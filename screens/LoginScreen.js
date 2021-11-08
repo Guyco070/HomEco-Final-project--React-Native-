@@ -30,8 +30,6 @@ const LoginScreen = () => {
     }
     
     const handleLogin = () => {
-        console.log(auth)
-
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in 

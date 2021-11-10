@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "HomEco-Final-project--React-Native-",
-    "slug": "HomEco-Final-project--React-Native-",
+    "name": "HomEco",
+    "slug": "HomEco",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

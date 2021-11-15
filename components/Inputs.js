@@ -20,13 +20,14 @@ class Inputs extends Component {
                     inputContainerStyle={styles.inputContainer}
                     inputStyle={styles.inputText}
                     secureTextEntry={this.props.pass}
+                    onChangeText={this.props.onChangeText}
+                    value = {this.props.value}
                     leftIcon={
                         <Icon 
                             name={this.props.icon}
                             size={22}
                             color={this.state.isFocused ? '#0779e4' : 'grey'}    
                         />
-
                     }
                 />
             </View>

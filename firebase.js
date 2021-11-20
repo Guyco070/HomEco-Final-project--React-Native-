@@ -3,6 +3,7 @@ import { getAuth } from "@firebase/auth";
 import { getApps, initializeApp } from "firebase/app";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
+import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -36,6 +37,62 @@ if(!getApps.length){
 } else {
     app = app()
 }
+const db = getFirestore(app)
 const auth = getAuth();
 
-export { auth, uiConfig } 
+const getByDocIdFromFirestore = async(collect, docId) =>{
+  const docRef = doc(db,collect,docId)
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+  }
+  return docSnap.data()
+}
+
+const getCollectionFromFirestore = async(collect) =>{
+  const collectCol = collection(db, collect);
+  const collectSnapshot = await getDocs(collectCol);
+  const collectList = collectSnapshot.docs.map(doc => doc.data());
+
+  return collectList;
+}
+
+const getWhereFromFirestore = async(collect, col,term , value) => { // term canbe - == ,<= ,>=, in (value is an array), array-contains-any (value is an array)... https://firebase.google.com/docs/firestore/query-data/queries// todo: fix return to return a llist
+  const q = query(collection(db, collect), where(col, term, value))
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    console.log("doc.id, doc.data()");
+
+    console.log(doc.id, " => ", doc.data());
+  });
+  const collectList = querySnapshot.docs.map(doc => doc.data());
+  return collectList
+}
+
+const deleteRowFromFirestore = async(collect, docId) => {
+  await deleteDoc(doc(db,collect, docId))
+}
+
+const addUserToFirestore = async(email, fName, lName, phone, bDate ) => {
+  await setDoc(doc(collection(db, 'users'), email), {
+      fName: fName,
+      lName: lName,
+      phone: phone,
+      bDate: bDate,
+      email: email
+     });
+}
+
+const updateUserAtFirestore = async(userEmail, col, newValue) => {
+  const data = { }
+  data[col] = newValue
+  console.log(data)
+  await setDoc(doc(db,"users", userEmail), {col: newValue } , {merge: true});
+}
+
+export { auth, uiConfig ,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore} 

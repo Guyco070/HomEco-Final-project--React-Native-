@@ -7,16 +7,21 @@ class Inputs extends Component {
     state = {isFocused: false};
 
     onFocusChange = () => {
-        this.setState({isFocused:true})
+        if(event.target.value == '' )
+            this.setState({isFocused:!this.state.isFocused})
+        else if(this.state.isFocused == false)
+            this.setState({isFocused:!this.state.isFocused})
     }
 
     render() {
         return(
-            <View style={[styles.container,{borderColor:this.stateisFocused ? 
+            <View style={[styles.container,{borderColor:this.state.isFocused ? 
             '#0779ef' : '#eee'}]}>
                 <Input 
+                    dataDetectorTypes={this.props.type}
                     placeholder={this.props.name}
                     onFocus={this.onFocusChange}
+                    onBlur = {this.onFocusChange}
                     inputContainerStyle={styles.inputContainer}
                     inputStyle={styles.inputText}
                     secureTextEntry={this.props.pass}
@@ -47,7 +52,7 @@ const styles = StyleSheet.create({
         borderBottomWidth:0
     },
     inputText: {
-        color: '#0779e4',
+        //color: '#0779e4',
         fontWeight: 'bold',
         marginLeft:5
     }

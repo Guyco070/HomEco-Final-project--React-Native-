@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { styles } from '../styleSheet';
+import { signInWithEmailAndPassword} from "firebase/auth";
 import { useNavigation } from '@react-navigation/core';
-import { auth, uiConfig } from '../firebase'
+import * as firebase from '../firebase'
 import Account from '../components/Acount';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements/dist/input/Input';
@@ -15,7 +16,7 @@ const LoginScreen = () => {
     const navigation = useNavigation()
     
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
+        const unsubscribe = firebase.auth.onAuthStateChanged(user => {
             if(user){
                 navigation.replace("Home")
             }
@@ -24,14 +25,17 @@ const LoginScreen = () => {
     }, [])
 
     const handleLogin = () => {
-        signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(firebase.auth, email, password)
         .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
             console.log('Logged in with: ', user.email)
 
         })
-        .catch(error => alert(error.message, user.email)
+        .catch(error => {
+            alert(error.message, email)
+            firebase.deleteRowFromFirestore("users", "Ga").then(list => console.log("User Added"))
+        } 
         );
     }
 
@@ -40,7 +44,7 @@ const LoginScreen = () => {
             style={styles.container}
             behavior="padding"
             >
-            <Text style={styles.textBody}>Log in your account </Text>
+            <Text style={styles.textBody}>Log in your account</Text>
             <View style={styles.inputContainer}>
 
                 <Input
@@ -94,71 +98,4 @@ const LoginScreen = () => {
 
 export default LoginScreen
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white'
-    },
-    inputContainer: {
-        width: '80%',
-        marginTop:20,
-        borderColor: '#eeee',
-        borderWidth:3.5,
-        borderRadius: 100,
-        backgroundColor:'white',
 
-    },
-    input: {
-        backgroundColor:'white',
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        borderRadius:100,
-        marginTop:5,
-        paddingVertical: 10,
-    },
-    buttonContainer: {
-        width: '60%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop:25
-    },
-    button: {
-        backgroundColor: '#0782F9',
-        width: '100%',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center'
-    },
-    buttonOutline: {
-        backgroundColor: 'white',
-        marginTop: 5,
-        borderColor: '#0782F9',
-        borderWidth: 2
-
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: '700',
-        fontSize: 16,
-    },
-    buttonOutlineText: {
-        color: '#0782F9',
-        fontWeight: '700',
-        fontSize: 16,
-    },
-    textBody:{
-        fontFamily: 'Foundation',
-        fontSize: 16,
-        alignSelf: 'center',
-        marginTop: 10
-    },
-    submitText:{
-        fontSize:22,
-        fontWeight: 'bold',
-        color: 'white',
-        alignSelf: 'center',
-        marginVertical : 10
-    }
-})

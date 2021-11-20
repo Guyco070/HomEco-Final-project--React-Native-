@@ -1,14 +1,21 @@
 import { signOut } from '@firebase/auth'
 import { useNavigation } from '@react-navigation/core'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { auth } from '../firebase'
+import * as firebase from '../firebase'
 
 const HomeScreen = () => {
     const navigation = useNavigation()
+    const [user, setUser] = useState([]);
 
+    useEffect(() => {
+        const us = firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
+      }, [])
+     
+    
+    
     const handleSignOut = () => {
-        signOut(auth)
+        signOut(firebase.auth)
         .then(() => {
             console.log("Logout")
             navigation.replace("Login")
@@ -19,7 +26,8 @@ const HomeScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text>Email: {auth.currentUser?.email} </Text>
+            <Text>{ user["fName"]+ " " + user["lName"] } </Text>
+            <Text>Email: { user["email"] } </Text>
             <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText} onPress={handleSignOut} >Sign out</Text>
             </TouchableOpacity>

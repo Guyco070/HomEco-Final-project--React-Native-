@@ -15,14 +15,16 @@ class Inputs extends Component {
             <View style={[styles.container,{borderColor:this.stateisFocused ? 
             '#0779ef' : '#eee'}]}>
                 <Input 
+                    keyboardType={this.props.keyboardType}
                     placeholder={this.props.name}
                     onFocus={this.onFocusChange}
                     inputContainerStyle={styles.inputContainer}
                     inputStyle={styles.inputText}
                     secureTextEntry={this.props.pass}
+                    
                     leftIcon={
                         <Icon 
-                            name={this.props.icon}
+                            name={"user"}
                             size={22}
                             color={this.state.isFocused ? '#0779e4' : 'grey'}    
                         />

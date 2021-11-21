@@ -1,10 +1,45 @@
-import React from 'react';
-import { StyleSheet, Text, View,Image,ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View,Image,ScrollView,KeyboardAvoidingView } from 'react-native';
 import Inputs from '../components/Inputs';
 import Submit from '../components/Submit';
 import Account from '../components/Account';
+import { Button } from 'react-native-elements';
+import { auth } from '../firebase'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+
+
 
 const Login = props => {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if(user){
+                navigation.replace("Home")
+            }
+        })
+        return unsubscribe
+    }, [])
+    const handleSignUp = () => {
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            console.log('Registered with: ', user.email)
+        });
+
+    }
+    const handleLogin = () => {
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            console.log('Logged in with: ', user.email)
+
+        });
+
+    }
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             <View style={styles.container}>
@@ -15,12 +50,12 @@ const Login = props => {
                 <Text style={styles.textTitle}>Welcome Back! </Text>
                 <Text style={styles.textBody}>Log in your account </Text>
                 <View style={{marginTop:20}}/>
-                <Inputs name='Email' icon="user"/>
-                <Inputs name='Password' icon="lock" pass={true} />
+                <Inputs name='Email' icon="user" onChangeText={setEmail}/>
+                <Inputs name='Password' icon="lock" pass={true} onChangeText={setPassword} />
                 <View style={{width: '90%'}}>
                     <Text style={[styles.textBody],{alignSelf: 'flex-end'}}> forgot Password </Text>
                 </View>
-                <Submit title="LOG IN" color="#0148a4" />
+                <Button title="LOG IN" color="#0148a4" onPress={handleLogin}/>
                 <Text style={styles.textBody}>Or connect Using</Text>
                 <View style={{flexDirection: 'row'}}>
                     <Account color="#3b5c8f" icon="facebook" title="Facebook" />

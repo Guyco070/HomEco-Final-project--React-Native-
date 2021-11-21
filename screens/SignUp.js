@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View,Image,ScrollView } from 'react-native';
- 
+import { StyleSheet, Text, View,Image,ScrollView,TextInput} from 'react-native';
 import Input from '../components/Inputs';
 import Submit from '../components/Submit';
- 
+
+
 const SignUp = props => {
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
@@ -14,7 +14,7 @@ const SignUp = props => {
                 <Text style={styles.textBody}>Create an account</Text>
                 <Input name="Full Name" icon="user" />
                 <Input name="Email" icon="envelope" /> 
-                <Input name="Phone" icon="phone" /> 
+                <Input keyboardType="phone-pad" name="Phone" icon="phone"  />
                 <Input name="Password" icon="lock" pass={true} />
                 <Input name="Confirm Password" icon="lock" pass={true} />
                 <Submit color="#0251ce" title="Create" /> 
@@ -46,6 +46,14 @@ const styles = StyleSheet.create({
     textBody:{
         fontFamily: 'Foundation',
         fontSize: 16
+    },
+    inputContainer: {
+        borderBottomWidth:0
+    },
+    inputText: {
+        color: '#0779e4',
+        fontWeight: 'bold',
+        marginLeft:5
     }
 });
 

@@ -1,11 +1,15 @@
-import React from 'react';
+import React , { useEffect, useState }  from 'react';
 import { StyleSheet,View,Text,TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
 
 const Submit = props => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     return(
+
         <TouchableOpacity style={[styles.container, {backgroundColor:props.color}]}>
-            <Text style={styles.submitText}>{props.title}</Text>
+            <Button style={styles.submitText} title={props.title} onPress={console.log("yarin")} />
         </TouchableOpacity>
     )
 }

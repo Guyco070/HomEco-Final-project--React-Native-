@@ -18,6 +18,7 @@ class Inputs extends Component {
             <View style={[styles.container,{borderColor:this.state.isFocused ? 
             '#0779ef' : '#eee'}]}>
                 <Input 
+                    keyboardType={this.props.keyboardType}
                     dataDetectorTypes={this.props.type}
                     placeholder={this.props.name}
                     onFocus={this.onFocusChange}

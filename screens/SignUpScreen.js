@@ -8,9 +8,6 @@ import { styles } from '../styleSheet';
 import Input from '../components/Inputs';
 import * as firebase from '../firebase'
 
-import Submit from '../components/Submit';
-
-
 const SignUpScreen = props => {
     const navigation = useNavigation()
     const [fName, setFName] = useState('');

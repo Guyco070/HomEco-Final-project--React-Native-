@@ -1,7 +1,7 @@
 import { sendPasswordResetEmail } from '@firebase/auth';
 import { useNavigation } from '@react-navigation/core';
 import React, { PureComponent, useState } from 'react'
-import { Text, View ,StyleSheet, KeyboardAvoidingView, TouchableOpacity} from 'react-native'
+import { Text, View ,StyleSheet, KeyboardAvoidingView, TouchableOpacity, Alert} from 'react-native'
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { Input } from 'react-native-elements/dist/input/Input';
 
@@ -11,13 +11,9 @@ const ForgotPasswordScreen = () => {
         const [email, setEmail] = useState('')
         
         const handlePasswordReset = () => {
-            console.log('Registered with: ', email)
-
-            sendPasswordResetEmail(email,true)
-            .then(() => {
-            })
-            .catch(error => alert(error.message)
-            );
+            sendPasswordResetEmail(email.toLowerCase(),true)
+                .then(() => alert('Your password reset mail has been sent'))
+                .catch(error => Alert.alert('Error', error.message));
         }
 
         return (

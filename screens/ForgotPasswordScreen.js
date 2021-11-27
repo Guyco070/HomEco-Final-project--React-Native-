@@ -6,41 +6,41 @@ import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { Input } from 'react-native-elements/dist/input/Input';
 
 const ForgotPasswordScreen = () => {
-        const navigation = useNavigation()
+    const navigation = useNavigation()
 
-        const [email, setEmail] = useState('')
-        
-        const handlePasswordReset = () => {
-            sendPasswordResetEmail(email.toLowerCase(),true)
-                .then(() => alert('Your password reset mail has been sent'))
-                .catch(error => Alert.alert('Error', error.message));
-        }
+    const [email, setEmail] = useState('')
+    
+    const handlePasswordReset = () => {
+        sendPasswordResetEmail(email.toLowerCase(),true)
+            .then(() => alert('Your password reset mail has been sent'))
+            .catch(error => Alert.alert('Error', error.message));
+    }
 
-        return (
-            <KeyboardAvoidingView
-            style={styles.container}
-            behavior="padding"
-            >
-                <Text style={styles.textTitle}>Enter Your confirmation Email ! </Text>
-                <View style={styles.inputContainer}style={styles.inputContainer}>
-                    <Input
-                        placeholder="Email"
-                        value={ email }
-                        onChangeText={text => setEmail(text)}
-                        style={styles.input}
-                        leftIcon={ <Icon name="mail" size={20} color="#000"/>}
-                        ></Input>
-                    <TouchableOpacity
-                        onPress={handlePasswordReset}
-                        style={[styles.button, styles.buttonOutline]}
-                        >
-                            <Text style={styles.buttonOutlineText}>Register</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.textBody}>{'\n'}{'\n'}I think I just remembered the password</Text>
-                    <Text style={[styles.textBody , {color: 'blue'}]} onPress={() => navigation.replace('Login')}>Login here</Text>
-                </View>
-            </KeyboardAvoidingView>
-        )
+    return (
+        <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        >
+            <Text style={styles.textTitle}>Enter Your confirmation Email ! </Text>
+            <View style={styles.inputContainer}style={styles.inputContainer}>
+                <Input
+                    placeholder="Email"
+                    value={ email }
+                    onChangeText={text => setEmail(text)}
+                    style={styles.input}
+                    leftIcon={ <Icon name="mail" size={20} color="#000"/>}
+                    ></Input>
+                <TouchableOpacity
+                    onPress={handlePasswordReset}
+                    style={[styles.button, styles.buttonOutline]}
+                    >
+                        <Text style={styles.buttonOutlineText}>Register</Text>
+                </TouchableOpacity>
+                <Text style={styles.textBody}>{'\n'}{'\n'}I think I just remembered the password</Text>
+                <Text style={[styles.textBody , {color: 'blue'}]} onPress={() => navigation.replace('Login')}>Login here</Text>
+            </View>
+        </KeyboardAvoidingView>
+    )
 }
 
 export default ForgotPasswordScreen

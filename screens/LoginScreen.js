@@ -79,10 +79,8 @@ const LoginScreen = () => {
                 <Text style={styles.textBody}>{'\n'}</Text>
                 {/*<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />*/}
 
-                <View style={styles.container}>
-                    <Text style={styles.textBody}>{'\n'}{'\n'}Don't Have an Acoount</Text>
+                    <Text style={styles.textBody}>{'\n'}Don't Have an Acoount</Text>
                     <Text style={[styles.textBody , {color: 'blue'}]} onPress={() => navigation.replace('SignUp')}>Sign Up</Text>
-                </View>
                 {/*
                 <TouchableOpacity
                 onPress={handleSignUp}

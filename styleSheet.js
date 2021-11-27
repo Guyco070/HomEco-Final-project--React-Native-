@@ -66,6 +66,11 @@ const styles = StyleSheet.create({
         color: 'white',
         alignSelf: 'center',
         marginVertical : 10
+    },
+    inputText: {
+        //color: '#0779e4',
+        fontWeight: 'bold',
+        marginLeft:5
     }
 })
 

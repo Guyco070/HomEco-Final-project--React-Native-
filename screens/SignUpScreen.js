@@ -47,7 +47,7 @@ const SignUpScreen = props => {
                 <Input name="Last Name" icon="user" onChangeText={text => setLName(text)} />
                 <Input name="Phone" icon="phone" keyboardType="phone-pad" onChangeText={text => setPhone(text)} /> 
                 <Input name="Birth Date" icon= 'birthday-cake' onChangeText={text => setBDate(text)} /> 
-                <Input name="Email" icon="envelope" onChangeText={text => setEmail(text)} /> 
+                <Input name="Email" icon="envelope" keyboardType="email-address" onChangeText={text => setEmail(text)} /> 
                 <Input name="Password" icon="lock" pass={true} onChangeText={text => setPassword(text)} />
                 <Input name="Confirm Password" icon="lock" pass={true} onChangeText={(text) => {}}/>
                 <View style={styles.buttonContainer}>

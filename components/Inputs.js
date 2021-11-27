@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { StyleSheet,View,TouchableOpacity } from 'react-native';
+import { StyleSheet,View,TouchableOpacity, Alert } from 'react-native';
 import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -7,10 +7,18 @@ class Inputs extends Component {
     state = {isFocused: false};
 
     onFocusChange = () => {
-        if(event.target.value == '' )
-            this.setState({isFocused:!this.state.isFocused})
-        else if(this.state.isFocused == false)
-            this.setState({isFocused:!this.state.isFocused})
+        // alert(event.target.value)
+        // if(event.target.value == ''){
+        //     this.setState({isFocused:!this.state.isFocused})
+        //     // Alert.alert("empty",this.state.isFocused)
+        // }
+        // else if(this.state.isFocused == false)
+        //     {
+        //         this.setState({isFocused:!this.state.isFocused})
+        //         // Alert.alert("false",this.state.isFocused)
+        //     }
+        this.setState({isFocused:!this.state.isFocused})
+
     }
 
     render() {

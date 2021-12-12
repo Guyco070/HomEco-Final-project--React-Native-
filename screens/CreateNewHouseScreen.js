@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation } from '@react-navigation/native';
 import { Text, View,Image,ScrollView, TouchableOpacity,KeyboardAvoidingView } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
@@ -47,9 +47,11 @@ const CreateNewHouseScreen = () => {
                 if(house)
                     alert("You have already created a house named \"" + hName + "\".\nPlease select another name.\nThanks!")
                 else {
-                    firebase.addHouseToFirestore(hName, user["email"] ,hPartners, catchImage)
-                    .then(
+                    firebase.addHouseToFirestore(hName, user["email"] ,[user,...hPartners], catchImage)
+                    .then(() =>{
                         console.log('House created: ', hName)
+                        navigation.replace("HouseProfile")
+                    }
                     ).catch(error => alert(error.message));
                 }
             }).catch(error => alert(error.message))
@@ -77,7 +79,7 @@ const CreateNewHouseScreen = () => {
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
-            <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage}/>
+            <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/>
 
             <View style={[styles.container, {marginTop:30,marginHorizontal:30}]}>
                 <Text style={styles.textTitle}>Let's Get Started</Text>

@@ -49,6 +49,7 @@ const auth = getAuth();
 
 
 const tempUserProfileImage = 'https://cdn4.iconfinder.com/data/icons/evil-icons-user-interface/64/avatar-512.png'
+const tempHouseProfileImage = 'https://www.iconfinder.com/icons/669946/home_building_estate_house_real_icon'
 
 
 const capitalize = (text) => {
@@ -100,7 +101,6 @@ const getCollectionFromFirestoreByKeySubString = async(collect,substring) =>{
 }
 
 const getUCollectionFromFirestoreByUserNameSubString = async(collect,substring) =>{
-  console.log("-"+substring+"-")
   if(substring == '')
     return [];
   else{
@@ -109,7 +109,6 @@ const getUCollectionFromFirestoreByUserNameSubString = async(collect,substring) 
     const collectSnapshot = await getDocs(collectCol);
   
     const collectList = collectSnapshot.docs.filter(doc => { return String(doc.data().fName + " " + doc.data().lName).includes(substring) } ).map(doc => { return doc.data() });
-    console.log(collectList)
     
     return collectList;
   }
@@ -149,22 +148,46 @@ const updateUserAtFirestore = async(userEmail, col, newValue) => {
   await setDoc(doc(db,"users", userEmail), {col: newValue } , {merge: true});
 }
 
+const setDefaultHousePartners = (partners) => {
+  let partnersDict = {}
+  let defPermitions = {"seeIncome": false, "seeMonthlyBills": false}
+
+
+  for(let i in partners){
+    partnersDict[partners[i]["email"]] = {
+      user : partners[i],
+      isAuth: false,
+      nowIn : false,
+      defPermitions : defPermitions, 
+      incomeToCurHouse: 0, // {[ company, amount ]}
+      outComeToCurHouse: {}, // {[ reasone, amount ]}
+      allowance: {} // {[ from, amount ],...}
+    }
+    defPermitions = {"seeIncome": true, "seeMonthlyBills": true}
+  }
+  partnersDict[partners[0].email].isAuth = true
+  partnersDict[partners[0].email].nowIn = true
+  partnersDict[partners[0].email].defPermitions = defPermitions
+  return partnersDict
+}
+
 const addHouseToFirestore = async(hName, cEmail, partners, hImage) => {
   let date = new Date()
   date = date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
+  partners = setDefaultHousePartners(partners)
   await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail), {
       hName: hName,
       cEmail: cEmail,
       partners: partners,
       cDate: date,
-      hImage: hImage
+      hImage: hImage ? hImage : tempHouseProfileImage
+
      });
 }
 
 const updateHouseAtFirestore = async(hName, col, newValue) => {
   const data = { }
   data[col] = newValue
-  console.log(data)
   await setDoc(doc(db,"houses", hName), {col: newValue } , {merge: true});
 }
 
@@ -172,9 +195,14 @@ const getHouseKeyByNameAndCreatorEmail = (hName, cEmail) => {
   return hName + "&" + cEmail
 }
 
-const getHousesByUserEmail = (cEmail) => {
-  
+const getHousesByUserEmail = async(cEmail) => {
+   return getCollectionFromFirestore("houses").then((collection) => {
+    if(collection)
+      return collection.filter((house) => { if(cEmail in house.partners) return house  })
+    else
+      return []
+  })
 }
 
 export { auth, uiConfig ,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,
-        addHouseToFirestore, updateHouseAtFirestore, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString } 
+        setDefaultHousePartners ,addHouseToFirestore, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString } 

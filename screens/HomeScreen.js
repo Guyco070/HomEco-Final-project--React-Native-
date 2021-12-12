@@ -1,8 +1,9 @@
 import { signOut } from '@firebase/auth'
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import * as firebase from '../firebase'
+
 
 const HomeScreen = () => {
     const navigation = useNavigation()
@@ -42,6 +43,10 @@ const HomeScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText} onPress={handleSignOut} >Sign out</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                    onPress={() => navigation.navigate('General')}>
+                    <Text>press me</Text>
             </TouchableOpacity>
         </View>
     )

@@ -1,5 +1,5 @@
 import { sendPasswordResetEmail } from '@firebase/auth';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { PureComponent, useState } from 'react'
 import { Text, View ,StyleSheet, KeyboardAvoidingView, TouchableOpacity, Alert} from 'react-native'
 import { Icon } from 'react-native-elements/dist/icons/Icon';

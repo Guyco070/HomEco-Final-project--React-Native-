@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Text, View,Image,ScrollView, TouchableOpacity } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
@@ -55,7 +55,7 @@ const SignUpScreen = props => {
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
-            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage}/>
+            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage} changeable/>
             <View style={styles.container}>
                 <Text style={styles.textTitle}>Let's Get Started</Text>
                 <Text style={[styles.textBody, {margin:10}]}>Create an account</Text>

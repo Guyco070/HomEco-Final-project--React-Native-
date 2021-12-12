@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { styles } from '../styleSheet';
 import { signInWithEmailAndPassword} from "firebase/auth";
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import * as firebase from '../firebase'
 import Account from '../components/Acount';
 import Icon from 'react-native-vector-icons/FontAwesome';

@@ -9,11 +9,13 @@ const HomeScreen = () => {
     const [user, setUser] = useState([]);
 
     useEffect(() => {
-        const us = firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
+        firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
       }, [])
+
+    const createNewHouseScreen = () => {
+        navigation.navigate("CreateNewHouse",user)
+    }
      
-    
-    
     const handleSignOut = () => {
         signOut(firebase.auth)
         .then(() => {
@@ -28,6 +30,16 @@ const HomeScreen = () => {
         <View style={styles.container}>
             <Text>{ user["fName"]+ " " + user["lName"] } </Text>
             <Text>Email: { user["email"] } </Text>
+            <Text>My Houses: </Text>
+           
+
+            <TouchableOpacity
+                    onPress={createNewHouseScreen}
+                    style={styles.button}
+                    email = {user["email"]}
+                    >
+                    <Text style={styles.buttonText}>Create New House</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText} onPress={handleSignOut} >Sign out</Text>
             </TouchableOpacity>

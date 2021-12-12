@@ -1,16 +1,24 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Text, View,Image,ScrollView, TouchableOpacity, TextPropTypes } from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import * as ImagePicker from 'expo-image-picker';
+import { AntDesign } from '@expo/vector-icons';
+import UploadProfileImage from '../components/UploadProfileImage';
 
-import { styles } from '../styleSheet';
+
+import { styles,imageUploaderStyles } from '../styleSheet';
 
 import Input from '../components/Inputs';
 import * as firebase from '../firebase'
+import * as cloudinary from '../Cloudinary'
+
 
 const SignUpScreen = props => {
     const navigation = useNavigation()
     const [fName, setFName] = useState('');
+    const [catchImage, setCatchImage] = useState('');
+    const [uImage, setUImage] = useState('');
     const [lName, setLName] = useState('');
     const [bDate, setBDate] = useState('');
     const [phone, setPhone] = useState('');
@@ -26,23 +34,31 @@ const SignUpScreen = props => {
         return unsubscribe
     }, [])
 
+    const addImage = async () => {
+        let _image = await cloudinary.addImage()
+          if (!_image.cancelled) {
+            setUImage(_image.uri);
+            cloudinary.uploadImageToCloudinary("users",_image).then((url)=>{ setCatchImage(url); }).catch((e) => alert(e.message))
+          }
+        }
+
     const handleSignUp = () => {
         createUserWithEmailAndPassword(firebase.auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            firebase.addUserToFirestore(email.toLowerCase(),fName, lName, phone, bDate )
+            firebase.addUserToFirestore(email.toLowerCase(),fName, lName, phone, bDate, catchImage )
             console.log('Registered with: ', user.email)
             signInWithEmailAndPassword(firebase.auth, email, password)
         })
         .catch(error => alert(error.message, email, password));
     }
+
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
+            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage}/>
             <View style={styles.container}>
-                <Image source={require('../assets/signup.png')}
-                resizeMode="center" style={styles.image} />
                 <Text style={styles.textTitle}>Let's Get Started</Text>
-                <Text style={styles.textBody}>Create an account</Text>
+                <Text style={[styles.textBody, {margin:10}]}>Create an account</Text>
                 <Input name="First Name" icon="user" onChangeText={text => setFName(text)} />
                 <Input name="Last Name" icon="user" onChangeText={text => setLName(text)} />
                 <Input name="Phone" icon="phone" keyboardType="phone-pad" onChangeText={text => setPhone(text)} /> 

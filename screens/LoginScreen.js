@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { styles } from '../styleSheet';
 import { signInWithEmailAndPassword} from "firebase/auth";
 import { useNavigation } from '@react-navigation/core';
 import * as firebase from '../firebase'
 import Account from '../components/Acount';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Input } from 'react-native-elements/dist/input/Input';
+import Input from '../components/Inputs';
+import { Title } from 'react-native-paper';
 // import { StyledFirebaseAuth } from 'react-firebaseui';
 
 const LoginScreen = () => {
@@ -25,7 +26,7 @@ const LoginScreen = () => {
     }, [])
 
     const handleLogin = () => {
-        signInWithEmailAndPassword(firebase.auth, email, password)
+        signInWithEmailAndPassword(firebase.auth, email.replace(' ',''), password)
         .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
@@ -40,57 +41,49 @@ const LoginScreen = () => {
     }
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior="padding"
-            >
-            <Text style={styles.textBody}>Log in your account</Text>
-            <View style={styles.inputContainer}>
+        <ScrollView style={{backgroundColor: 'white'}}>
+            <View>
+                <Title style={[styles.textBody,{fontSize:20}]}>Hello and Wellcome to</Title>
+                <Title style={[styles.textBody,{fontSize:30,color:"#0782F9",textShadowRadius:2,textShadowColor:"grey"}]}>HomEco{"\n"}</Title>
+                <Text style={styles.textBody}>Log in to your account</Text>
+                <View style={styles.container}>
 
-                <Input
-                    placeholder="Email"
-                    value={ email }
-                    onChangeText={text => setEmail(text)}
-                    style={styles.input}
-                    leftIcon={ <Icon name="user" size={20} color="#000"/>}
-                    />
-            </View>
-            <View style={styles.inputContainer}>
-                <Input
-                    placeholder="Pasword"
-                    value={ password }
-                    onChangeText={text => setPassword(text)}
-                    style={styles.input}
-                    secureTextEntry
-                    leftIcon={ <Icon name="lock" size={20} color="#000"/>}
-                    />
-            </View>
-            <View style={[styles.inputContainer], {marginTop: 5}}>
-                    <Text style={[styles.textBody,{color: 'blue',alignSelf: 'flex-end'}]} onPress={() => navigation.navigate('ForgotPassword')}> Forgot Password </Text>
-            </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    onPress={handleLogin}
-                    style={styles.button}
+                        <Input name="Email" icon="user" onChangeText={text => setEmail(text)} />
+
+                    <Input
+                        name="Pasword"
+                        value={ password }
+                        onChangeText={text => setPassword(text)}
+                        pass={true}
+                        icon="lock"
+                        />
+                        <Text style={[styles.textBody,{color: 'blue'}]} onPress={() => navigation.navigate('ForgotPassword')}> Forgot Password </Text>
+
+                        <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        onPress={handleLogin}
+                        style={styles.button}
+                        >
+                        <Text style={styles.buttonText}>Login</Text>
+                    </TouchableOpacity>
+
+                    <Text style={styles.textBody}>{'\n'}</Text>
+                    {/*<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />*/}
+
+                        <Text style={styles.textBody}>{'\n'}Don't Have an Acoount</Text>
+                        <Text style={[styles.textBody , {color: 'blue'}]} onPress={() => navigation.navigate('SignUp')}>Sign Up</Text>
+                    {/*
+                    <TouchableOpacity
+                    onPress={handleSignUp}
+                    style={[styles.button, styles.buttonOutline]}
                     >
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-
-                <Text style={styles.textBody}>{'\n'}</Text>
-                {/*<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />*/}
-
-                    <Text style={styles.textBody}>{'\n'}Don't Have an Acoount</Text>
-                    <Text style={[styles.textBody , {color: 'blue'}]} onPress={() => navigation.replace('SignUp')}>Sign Up</Text>
-                {/*
-                <TouchableOpacity
-                onPress={handleSignUp}
-                style={[styles.button, styles.buttonOutline]}
-                >
-                    <Text style={styles.buttonOutlineText}>Register</Text>
-                </TouchableOpacity>
-                */}        
+                        <Text style={styles.buttonOutlineText}>Register</Text>
+                    </TouchableOpacity>
+                    */}        
+                </View>
+                </View>
             </View>
-        </KeyboardAvoidingView>
+        </ScrollView>
     )
 }
 

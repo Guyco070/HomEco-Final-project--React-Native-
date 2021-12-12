@@ -4,6 +4,11 @@ import { getApps, initializeApp } from "firebase/app";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import { Alert } from "react-native";
+import { uuid } from "uuidv4";
+
+
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -38,7 +43,28 @@ if(!getApps.length){
     app = app()
 }
 const db = getFirestore(app)
+const storage = getStorage(app)
 const auth = getAuth();
+
+
+
+const tempUserProfileImage = 'https://cdn4.iconfinder.com/data/icons/evil-icons-user-interface/64/avatar-512.png'
+
+
+const capitalize = (text) => {
+  if (text == '') return ''
+  return text[0].toUpperCase() + text.substr(1).toLowerCase()
+}
+
+const capitalizeAll = (text) => {
+  return text.split(' ').map(str => { return capitalize(str) }).join(' ')
+}
+
+function arrayRemove(arr, value) { 
+  return arr.filter(function(ele){ 
+      return ele != value; 
+  });
+}
 
 const getByDocIdFromFirestore = async(collect, docId) =>{
   const docRef = doc(db,collect,docId)
@@ -61,7 +87,35 @@ const getCollectionFromFirestore = async(collect) =>{
   return collectList;
 }
 
-const getWhereFromFirestore = async(collect, col,term , value) => { // term canbe - == ,<= ,>=, in (value is an array), array-contains-any (value is an array)... https://firebase.google.com/docs/firestore/query-data/queries// todo: fix return to return a llist
+const getCollectionFromFirestoreByKeySubString = async(collect,substring) =>{
+  if(substring == '')
+    return [];
+  const collectCol = collection(db, collect);
+  const collectSnapshot = await getDocs(collectCol);
+ 
+  const collectList = collectSnapshot.docs.filter(doc => { return String(doc.id).includes(substring) } ).map(doc => { return doc.data() });
+  // console.log(collectList)
+
+  return collectList;
+}
+
+const getUCollectionFromFirestoreByUserNameSubString = async(collect,substring) =>{
+  console.log("-"+substring+"-")
+  if(substring == '')
+    return [];
+  else{
+    substring = capitalizeAll(substring)
+    const collectCol = collection(db, collect);
+    const collectSnapshot = await getDocs(collectCol);
+  
+    const collectList = collectSnapshot.docs.filter(doc => { return String(doc.data().fName + " " + doc.data().lName).includes(substring) } ).map(doc => { return doc.data() });
+    console.log(collectList)
+    
+    return collectList;
+  }
+}
+
+const getWhereFromFirestore = async(collect, col, term , value) => { // term can be - == ,<= ,>=, in (value is an array), array-contains-any (value is an array)... https://firebase.google.com/docs/firestore/query-data/queries// todo: fix return to return a llist
   const q = query(collection(db, collect), where(col, term, value))
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
@@ -78,21 +132,49 @@ const deleteRowFromFirestore = async(collect, docId) => {
   await deleteDoc(doc(db,collect, docId))
 }
 
-const addUserToFirestore = async(email, fName, lName, phone, bDate ) => {
+const addUserToFirestore = async(email, fName, lName, phone, bDate, uImage ) => {
   await setDoc(doc(collection(db, 'users'), email), {
-      fName: fName,
-      lName: lName,
+      fName: capitalize(fName),
+      lName: capitalize(lName),
       phone: phone,
       bDate: bDate,
-      email: email
+      email: email.replace(' ',''),
+      uImage: uImage ? uImage : tempUserProfileImage
      });
+    //  uploadImageToStorage('users',uImage ? uImage : tempUserProfileImage,email).then(alert()).catch()
 }
 
 const updateUserAtFirestore = async(userEmail, col, newValue) => {
-  const data = { }
   data[col] = newValue
-  console.log(data)
   await setDoc(doc(db,"users", userEmail), {col: newValue } , {merge: true});
 }
 
-export { auth, uiConfig ,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore} 
+const addHouseToFirestore = async(hName, cEmail, partners, hImage) => {
+  let date = new Date()
+  date = date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
+  await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail), {
+      hName: hName,
+      cEmail: cEmail,
+      partners: partners,
+      cDate: date,
+      hImage: hImage
+     });
+}
+
+const updateHouseAtFirestore = async(hName, col, newValue) => {
+  const data = { }
+  data[col] = newValue
+  console.log(data)
+  await setDoc(doc(db,"houses", hName), {col: newValue } , {merge: true});
+}
+
+const getHouseKeyByNameAndCreatorEmail = (hName, cEmail) => {
+  return hName + "&" + cEmail
+}
+
+const getHousesByUserEmail = (cEmail) => {
+  
+}
+
+export { auth, uiConfig ,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,
+        addHouseToFirestore, updateHouseAtFirestore, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString } 

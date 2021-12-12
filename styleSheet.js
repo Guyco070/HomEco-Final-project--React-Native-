@@ -54,11 +54,17 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 16,
     },
+    textTitle:{
+        fontFamily: 'Foundation',
+        fontSize: 18,
+        alignSelf: 'center',
+        margin: 10
+    },
     textBody:{
         fontFamily: 'Foundation',
         fontSize: 16,
         alignSelf: 'center',
-        marginTop: 10
+        marginTop: 20
     },
     submitText:{
         fontSize:22,
@@ -67,11 +73,57 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginVertical : 10
     },
+    listTextItem:{
+        fontFamily: 'Foundation',
+        fontSize: 16,
+        alignSelf: "flex-end",
+    },
+    listSubtitleTextItem:{
+        fontFamily: 'Foundation',
+        alignSelf: "flex-end",
+    },
     inputText: {
         //color: '#0779e4',
         fontWeight: 'bold',
         marginLeft:5
+    },
+    image:{
+        flex: 1,
+        width: 150,
+        height: 150,
+        resizeMode: 'contain',
+        alignSelf: 'center'
+    },
+})
+
+
+const imageUploaderStyles=StyleSheet.create({
+    container:{
+        margin:15,
+        elevation:2,
+        height:150,
+        width:150, 
+        backgroundColor:'#efefef',
+        position:'relative',
+        borderRadius:999,
+        overflow:'hidden',
+        borderColor:"#0782F9",
+        borderWidth:2
+    },
+    uploadBtnContainer:{
+        opacity:0.7,
+        position:'absolute',
+        right:0,
+        bottom:0,
+        backgroundColor:'lightgrey',
+        width:'100%',
+        height:'25%',
+    },
+    uploadBtn:{
+        display:'flex',
+        alignItems:"center",
+        justifyContent:'center'
     }
 })
 
-export {styles}
+export {styles, imageUploaderStyles}

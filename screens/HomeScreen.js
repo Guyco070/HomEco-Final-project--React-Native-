@@ -1,5 +1,5 @@
 import { signOut } from '@firebase/auth'
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import * as firebase from '../firebase'

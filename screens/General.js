@@ -20,7 +20,7 @@ export default function App() {
   // To get the curretn Status of menu ...
   const [showMenu, setShowMenu] = useState(false);
   const [user, setUser] = useState([]);
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   
 
@@ -30,6 +30,8 @@ export default function App() {
   // Scale Intially must be One...
   const scaleValue = useRef(new Animated.Value(1)).current;
   const closeButtonOffset = useRef(new Animated.Value(0)).current;
+  
+
   
   useEffect(() => {
     firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
@@ -65,15 +67,15 @@ export default function App() {
             // Tab Bar Buttons....
           }
 
-          {TabButton(currentTab, setCurrentTab, "Home", home)}
-          {TabButton(currentTab, setCurrentTab, "Search", search)}
-          {TabButton(currentTab, setCurrentTab, "Notifications", notifications)}
-          {TabButton(currentTab, setCurrentTab, "Settings", settings)}
+          {TabButton(currentTab, setCurrentTab, "Home", home,navigation)}
+          {TabButton(currentTab, setCurrentTab, "Search", search,navigation)}
+          {TabButton(currentTab, setCurrentTab, "Notifications", notifications,navigation)}
+          {TabButton(currentTab, setCurrentTab, "Settings", settings,navigation)}
 
         </View>
 
         <View>
-          {TabButton(currentTab, setCurrentTab, "LogOut", logout)}
+          {TabButton(currentTab, setCurrentTab, "LogOut", logout,navigation)}
         </View>
 
       </View>
@@ -174,12 +176,13 @@ const handleSignOut = () => {
   );
 }
 // For multiple Buttons...
-const TabButton = (currentTab, setCurrentTab, title, image) => {
+const TabButton = (currentTab, setCurrentTab, title, image,navigation) => {
   return (
-
+    
     <TouchableOpacity onPress={() => {
+
       if (title == "LogOut") {
-        // do some
+        {handleSignOut}
       } else {
         navigation.navigate('Home')
         setCurrentTab(title)

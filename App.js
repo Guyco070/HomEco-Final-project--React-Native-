@@ -1,18 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {createAppContainer} from "react-navigation"
-import {createDrawerNavigator} from 'react-navigation-drawer'
-import LoginScreen from './screens/LoginScreen';
-import HomeScreen from './screens/HomeScreen';
-import SignUpScreen from './screens/SignUpScreen';
-import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
-import CreateNewHouseScreen from './screens/CreateNewHouseScreen';
 
+import LoginScreen from './screens/LoginScreen';
+ 
 const Stack = createNativeStackNavigator();
-const DrawerStack = createDrawerNavigator();
 
 export default function App() {
   return (
@@ -22,6 +17,7 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="CreateNewHouse" component={CreateNewHouseScreen} />
+        <Stack.Screen name="HouseProfile" component={HouseProfileScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>

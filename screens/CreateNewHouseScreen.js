@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/core'
-import { Text, View,Image,ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity,KeyboardAvoidingView } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
@@ -79,12 +79,14 @@ const CreateNewHouseScreen = () => {
         <ScrollView style={{backgroundColor: 'white'}}>
             <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage}/>
 
-            <View style={[styles.container, {margin:30}]}>
+            <View style={[styles.container, {marginTop:30,marginHorizontal:30}]}>
                 <Text style={styles.textTitle}>Let's Get Started</Text>
                 <Text style={[styles.textBody, {margin:10}]}>Create a house to manage</Text>
                 <Input name="House name" icon="user" onChangeText={text => setHName(text)} />
+                </View>
+            <KeyboardAvoidingView style={[styles.container, {marginHorizontal:30}]}>
                 <Input name="Search partners here..."  icon = "search" onChangeText={handlePartnersSearch} />
-            </View>
+            </KeyboardAvoidingView>
             <View>
             {partnersList &&
                     partnersList

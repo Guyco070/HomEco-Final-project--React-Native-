@@ -12,7 +12,7 @@ import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import CreateNewHouseScreen from './screens/CreateNewHouseScreen';;
  
 const Stack = createNativeStackNavigator();
-
+const Drawer = createDrawerNavigator();
 export default function App() {
   return (
     <NavigationContainer>

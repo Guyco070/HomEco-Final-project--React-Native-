@@ -19,7 +19,7 @@ const UserHousesListView = (props) => {
         firebase.getHousesByUserEmail(props.user["email"])
         .then((houses) => sethousesList(houses)).catch((e)=>alert(e.massege)
         )    // before opening the page
-      })
+      },[])
 
 
     const addImage = async () => {
@@ -44,7 +44,7 @@ const UserHousesListView = (props) => {
                             friction={90} //
                             tension={100} // These props are passed to the parent component (here TouchableScale)
                             activeScale={0.95}
-                            onPress={() => navigation.navigate('General')}
+                            onPress={() => { navigation.navigate('HouseProfile',l);} }
                             >
                                 <ListItem.Content>
                                 <ListItem.Title style={styles.listTextItem} >{l.hName}</ListItem.Title>

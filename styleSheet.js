@@ -56,13 +56,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     textTitle:{
-        fontFamily: 'Foundation',
+        //fontFamily: 'HeleveticaNeue',
         fontSize: 18,
         alignSelf: 'center',
         margin: 10
     },
     textBody:{
-        fontFamily: 'Foundation',
+        //fontFamily: 'HeleveticaNeue',
         fontSize: 16,
         alignSelf: 'center',
         marginTop: 20
@@ -75,12 +75,12 @@ const styles = StyleSheet.create({
         marginVertical : 10
     },
     listTextItem:{
-        fontFamily: 'Foundation',
+        //fontFamily: 'HeleveticaNeue',
         fontSize: 16,
         alignSelf: "flex-end",
     },
     listSubtitleTextItem:{
-        fontFamily: 'Foundation',
+        //fontFamily: 'HeleveticaNeue',
         alignSelf: "flex-end",
     },
     inputText: {

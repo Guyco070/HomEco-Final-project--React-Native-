@@ -49,7 +49,9 @@ const auth = getAuth();
 
 
 const tempUserProfileImage = 'https://cdn4.iconfinder.com/data/icons/evil-icons-user-interface/64/avatar-512.png'
-const tempHouseProfileImage = 'https://www.iconfinder.com/icons/669946/home_building_estate_house_real_icon'
+const tempHouseProfileImage = 'https://cdn3.iconfinder.com/data/icons/luchesa-vol-9/128/Home-512.png'
+
+const tempHouseDescripton = 'Let\'s be the best house ever'
 
 
 const capitalize = (text) => {
@@ -170,18 +172,20 @@ const setDefaultHousePartners = (partners) => {
   return partnersDict
 }
 
-const addHouseToFirestore = async(hName, cEmail, partners, hImage) => {
+const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) => {
   let date = new Date()
   date = date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
   partners = setDefaultHousePartners(partners)
-  await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail), {
-      hName: hName,
-      cEmail: cEmail,
-      partners: partners,
-      cDate: date,
-      hImage: hImage ? hImage : tempHouseProfileImage
-
-     });
+  house = {
+    hName: hName,
+    cEmail: cEmail,
+    partners: partners,
+    cDate: date,
+    hImage: hImage ? hImage : tempHouseProfileImage,
+    description: description ? tempHouseDescripton : tempHouseDescripton
+   }
+  await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail),house );
+  return house
 }
 
 const updateHouseAtFirestore = async(hName, col, newValue) => {
@@ -203,5 +207,5 @@ const getHousesByUserEmail = async(cEmail) => {
   }).catch(() => alert(e.massege))
 }
 
-export { auth, uiConfig ,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,
+export { auth, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString } 

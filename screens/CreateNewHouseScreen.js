@@ -48,9 +48,9 @@ const CreateNewHouseScreen = () => {
                     alert("You have already created a house named \"" + hName + "\".\nPlease select another name.\nThanks!")
                 else {
                     firebase.addHouseToFirestore(hName, user["email"] ,[user,...hPartners], catchImage)
-                    .then(() =>{
+                    .then((creattedHouse) =>{
                         console.log('House created: ', hName)
-                        navigation.replace("HouseProfile")
+                        navigation.replace("HouseProfile",creattedHouse)
                     }
                     ).catch(error => alert(error.message));
                 }
@@ -85,6 +85,7 @@ const CreateNewHouseScreen = () => {
                 <Text style={styles.textTitle}>Let's Get Started</Text>
                 <Text style={[styles.textBody, {margin:10}]}>Create a house to manage</Text>
                 <Input name="House name" icon="user" onChangeText={text => setHName(text)} />
+                <Input name="Description" icon="comment" onChangeText={text => setHName(text)} />
                 </View>
             <KeyboardAvoidingView style={[styles.container, {marginHorizontal:30}]}>
                 <Input name="Search partners here..."  icon = "search" onChangeText={handlePartnersSearch} />

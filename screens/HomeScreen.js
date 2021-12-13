@@ -2,7 +2,10 @@ import { signOut } from '@firebase/auth'
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import UserHousesListView from '../components/UserHousesListView'
 import * as firebase from '../firebase'
+import { styles } from '../styleSheet'
+
 
 
 const HomeScreen = () => {
@@ -11,6 +14,7 @@ const HomeScreen = () => {
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
+
       }, [])
 
     const createNewHouseScreen = () => {
@@ -28,11 +32,10 @@ const HomeScreen = () => {
     }
 
     return (
-        <View style={styles.container}>
-            <Text>{ user["fName"]+ " " + user["lName"] } </Text>
-            <Text>Email: { user["email"] } </Text>
-            <Text>My Houses: </Text>
-           
+        <View style={[styles.container],styles.container}>
+            <Text style={styles.textBody}>{ user["fName"]+ " " + user["lName"] } </Text>
+            <Text style={styles.textBody}>Email: { user["email"] } </Text>
+            <UserHousesListView user={user}/>
 
             <TouchableOpacity
                     onPress={createNewHouseScreen}
@@ -54,23 +57,3 @@ const HomeScreen = () => {
 
 export default HomeScreen
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    button: {
-        backgroundColor: '#0782F9',
-        width: '60%',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginTop: 40
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: '700',
-        fontSize: 16,
-    },
-})

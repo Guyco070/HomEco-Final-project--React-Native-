@@ -49,6 +49,9 @@ const auth = getAuth();
 
 
 const tempUserProfileImage = 'https://cdn4.iconfinder.com/data/icons/evil-icons-user-interface/64/avatar-512.png'
+const tempHouseProfileImage = 'https://cdn3.iconfinder.com/data/icons/luchesa-vol-9/128/Home-512.png'
+
+const tempHouseDescripton = 'Let\'s be the best house ever !'
 
 
 const capitalize = (text) => {
@@ -94,13 +97,11 @@ const getCollectionFromFirestoreByKeySubString = async(collect,substring) =>{
   const collectSnapshot = await getDocs(collectCol);
  
   const collectList = collectSnapshot.docs.filter(doc => { return String(doc.id).includes(substring) } ).map(doc => { return doc.data() });
-  // console.log(collectList)
 
   return collectList;
 }
 
 const getUCollectionFromFirestoreByUserNameSubString = async(collect,substring) =>{
-  console.log("-"+substring+"-")
   if(substring == '')
     return [];
   else{
@@ -109,7 +110,6 @@ const getUCollectionFromFirestoreByUserNameSubString = async(collect,substring) 
     const collectSnapshot = await getDocs(collectCol);
   
     const collectList = collectSnapshot.docs.filter(doc => { return String(doc.data().fName + " " + doc.data().lName).includes(substring) } ).map(doc => { return doc.data() });
-    console.log(collectList)
     
     return collectList;
   }
@@ -149,22 +149,48 @@ const updateUserAtFirestore = async(userEmail, col, newValue) => {
   await setDoc(doc(db,"users", userEmail), {col: newValue } , {merge: true});
 }
 
-const addHouseToFirestore = async(hName, cEmail, partners, hImage) => {
+const setDefaultHousePartners = (partners) => {
+  let partnersDict = {}
+  let defPermitions = {"seeIncome": false, "seeMonthlyBills": false}
+
+
+  for(let i in partners){
+    partnersDict[partners[i]["email"]] = {
+      user : partners[i],
+      isAuth: false,
+      nowIn : false,
+      defPermitions : defPermitions, 
+      incomeToCurHouse: 0, // {[ company, amount ]}
+      outComeToCurHouse: {}, // {[ reasone, amount ]}
+      allowance: {} // {[ from, amount ],...}
+    }
+    defPermitions = {"seeIncome": true, "seeMonthlyBills": true}
+  }
+  partnersDict[partners[0].email].isAuth = true
+  partnersDict[partners[0].email].nowIn = true
+  partnersDict[partners[0].email].defPermitions = defPermitions
+  return partnersDict
+}
+
+const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) => {
   let date = new Date()
   date = date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
-  await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail), {
-      hName: hName,
-      cEmail: cEmail,
-      partners: partners,
-      cDate: date,
-      hImage: hImage
-     });
+  partners = setDefaultHousePartners(partners)
+  house = {
+    hName: hName,
+    cEmail: cEmail,
+    partners: partners,
+    cDate: date,
+    hImage: hImage ? hImage : tempHouseProfileImage,
+    description: description ? tempHouseDescripton : tempHouseDescripton
+   }
+  await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail),house );
+  return house
 }
 
 const updateHouseAtFirestore = async(hName, col, newValue) => {
   const data = { }
   data[col] = newValue
-  console.log(data)
   await setDoc(doc(db,"houses", hName), {col: newValue } , {merge: true});
 }
 
@@ -172,9 +198,14 @@ const getHouseKeyByNameAndCreatorEmail = (hName, cEmail) => {
   return hName + "&" + cEmail
 }
 
-const getHousesByUserEmail = (cEmail) => {
-  
+const getHousesByUserEmail = async(cEmail) => {
+   return getCollectionFromFirestore("houses").then((collection) => {
+    if(collection)
+      return collection.filter((house) => { if(cEmail in house.partners) return house  })
+    else
+      return []
+  }).catch(() => alert(e.massege))
 }
 
-export { auth, uiConfig ,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,
-        addHouseToFirestore, updateHouseAtFirestore, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString } 
+export { auth, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,
+        setDefaultHousePartners ,addHouseToFirestore, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString } 

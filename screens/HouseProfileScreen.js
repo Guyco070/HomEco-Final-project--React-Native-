@@ -1,30 +1,38 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { tempHouseProfileImage } from '../firebase';
+import * as firebase from '../firebase'
+
  
 
 
 const HouseProfileScreen = ({route, navigator}) => {
+    const [user, setUser] = useState([]);
     const house = route.params;
+
+
+    useEffect(() => {
+        firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
+    }, [])
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.titleBar}>
+            {/* <View style={styles.titleBar}>
                 <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
                 <Ionicons name="ios-ellipsis-vertical" size={24} color="#52575D"></Ionicons>
-            </View>
+            </View> */}
                 <View style={{ alignSelf: "center" }}>
-                    <View style={styles.profileImage}>
+                    <View style={styles.profileHouseImage}>
                         <Image source={{uri:house.hImage}} style={styles.image} resizeMode="center"></Image>
                     </View>
-                    <View style={styles.dm}>
+                    {/* <View style={styles.dm}>
                         <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
-                    </View>
+                    </View> */}
                     <View style={styles.active}></View>
-                    <View style={styles.add}>
-                        <Ionicons name="ios-add" size={48} color="#DFD8C8" style={{ marginTop: 6, marginLeft: 2 }}></Ionicons>
-                    </View> 
+                    <View style={styles.userProfileImage}>
+                        <Image source={{uri:user.uImage}} style={styles.image} resizeMode="center"></Image>
+                    </View>
                 </View>
 
                 <View style={styles.infoContainer}>
@@ -119,7 +127,8 @@ const styles = StyleSheet.create({
         textTransform: "uppercase",
         fontWeight: "500"
     },
-    profileImage: {
+    profileHouseImage: {
+        marginTop: 25,
         width: 200,
         height: 200,
         borderRadius: 100,
@@ -139,22 +148,23 @@ const styles = StyleSheet.create({
         backgroundColor: "#34FFB9",
         position: "absolute",
         bottom: 28,
-        left: 10,
+        left: 15,
         padding: 4,
         height: 20,
         width: 20,
         borderRadius: 10
     },
-    add: {
-        backgroundColor: "#41444B",
+    userProfileImage: {
+        backgroundColor: "lightgrey",
         position: "absolute",
         bottom: 0,
         right: 0,
         width: 60,
         height: 60,
         borderRadius: 30,
-        alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        borderWidth: 2,
+        borderColor:"#0782F9"
     },
     infoContainer: {
         alignSelf: "center",

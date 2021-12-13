@@ -55,7 +55,7 @@ const SignUpScreen = props => {
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
-            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage} changeable/>
+            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage} changeable={true}/>
             <View style={styles.container}>
                 <Text style={styles.textTitle}>Let's Get Started</Text>
                 <Text style={[styles.textBody, {margin:10}]}>Create an account</Text>

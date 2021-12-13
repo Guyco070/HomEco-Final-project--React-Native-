@@ -95,7 +95,6 @@ const getCollectionFromFirestoreByKeySubString = async(collect,substring) =>{
   const collectSnapshot = await getDocs(collectCol);
  
   const collectList = collectSnapshot.docs.filter(doc => { return String(doc.id).includes(substring) } ).map(doc => { return doc.data() });
-  // console.log(collectList)
 
   return collectList;
 }
@@ -201,7 +200,7 @@ const getHousesByUserEmail = async(cEmail) => {
       return collection.filter((house) => { if(cEmail in house.partners) return house  })
     else
       return []
-  })
+  }).catch(() => alert(e.massege))
 }
 
 export { auth, uiConfig ,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,

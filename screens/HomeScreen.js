@@ -2,7 +2,10 @@ import { signOut } from '@firebase/auth'
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import UserHousesListView from '../components/UserHousesListView'
 import * as firebase from '../firebase'
+import { styles } from '../styleSheet'
+
 
 
 const HomeScreen = () => {
@@ -11,6 +14,7 @@ const HomeScreen = () => {
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
+
       }, [])
 
     const createNewHouseScreen = () => {

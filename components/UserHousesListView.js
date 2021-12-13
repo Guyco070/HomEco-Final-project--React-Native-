@@ -16,8 +16,11 @@ const UserHousesListView = (props) => {
     const [housesList, sethousesList] = useState([]);
 
     useEffect(() => {
-        firebase.getHousesByUserEmail(props.user["email"]).then((houses) => {sethousesList(houses); console.log(houses)}).catch((e)=>alert(e.massege)).catch((e) => alert(e.massege))    // before opening the page
-      }, [])
+        firebase.getHousesByUserEmail(props.user["email"])
+        .then((houses) => sethousesList(houses)).catch((e)=>alert(e.massege)
+        )    // before opening the page
+      })
+
 
     const addImage = async () => {
         let _image = await cloudinary.addImage()
@@ -35,14 +38,13 @@ const UserHousesListView = (props) => {
             
             {housesList &&
                     housesList
-                    .slice(0, 5)
                         .map((l, i) => 
                         (
                             <ListItem key={i} bottomDivider topDivider Component={TouchableScale}
                             friction={90} //
                             tension={100} // These props are passed to the parent component (here TouchableScale)
                             activeScale={0.95}
-                            onPress={() => {}}
+                            onPress={() => navigation.navigate('General')}
                             >
                                 <ListItem.Content>
                                 <ListItem.Title style={styles.listTextItem} >{l.hName}</ListItem.Title>

@@ -3,9 +3,11 @@ import { getAuth } from "@firebase/auth";
 import { getApps, initializeApp } from "firebase/app";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 import { Alert } from "react-native";
+
+
 
 
 
@@ -144,9 +146,14 @@ const addUserToFirestore = async(email, fName, lName, phone, bDate, uImage ) => 
     //  uploadImageToStorage('users',uImage ? uImage : tempUserProfileImage,email).then(alert()).catch()
 }
 
-const updateUserAtFirestore = async(userEmail, col, newValue) => {
-  data[col] = newValue
-  await setDoc(doc(db,"users", userEmail), {col: newValue } , {merge: true});
+const updateUserAtFirestore = async(collect,key, col, newValue) => {
+
+  await setDoc(doc(db,collect, key), {col: newValue } , {merge: true});
+}
+
+const updateCollectAtFirestore = async(collect,key, col, newValue) => {
+  const Data = doc(db, collect, key);
+  await updateDoc(Data , col = col,newValue);
 }
 
 const setDefaultHousePartners = (partners) => {
@@ -207,5 +214,5 @@ const getHousesByUserEmail = async(cEmail) => {
   }).catch(() => alert(e.massege))
 }
 
-export { auth, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,
+export { auth, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,updateCollectAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString } 

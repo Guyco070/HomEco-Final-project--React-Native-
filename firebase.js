@@ -51,7 +51,7 @@ const auth = getAuth();
 const tempUserProfileImage = 'https://cdn4.iconfinder.com/data/icons/evil-icons-user-interface/64/avatar-512.png'
 const tempHouseProfileImage = 'https://cdn3.iconfinder.com/data/icons/luchesa-vol-9/128/Home-512.png'
 
-const tempHouseDescripton = 'Let\'s be the best house ever'
+const tempHouseDescripton = 'Let\'s be the best house ever !'
 
 
 const capitalize = (text) => {

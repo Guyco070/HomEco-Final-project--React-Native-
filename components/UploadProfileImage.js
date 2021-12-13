@@ -26,14 +26,14 @@ export default function UploadProfileImage(props) {
             <Image source={props.image ? {uri: props.image} : props.tempImage}
                         resizeMode="center" style={styles.image}/>
             <View>
-            { props.changeable &&
+  
             <View style={imageUploaderStyles.uploadBtnContainer}>
                   <TouchableOpacity onPress={props.onPress} style={imageUploaderStyles.uploadBtn} >
                     <Text >{ props.image ? 'Edit' : 'Upload'} Image</Text>
                     <AntDesign name="camera" size={17} color="black" />
                 </TouchableOpacity>
-                </View>
-                }
+              </View>
+              
             </View>
         </View>
     </View>

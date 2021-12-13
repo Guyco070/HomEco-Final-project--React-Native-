@@ -10,16 +10,21 @@ import UploadProfileImage from '../components/UploadProfileImage';
 import { ListItem, Avatar } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
 import { Divider } from 'react-native-elements/dist/divider/Divider';
+import Loading from './Loading';
 
 const UserHousesListView = (props) => {
     const navigation = useNavigation()
     const [housesList, sethousesList] = useState([]);
+    const [housesList2, sethousesList2] = useState([]);
+    const [loading, setloading] = useState(true);
+
+    
 
     useEffect(() => {
-        firebase.getHousesByUserEmail(props.user["email"])
-        .then((houses) => sethousesList(houses)).catch((e)=>alert(e.massege)
-        )    // before opening the page
-      },[])
+            firebase.getHousesByUserEmail(props.user["email"])
+            .then((houses) => {sethousesList(houses); setloading(false);})
+            .catch((e)=>alert(e.massege))    // before opening the page
+      },[props])
 
 
     const addImage = async () => {
@@ -31,13 +36,14 @@ const UserHousesListView = (props) => {
         }
 
     return (
-        <ScrollView 
+        loading?(<Loading/>) :
+        (<ScrollView 
         style={{width:'80%',}}
         >
             <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {props.user.uImage} onPress={addImage} changeable={false} />
             
-            {housesList &&
-                    housesList
+            {housesList && 
+                    housesList 
                         .map((l, i) => 
                         (
                             <ListItem key={i} bottomDivider topDivider Component={TouchableScale}
@@ -54,7 +60,7 @@ const UserHousesListView = (props) => {
                             </ListItem>
                         ))
                     }
-        </ScrollView>
+        </ScrollView>)
     )
 }
 

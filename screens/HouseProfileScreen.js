@@ -3,11 +3,15 @@ import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView } from "react-n
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 import Loading from '../components/Loading';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { styles } from '../styleSheet';
+import { useNavigation } from '@react-navigation/native';
 
  
 
 
-const HouseProfileScreen = ({route, navigator}) => {
+const HouseProfileScreen = ({route}) => {
+    const navigation = useNavigation()
     const [loading, setLoading] = useState(true);
 
     const [user, setUser] = useState([]);
@@ -30,84 +34,103 @@ const HouseProfileScreen = ({route, navigator}) => {
     }, [hKey])
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={houseProfileStyles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
-            {/* <View style={styles.titleBar}>
+            {/* <View style={houseProfileStyles.titleBar}>
                 <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
                 <Ionicons name="ios-ellipsis-vertical" size={24} color="#52575D"></Ionicons>
             </View> */}
                 <View style={{ alignSelf: "center" }}>
-                    <View style={styles.profileHouseImage}>
-                        <Image source={{uri:house.hImage}} style={styles.image} resizeMode="center"></Image>
+                    <View style={houseProfileStyles.profileHouseImage}>
+                        <Image source={{uri:house.hImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
                     </View>
-                    {/* <View style={styles.dm}>
+                    {/* <View style={houseProfileStyles.dm}>
                         <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
                     </View> */}
-                    <View style={styles.active}></View>
-                    <View style={styles.userProfileImage}>
-                        <Image source={{uri:user.uImage}} style={styles.image} resizeMode="center"></Image>
+                    <View style={houseProfileStyles.active}></View>
+                    <View style={houseProfileStyles.userProfileImage}>
+                        <Image source={{uri:user.uImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
                     </View>
                 </View>
 
-                <View style={styles.infoContainer}>
-                    <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{house.hName}</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{house.description}</Text>
+                <View style={houseProfileStyles.infoContainer}>
+                    <Text style={[houseProfileStyles.text, { fontWeight: "200", fontSize: 36 }]}>{house.hName}</Text>
+                    <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 14 }]}>{house.description}</Text>
                 </View>
                 {loading? <Loading/> : 
-                <View style={styles.statsContainer}>
-                    { <View style={styles.statsBox}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>483</Text>
-                        <Text style={[styles.text, styles.subText]}>Remainder</Text>
+                <View style={houseProfileStyles.statsContainer}>
+                    { <View style={houseProfileStyles.statsBox}>
+                        <Text style={[houseProfileStyles.text, { fontSize: 24 }]}>483</Text>
+                        <Text style={[houseProfileStyles.text, houseProfileStyles.subText]}>Remainder</Text>
                     </View> }
-                    { <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>45,844</Text>
-                        <Text style={[styles.text, styles.subText]}>Expenses</Text>
+                    { <View style={[houseProfileStyles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
+                        <Text style={[houseProfileStyles.text, { fontSize: 24 }]}>45,844</Text>
+                        <Text style={[houseProfileStyles.text, houseProfileStyles.subText]}>Expenses</Text>
                     </View> }
-                    { <View style={styles.statsBox}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>{hIncome}</Text>
-                        <Text style={[styles.text, styles.subText]}>Income</Text>
+                    { <View style={houseProfileStyles.statsBox}>
+                        <Text style={[houseProfileStyles.text, { fontSize: 24 }]}>{hIncome}</Text>
+                        <Text style={[houseProfileStyles.text, houseProfileStyles.subText]}>Income</Text>
                     </View> }
                 </View>}
 
                 {/* <View style={{ marginTop: 32 }}>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("./assets/media1.jpg")} style={styles.image} resizeMode="cover"></Image>
+                        <View style={houseProfileStyles.mediaImageContainer}>
+                            <Image source={require("./assets/media1.jpg")} style={houseProfileStyles.image} resizeMode="cover"></Image>
                         </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("./assets/media2.jpg")} style={styles.image} resizeMode="cover"></Image>
+                        <View style={houseProfileStyles.mediaImageContainer}>
+                            <Image source={require("./assets/media2.jpg")} style={houseProfileStyles.image} resizeMode="cover"></Image>
                         </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("./assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
+                        <View style={houseProfileStyles.mediaImageContainer}>
+                            <Image source={require("./assets/media3.jpg")} style={houseProfileStyles.image} resizeMode="cover"></Image>
                         </View>
                     </ScrollView>
-                    <View style={styles.mediaCount}>
-                        <Text style={[styles.text, { fontSize: 24, color: "#DFD8C8", fontWeight: "300" }]}>70</Text>
-                        <Text style={[styles.text, { fontSize: 12, color: "#DFD8C8", textTransform: "uppercase" }]}>Media</Text>
+                    <View style={houseProfileStyles.mediaCount}>
+                        <Text style={[houseProfileStyles.text, { fontSize: 24, color: "#DFD8C8", fontWeight: "300" }]}>70</Text>
+                        <Text style={[houseProfileStyles.text, { fontSize: 12, color: "#DFD8C8", textTransform: "uppercase" }]}>Media</Text>
                     </View>
                 </View> */}
 
-                <Text style={[styles.subText, styles.recent]}>Recent Activity</Text>
-                <View style={{ alignItems: "center" }}>
-                    <View style={styles.recentItem}>
-                        <View style={styles.activityIndicator}></View>
-                        <View style={{ width: 250 }}>
-                            <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                Started following <Text style={{ fontWeight: "400" }}>Jake Challeahe</Text> and <Text style={{ fontWeight: "400" }}>Luis Poteer</Text>
-                            </Text>
+                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
+                <View style={[styles.container],{ alignItems: "center" }}>
+                    <View style={houseProfileStyles.recentItem}>
+                        <View style={houseProfileStyles.activityIndicator}>
                         </View>
+                            <View style={{ width: 250 }}>
+                                <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
+                                    Started following <Text style={{ fontWeight: "400" }}>Jake Challeahe</Text> and <Text style={{ fontWeight: "400" }}>Luis Poteer</Text>
+                                </Text>
+                            </View>
                     </View>
 
-                    <View style={styles.recentItem}>
-                        <View style={styles.activityIndicator}></View>
-                        <View style={{ width: 250 }}>
-                            <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                Started following <Text style={{ fontWeight: "400" }}>Luke Harper</Text>
-                            </Text>
+                    <View style={houseProfileStyles.recentItem}>
+                        <View style={houseProfileStyles.activityIndicator}>
                         </View>
+                            <View style={{ width: 250 }}>
+                                <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
+                                    Started following <Text style={{ fontWeight: "400" }}>Luke Harper</Text>
+                                </Text>
+                            </View>
                     </View> 
                 </View>
 
+                <View style={[styles.container,{alignSelf:'center'}]}>
+                    <TouchableOpacity
+                            title="Add Expenditure"
+                            onPress={() => {navigation.navigate('AddNewExpenditure')}}
+                            style={styles.button}
+                            >
+                            <Text style={styles.buttonText}>Add Expenditure</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            title="Edit"
+                            onPress={() => {navigation.navigate('EditHouseProfile',house)}}
+                            style={styles.button}
+                            >
+                            <Text style={styles.buttonText}>Edit</Text>
+                        </TouchableOpacity>
+                </View>
+            
             </ScrollView>
         </SafeAreaView>
     );
@@ -115,7 +138,7 @@ const HouseProfileScreen = ({route, navigator}) => {
 
 export default HouseProfileScreen
 
-const styles = StyleSheet.create({
+const houseProfileStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#FFF"

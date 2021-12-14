@@ -7,12 +7,14 @@ import {createAppContainer} from "react-navigation"
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import SignUpScreen from './screens/SignUpScreen';
-import EditProfile from './screens/EditProfile';
+import EditUserProfileScreen from './screens/EditUserProfileScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import CreateNewHouseScreen from './screens/CreateNewHouseScreen';
 import HouseProfileScreen from './screens/HouseProfileScreen';
+import EditHouseProfileScreen from './screens/EditHouseProfileScreen';
 import General from './screens/General';
+import AddNewExpenditureScreen from './screens/AddNewExpenditureScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -25,10 +27,12 @@ export default function App() {
       <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="EditUserProfile" component={EditUserProfileScreen} />
         <Stack.Screen name="CreateNewHouse" component={CreateNewHouseScreen} />
         <Stack.Screen name="HouseProfile" component={HouseProfileScreen} />
+        <Stack.Screen name="EditHouseProfile" component={EditHouseProfileScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+        <Stack.Screen name="AddNewExpenditure" component={AddNewExpenditureScreen} />
         <Stack.Screen name="General" component={General} />
       </Stack.Navigator>
     </NavigationContainer>

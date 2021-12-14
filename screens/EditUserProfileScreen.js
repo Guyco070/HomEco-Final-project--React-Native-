@@ -13,7 +13,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "fireb
 import Loading from '../components/Loading';
 
 
-const EditProfile = () => {
+const EditUserProfileScreen = () => {
     const [user, setUser] = useState([]);
     const [uImage, setImage] = useState('');
     const [fName, setFName] = useState('');
@@ -81,4 +81,4 @@ const EditProfile = () => {
     )
 };
 
-export default EditProfile;
+export default EditUserProfileScreen;

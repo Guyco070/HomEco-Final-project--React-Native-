@@ -48,8 +48,13 @@ const HomeScreen = () => {
                 <Text style={styles.buttonText} onPress={handleSignOut} >Sign out</Text>
             </TouchableOpacity>
             <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate('EditProfile')}>
+                    <Text style={styles.buttonText}>Edit User</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
                     onPress={() => navigation.navigate('General')}>
-                    <Text>press me</Text>
+                    <Text >press me</Text>
             </TouchableOpacity>
         </View>
     )

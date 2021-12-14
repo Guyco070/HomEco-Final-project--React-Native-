@@ -12,7 +12,6 @@ import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import CreateNewHouseScreen from './screens/CreateNewHouseScreen';
 import HouseProfileScreen from './screens/HouseProfileScreen';
-import {Feather} from "@expo/vector-icons";
 import General from './screens/General';
 
 

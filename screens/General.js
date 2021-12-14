@@ -10,9 +10,7 @@ import logout from '../assets/logout.png';
 // Menu
 import menu from '../assets/menu.png';
 import close from '../assets/close.png';
-
 // Photo
-import photo from '../assets/photo.jpg';
 import * as firebase from '../firebase'
 
 export default function App() {

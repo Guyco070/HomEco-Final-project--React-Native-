@@ -10,11 +10,12 @@ import {FontAwesome5} from "@expo/vector-icons";
 import { styles } from '../styleSheet';
 import '@firebase/auth';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import Loading from '../components/Loading';
 
 
 const EditProfile = () => {
     const [user, setUser] = useState([]);
-    const [hImage, setImage] = useState('');
+    const [uImage, setImage] = useState('');
     const [fName, setFName] = useState('');
     const [lName, setLName] = useState('');
     const [bDate, setBDate] = useState('');
@@ -22,8 +23,14 @@ const EditProfile = () => {
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
-
       }, [])
+    useEffect(()=>{
+        setImage(user.uImage)
+        setFName(user.fName)
+        setLName(user.lName)
+        setBDate(user.bDate)
+        setPhone(user.phone)
+    },[user])
 
     const capitalize = (text) => {
         if (text == '') return ''
@@ -36,6 +43,7 @@ const EditProfile = () => {
             cloudinary.uploadImageToCloudinary("houses",_image).then((url)=>{ setCatchImage(url); }).catch((e) => alert(e.message))
           }
         }
+
     const handleEditProfile = () => {
         if(fName!=""){
             firebase.updateCollectAtFirestore("users",user["email"],"fName",capitalize(fName))
@@ -53,12 +61,13 @@ const EditProfile = () => {
     
 
     return (
-        <ScrollView>
-            <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/>
-            <Input name={user["fName"]} text={user["fName"]} icon="user" onChangeText={text => setFName(text)} />
-            <Input name={user["lName"]} icon="user" onChangeText={text => setLName(text)} />
-            <Input name={user["phone"]} icon="phone" keyboardType="phone-pad" onChangeText={text => setPhone(text)} /> 
-            <Input name={user["bDate"]} icon= 'birthday-cake' onChangeText={text => setBDate(text)} /> 
+        <ScrollView style = {{backgroundColor: "white"}}>
+            <View  style={styles.container}>
+            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage} changeable={true}/>
+            <Input name={user["fName"] ? user["fName"] : ""} icon="user" value={fName?fName : ""} onChangeText={text => setFName(text)} />
+            <Input name={user["lName"] ? user["lName"] : ""} icon="user" value={lName?lName : ""} onChangeText={text => setLName(text)} />
+            <Input name={user["phone"] ? user["phone"] : ""} icon="phone" value={phone? phone : ""} keyboardType="phone-pad" onChangeText={text => setPhone(text)} /> 
+            <Input name={user["bDate"] ? user["bDate"] : ""} icon= 'birthday-cake'value={bDate? bDate : ""} onChangeText={text => setBDate(text)} /> 
 
             <TouchableOpacity
                         title="Save"
@@ -67,6 +76,7 @@ const EditProfile = () => {
                         >
                         <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
+            </View>
         </ScrollView>
     )
 };

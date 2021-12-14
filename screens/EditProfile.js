@@ -61,11 +61,11 @@ const EditProfile = () => {
             <Input name={user["bDate"]} icon= 'birthday-cake' onChangeText={text => setBDate(text)} /> 
 
             <TouchableOpacity
-                        title="Submit"
+                        title="Save"
                         onPress={handleEditProfile}
                         style={styles.button}
                         >
-                        <Text style={styles.buttonText}>Submit</Text>
+                        <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
         </ScrollView>
     )

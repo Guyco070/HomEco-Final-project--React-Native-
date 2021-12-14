@@ -2,18 +2,32 @@ import React, { useEffect,useState } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
+import Loading from '../components/Loading';
 
  
 
 
 const HouseProfileScreen = ({route, navigator}) => {
+    const [loading, setLoading] = useState(true);
+
     const [user, setUser] = useState([]);
     const house = route.params;
+    const [hKey, setHKey] = useState('');
+    const [hIncome, setHIncom] = useState(undefined)
 
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
     }, [])
+
+    useEffect(() => {
+        setHKey(firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail))
+    }, [house])
+
+    useEffect(() => {
+        firebase.getHouseIncome(hKey).then((hIncome) => setHIncom(hIncome)).catch((e) => alert(e.message))
+        setLoading(false)
+    }, [hKey])
 
     return (
         <SafeAreaView style={styles.container}>
@@ -39,7 +53,7 @@ const HouseProfileScreen = ({route, navigator}) => {
                     <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{house.hName}</Text>
                     <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{house.description}</Text>
                 </View>
-
+                {loading? <Loading/> : 
                 <View style={styles.statsContainer}>
                     { <View style={styles.statsBox}>
                         <Text style={[styles.text, { fontSize: 24 }]}>483</Text>
@@ -50,10 +64,10 @@ const HouseProfileScreen = ({route, navigator}) => {
                         <Text style={[styles.text, styles.subText]}>Expenses</Text>
                     </View> }
                     { <View style={styles.statsBox}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>302</Text>
+                        <Text style={[styles.text, { fontSize: 24 }]}>{hIncome}</Text>
                         <Text style={[styles.text, styles.subText]}>Income</Text>
                     </View> }
-                </View>
+                </View>}
 
                 {/* <View style={{ marginTop: 32 }}>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { getAuth } from "@firebase/auth";
+import { map } from "@firebase/util";
 import { getApps, initializeApp } from "firebase/app";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -204,8 +205,29 @@ const getHousesByUserEmail = async(cEmail) => {
       return collection.filter((house) => { if(cEmail in house.partners) return house  })
     else
       return []
-  }).catch(() => alert(e.massege))
+  }).catch((e) => alert(e.massege))
+}
+
+const getHousePartnersByKey = async(hKey) => {
+  return getByDocIdFromFirestore("houses", hKey).then((house) => {
+   if(house){
+     return house.partners
+   }
+   else
+     return {}
+ }).catch((e) => {})
+}
+
+const getHouseIncome = async(hKey) => {
+  return getHousePartnersByKey(hKey).then((partners) => {
+    let hIncome = 0
+   if(partners){
+      for(const key in partners) { hIncome += partners[key].incomeToCurHouse}
+    }
+     return hIncome
+ }).catch((e) => alert(e.massege))
 }
 
 export { auth, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore, updateUserAtFirestore,
-        setDefaultHousePartners ,addHouseToFirestore, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString } 
+        setDefaultHousePartners ,addHouseToFirestore, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
+        getHousePartnersByKey, getHouseIncome } 

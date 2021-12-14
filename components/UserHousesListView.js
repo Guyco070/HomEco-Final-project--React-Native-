@@ -15,14 +15,13 @@ import Loading from './Loading';
 const UserHousesListView = (props) => {
     const navigation = useNavigation()
     const [housesList, sethousesList] = useState([]);
-    const [housesList2, sethousesList2] = useState([]);
-    const [loading, setloading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     
 
     useEffect(() => {
             firebase.getHousesByUserEmail(props.user["email"])
-            .then((houses) => {sethousesList(houses); setloading(false);})
+            .then((houses) => {sethousesList(houses); setLoading(false);})
             .catch((e)=>alert(e.massege))    // before opening the page
       },[props])
 

@@ -10,6 +10,7 @@ import UploadProfileImage from '../components/UploadProfileImage';
 import { ListItem, Avatar } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
 import { Divider } from 'react-native-elements/dist/divider/Divider';
+import { set } from 'react-native-reanimated';
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 
@@ -25,6 +26,7 @@ const EditHouseProfileScreen =({route}) => {
     const [hName, setHName] = useState('');
     const [hPartners, setPartners] = useState([]);
     const [partnersList, setPartnersList] = useState([]);
+    const [desc, setDesc] = useState('');
 
     const [loading, setLoading] = useState(true);
 
@@ -37,19 +39,15 @@ const EditHouseProfileScreen =({route}) => {
         const house = route.params
         setImage(house.hImage)
         setHName(house.hName)
-        // const temp = firebase.getUserArrayFromPartnersDict(house.partners)
-        // setPartners(temp)
-        
-        setLoading(false)
+        setDesc(house.desc)
+        firebase.getUserArrayFromPartnersDict(route.params["partners"]).then(arr => set(setPartners(arr)))
     }, [route])
+
     
 
     useEffect(() =>
     {
-        console.log("hPartners")
-        console.log(hPartners)
-        console.log("partnerList")
-        console.log(partnersList)
+        setLoading(false)
     },[partnersList] )
 
       const addImage = async () => {
@@ -106,8 +104,8 @@ const EditHouseProfileScreen =({route}) => {
             <View style={[styles.container, {marginTop:30,marginHorizontal:30}]}>
                 <Text style={styles.textTitle}>Let's Get Started</Text>
                 <Text style={[styles.textBody, {margin:10}]}>Create a house to manage</Text>
-                <Input name="House name" icon="user" onChangeText={text => setHName(text)} />
-                <Input name="Description" icon="comment" onChangeText={text => setHName(text)} />
+                <Input name="House name" value={hName?hName:""} icon="user" onChangeText={text => setHName(text)} />
+                <Input name={"Description"} value={desc?desc:""} icon="comment" onChangeText={text => setDesc(text)} />
                 </View>
             <KeyboardAvoidingView style={[styles.container, {marginHorizontal:30}]}>
                 <Input name="Search partners here..."  icon = "search" onChangeText={handlePartnersSearch} />
@@ -142,8 +140,7 @@ const EditHouseProfileScreen =({route}) => {
             <View>
             {hPartners &&
                     hPartners
-                    .slice(0, 5)
-                        .map((l) => 
+                        .map((l,i) => 
                         (
                             <ListItem key={i} topDivider bottomDivider  Component={TouchableScale}
                             friction={90} //
@@ -169,11 +166,11 @@ const EditHouseProfileScreen =({route}) => {
             <View style={styles.container}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                        title="Create"
+                        title="Save"
                         onPress={handleCreateHouse}
                         style={styles.button}
                         >
-                        <Text style={styles.buttonText}>Create</Text>
+                        <Text style={styles.buttonText}>Save</Text>
                     </TouchableOpacity>
                 </View>
             </View>

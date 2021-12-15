@@ -1,22 +1,38 @@
 import React, { useEffect,useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox, TouchableOpacity } from "react-native";
+import { Divider } from 'react-native-elements/dist/divider/Divider';
+import { Icon } from 'react-native-elements/dist/icons/Icon';
 import Loading from '../components/Loading';
 import { getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate } from '../firebase';
 import { styles,houseProfileStyles } from '../styleSheet';
 
+
 const RecentActivity = ({map,slice}) => {
     const [loading, setLoading] = useState(true);
     const [sorteList, setSorteList] = useState(true);
+    let isExpended = {}
+    const [isExpendedConst, setIsExpendedConst] = useState(true);
+    const [newSlice,setNewSlice] = useState(1)
 
     
 
     useEffect(() => {
         setSorteList(getSortedArrayDateFromDict(map))
+        setNewSlice(slice)
       },[map])
 
       useEffect(() => {
         setLoading(false);
-      },[sorteList])
+        for(const key in sorteList)
+            isExpended[sorteList[key].date.toDate()] = false
+            setIsExpendedConst(isExpended)
+        },[sorteList])
+        
+
+      const setIsExpended=(date) => {
+            isExpended[date.toDate()] = !isExpendedConst[date.toDate()]
+            setIsExpendedConst(isExpended)
+      }
 
     return (
         <View>
@@ -26,22 +42,30 @@ const RecentActivity = ({map,slice}) => {
         >  
         <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
 
-            {sorteList &&  sorteList.slice(0,slice)
+            {sorteList &&  sorteList.slice(0,newSlice)
                         .map((l, i) => 
                         (
-                            <View>
+                            <View key={i}>
                                 <View style={[styles.container],{ alignItems: "center" }}>
                                     <View style={houseProfileStyles.recentItem}>
                                         <View style={houseProfileStyles.activityIndicator}>
                                         </View>
                                             <View style={{ width: 250 }}>
-                                                <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                                    <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
-                                                    {"\n"}Company: <Text style={{ fontWeight: "400" }}>{l.company}</Text>
-                                                    {"\n"}Description: <Text style={{ fontWeight: "400" }}>{l.desc}</Text>
-                                                    {"\n"}Billing type: <Text style={{ fontWeight: "400" }}>{l.billingType}</Text>
-                                                    {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>
-                                                </Text>
+                                                <TouchableOpacity onPress={()=> {setIsExpended(l.date)}}>
+                                                    <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
+                                                        <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
+                                                        {"\n"}Company: <Text style={{ fontWeight: "400" }}>{l.company}</Text>
+                                                        {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>
+                                                       
+                                                    </Text>
+                                                    {isExpendedConst && isExpendedConst[l.date.toDate()] &&
+                                                        <Text style = {houseProfileStyles.textWithTopAndButDividers}>
+                                                           <Text style={{ fontWeight: "400" }}>{"Description: " + l.desc}</Text>
+                                                           {"\n"}<Text style={{ fontWeight: "400" }}>{"Billing type:" + l.billingType}</Text>
+                                                           {"\n"}<Text style={{ fontWeight: "400" }}>{"Creator: " + l.partner}</Text>
+                                                        </Text>
+                                                        }
+                                                </TouchableOpacity>
                                             </View>
                                     </View>
 
@@ -59,6 +83,29 @@ const RecentActivity = ({map,slice}) => {
                         )
             )}
         </ScrollView>)}
+            <View style={{flexDirection:"row" ,alignSelf:'center'}}>
+            { newSlice < sorteList.length &&
+                <TouchableOpacity onPress={()=>{setNewSlice(newSlice + 2)}}>
+                    <View>
+                        <Icon
+                            name='chevron-down' size={22}  type='ionicon'
+                        />
+                        <Text value = "See more" />
+                    </View>
+                </TouchableOpacity>
+                }
+
+                { newSlice != slice &&
+                    <TouchableOpacity onPress={()=>{setNewSlice(slice)}}>
+                        <View>
+                            <Icon name="chevron-up" size={22} type='ionicon'
+                            />
+                            <Text value = "See more" />
+                        </View>
+                    </TouchableOpacity>
+                }
+
+            </View>
         </View>
     )
 }

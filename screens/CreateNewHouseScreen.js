@@ -25,6 +25,7 @@ const CreateNewHouseScreen = () => {
     const [hName, setHName] = useState('');
     const [hPartners, setPartners] = useState([]);
     const [partnersList, setPartnersList] = useState([]);
+    const [desc, setDesc] = useState('');
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
@@ -47,9 +48,8 @@ const CreateNewHouseScreen = () => {
                 if(house)
                     alert("You have already created a house named \"" + hName + "\".\nPlease select another name.\nThanks!")
                 else {
-                    firebase.addHouseToFirestore(hName, user["email"] ,[user,...hPartners], catchImage)
+                    firebase.addHouseToFirestore(hName, user["email"] ,[user,...hPartners], catchImage, desc)
                     .then((creattedHouse) =>{
-                        console.log('House created: ', hName)
                         navigation.replace("HouseProfile",creattedHouse)
                     }
                     ).catch(error => alert(error.message));
@@ -85,7 +85,7 @@ const CreateNewHouseScreen = () => {
                 <Text style={styles.textTitle}>Let's Get Started</Text>
                 <Text style={[styles.textBody, {margin:10}]}>Create a house to manage</Text>
                 <Input name="House name" icon="user" onChangeText={text => setHName(text)} />
-                <Input name="Description" icon="comment" onChangeText={text => setHName(text)} />
+                <Input name="Description" icon="comment" onChangeText={text => setDesc(text)} />
                 </View>
             <KeyboardAvoidingView style={[styles.container, {marginHorizontal:30}]}>
                 <Input name="Search partners here..."  icon = "search" onChangeText={handlePartnersSearch} />
@@ -122,8 +122,6 @@ const CreateNewHouseScreen = () => {
             <View>
             {hPartners &&
                     hPartners
-                    .slice(0, 5)
-                        //.map((item) =>
                         .map((l, i) => 
                         (
                             <ListItem key={i} topDivider bottomDivider  Component={TouchableScale}
@@ -139,7 +137,6 @@ const CreateNewHouseScreen = () => {
                                 <Avatar source={{uri: l.uImage}} rounded />
                             </ListItem>
                         ))
-                        // <Item key={item.guy} item={item}/>)
                     }
             </View>
             { hPartners.length != 0 &&

@@ -187,8 +187,9 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
     cEmail: cEmail,
     partners: partners,
     cDate: date,
+    expends: {},
     hImage: hImage ? hImage : tempHouseProfileImage,
-    description: description ? tempHouseDescripton : tempHouseDescripton
+    description: description ? description : tempHouseDescripton
    }
   await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail),house );
   return house
@@ -240,16 +241,17 @@ const getHouseExpendsAmount = (expends) => {
 }
 
 const getUserArrayFromPartnersDict = async(dict) => {
-  let arr = []
+  let arr
   if(dict){
-    for(const key in dict) { arr.push(dict[key].user)}
+    // for(const key in dict) { arr.push(dict[key].user)}
+    arr = Object.values(dict)
+    for(key in arr)
+      arr[key] = arr[key].user
   }
-  console.log(arr)
     return arr
 }
 
 const getCurentPartnerOfHouse = async(hName,cEmail,curUEmail) => {
-
   const hKey = getHouseKeyByNameAndCreatorEmail(hName,cEmail)
   return getHousePartnersByKey(hKey).then((partners) => {
     let curPartner

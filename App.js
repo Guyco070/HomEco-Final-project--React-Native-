@@ -16,6 +16,7 @@ import EditHouseProfileScreen from './screens/EditHouseProfileScreen';
 import General from './screens/General';
 import AddNewExpenditureScreen from './screens/AddNewExpenditureScreen';
 
+console.disableYellowBox = true;
 
 const Stack = createNativeStackNavigator();
 

@@ -52,10 +52,6 @@ const HomeScreen = () => {
                     onPress={() => navigation.navigate('EditUserProfile')}>
                     <Text style={styles.buttonText}>Edit User</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                    onPress={() => navigation.navigate('General')}>
-                    <Text >press me</Text>
-            </TouchableOpacity>
         </View>
     )
 }

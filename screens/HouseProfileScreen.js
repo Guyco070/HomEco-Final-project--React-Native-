@@ -50,6 +50,19 @@ const HouseProfileScreen = ({route}) => {
         setLoading(false)
     }, [updatedHouse])
 
+    useEffect(() => {
+        if(hExpedns)
+         firebase.getSortedArrayDateFromDict(hExpedns).map((expend) => {
+                isExpended[expend.date] = false 
+            })
+    }, [hExpedns])
+
+    const getReminderColor = () => {
+        if(hIncome < hExpedns)
+            return '#FF6347'
+        else return 'lightgreen'
+    }
+
     const handleCreateExpend = () => {
         firebase.changePartnerIncomeOfHouse(hKey,user.email,hIncome)
         setChangeIncom(false)
@@ -82,7 +95,7 @@ const HouseProfileScreen = ({route}) => {
                 {loading? <Loading/> : 
                 <View style={houseProfileStyles.statsContainer}>
                     { <View style={houseProfileStyles.statsBox}>
-                        <Text style={[houseProfileStyles.text, { fontSize: 24 }]}>{hIncome - hExpedns} $</Text>
+                        <Text style={[houseProfileStyles.text, { fontSize: 24, color:  getReminderColor() }]}>{hIncome - hExpedns} $</Text>
                         <Text style={[houseProfileStyles.text, houseProfileStyles.subText]}>Remainder</Text>
                     </View> }
                     { <View style={[houseProfileStyles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
@@ -115,7 +128,7 @@ const HouseProfileScreen = ({route}) => {
 
                 <RecentActivity map = {updatedHouse.expends?updatedHouse.expends:[]} slice={3}/>
 
-                <View style={[styles.container,{alignSelf:'center'}]}>
+                <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
                         <TouchableOpacity
                             title="Change Income"
                             onPress={() => {setChangeIncom(true)}}
@@ -124,13 +137,10 @@ const HouseProfileScreen = ({route}) => {
                             <Text style={styles.buttonText}>Change Income</Text>
                         </TouchableOpacity>
                         {changeIncom && (
-                            <ScrollView style={{backgroundColor: 'white'}}>
-
-                            <View style={[styles.container, {marginTop:30,marginHorizontal:30}]}>
+                        <View style={styles.buttonContainer}>
+                            <View style={[styles.container, {marginHorizontal:30, width:'100%'}]}>
                                 <Input name="Change" icon="money" onChangeText={text => setHIncom(text)} />
                             </View>
-                            <View style={[styles.container,{marginTop: 55}]}>
-                                <View style={styles.buttonContainer}>
                                     <TouchableOpacity
                                         title="Change"
                                         onPress={handleCreateExpend}
@@ -138,9 +148,7 @@ const HouseProfileScreen = ({route}) => {
                                         >
                                         <Text style={styles.buttonText}>Change</Text>
                                     </TouchableOpacity>
-                                </View>
-                            </View>
-                        </ScrollView>
+                        </View>
                         )}
                         <TouchableOpacity
                             title="Add Expenditure"

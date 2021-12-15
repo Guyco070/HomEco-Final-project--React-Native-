@@ -73,11 +73,12 @@ function arrayRemove(arr, value) {
 }
 
 const getByDocIdFromFirestore = async(collect, docId) =>{
+
   const docRef = doc(db,collect,docId)
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
+    // console.log("Document data:", docSnap.data());
   } else {
     // doc.data() will be undefined in this case
     console.log("No such document!");
@@ -148,6 +149,7 @@ const addUserToFirestore = async(email, fName, lName, phone, bDate, uImage ) => 
 }
 
 const updateCollectAtFirestore = async(collect,key, col, newValue) => {
+  console.log(newValue)
   const Data = doc(db, collect, key);
   await updateDoc(Data , col = col,newValue);
 }
@@ -230,6 +232,12 @@ const getHouseIncome = async(hKey) => {
  }).catch((e) => alert(e.massege))
 }
 
+const getHouseExpendsAmount = (expends) => {
+  let expendsAmount = 0
+  for(const key in expends) expendsAmount+=parseInt(expends[key].amount)
+  return expendsAmount
+}
+
 const getUserArrayFromPartnersDict = async(dict) => {
   let arr = []
   if(dict){
@@ -239,7 +247,63 @@ const getUserArrayFromPartnersDict = async(dict) => {
     return arr
 }
 
+const getCurentPartnerOfHouse = async(hName,cEmail,curUEmail) => {
+
+  const hKey = getHouseKeyByNameAndCreatorEmail(hName,cEmail)
+  return getHousePartnersByKey(hKey).then((partners) => {
+    let curPartner
+   if(partners){
+      for(const key in partners) { 
+        if(partners[key].user["email"] == curUEmail) return partners[key] }
+    }
+     return {}
+  }).catch((e) => alert(e.massege))
+}
+
+// const getExpendsOfUserAtHouse = async(hName,cEmail,curUEmail) => {
+//   return getCurentPartnerOfHouse(hName,cEmail,curUEmail).then((partner) => {
+//     return partner.outComeToCurHouse
+//   }).catch((e) => {console.log("getExpendsOfUserAtHouse - " + e.massege)})
+// }
+
+
+// const addExpendToHouse = async(hName, cEmail, curUEmail, expend) => {
+//   getExpendsOfHouse(hName,cEmail,curUEmail).then((expends) => {
+//     console.log(expends)
+//     expends[expend.date] = expend
+//     console.log(expends)
+//     updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "outComeToCurHouse", expends)
+//   }).catch((e) => {console.log("getExpendsOfUserAtHouse - " + e.massege)})
+// }
+
+const addExpendToHouse = async(hName, cEmail,expends, expend) => {
+    console.log(expends)
+    let temp = expends
+    temp[expend.date] = expend
+    expends[expend.date] = expend
+    console.log(expends)
+    updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "outComeToCurHouse", temp)
+}
+
+const getSortedArrayDateFromDict = (dict) => {
+  let array = Object.values(dict)
+  return array.sort((a,b) => {
+    // Turn your strings into dates, and then subtract them
+    // to get a value that is either negative, positive, or zero.
+    return b.date.toDate() - a.date.toDate()
+  }); 
+}
+
+const getSrtDateAndTimeToViewFromSrtDate = (date) =>{
+  let minutes = 10
+  if(date.getMinutes() < minutes)
+    minutes = "0" + date.getMinutes().toString()
+  else minutes = date.getMinutes()
+  return  date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + "  " + date.getHours() + ":" + minutes
+}
+
+
 export { auth, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
-        getHousePartnersByKey, getHouseIncome } 
+        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate} 
 

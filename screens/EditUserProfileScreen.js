@@ -64,9 +64,13 @@ const EditUserProfileScreen = () => {
         <ScrollView style = {{backgroundColor: "white"}}>
             <View  style={styles.container}>
             <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage} changeable={true}/>
+            <Text style={{textAlign: "left"}} >First Name *</Text>
             <Input name={user["fName"] ? user["fName"] : ""} icon="user" value={fName?fName : ""} onChangeText={text => setFName(text)} />
+            <Text style={{textAlign: "left"}} >Last Name *</Text>
             <Input name={user["lName"] ? user["lName"] : ""} icon="user" value={lName?lName : ""} onChangeText={text => setLName(text)} />
+            <Text style={{textAlign: "left"}} >Phone *</Text>
             <Input name={user["phone"] ? user["phone"] : ""} icon="phone" value={phone? phone : ""} keyboardType="phone-pad" onChangeText={text => setPhone(text)} /> 
+            <Text style={{textAlign: "left"}} >BirthDay *</Text>
             <Input name={user["bDate"] ? user["bDate"] : ""} icon= 'birthday-cake'value={bDate? bDate : ""} onChangeText={text => setBDate(text)} /> 
 
             <TouchableOpacity

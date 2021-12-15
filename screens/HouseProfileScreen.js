@@ -131,23 +131,17 @@ const HouseProfileScreen = ({route}) => {
                 <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
                         <TouchableOpacity
                             title="Change Income"
-                            onPress={() => {setChangeIncom(true)}}
+                            onPress={() => {setChangeIncom(!changeIncom)}}
                             style={styles.button}
                             >
                             <Text style={styles.buttonText}>Change Income</Text>
                         </TouchableOpacity>
                         {changeIncom && (
-                        <View style={styles.buttonContainer}>
-                            <View style={[styles.container, {marginHorizontal:30, width:'100%'}]}>
+                        <View style={[styles.buttonContainer,{marginBottom:0}]}>
+                            <View style={[styles.container, { marginHorizontal:30, width:'100%'}]}>
                                 <Input name="Change" icon="money" onChangeText={text => setHIncom(text)} />
                             </View>
-                                    <TouchableOpacity
-                                        title="Change"
-                                        onPress={handleCreateExpend}
-                                        style={styles.button}
-                                        >
-                                        <Text style={styles.buttonText}>Change</Text>
-                                    </TouchableOpacity>
+                                    <Text style={[styles.textBody , {color: 'blue',marginBottom:10}]} onPress={handleCreateExpend}>Save new income</Text>
                         </View>
                         )}
                         <TouchableOpacity

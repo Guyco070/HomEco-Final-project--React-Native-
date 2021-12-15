@@ -64,7 +64,7 @@ const EditUserProfileScreen = () => {
         <ScrollView style = {{backgroundColor: "white"}}>
             <View  style={styles.container}>
             <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage} changeable={true}/>
-            <Text style={{textAlign: "left"}} >First Name *</Text>
+            עכיעכי<Text style={{textAlign: "left"}} >First Name *</Text>
             <Input name={user["fName"] ? user["fName"] : ""} icon="user" value={fName?fName : ""} onChangeText={text => setFName(text)} />
             <Text style={{textAlign: "left"}} >Last Name *</Text>
             <Input name={user["lName"] ? user["lName"] : ""} icon="user" value={lName?lName : ""} onChangeText={text => setLName(text)} />

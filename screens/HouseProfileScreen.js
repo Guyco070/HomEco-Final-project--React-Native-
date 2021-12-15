@@ -104,7 +104,7 @@ const HouseProfileScreen = ({route}) => {
                     </View>
                 </View> */}
 
-                <RecentActivity list = {updatedHouse.outComeToCurHouse?updatedHouse.outComeToCurHouse:[]}/>
+                <RecentActivity map = {updatedHouse.outComeToCurHouse?updatedHouse.outComeToCurHouse:[]} slice={3}/>
 
                 <View style={[styles.container,{alignSelf:'center'}]}>
                     <TouchableOpacity

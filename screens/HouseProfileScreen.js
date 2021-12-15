@@ -7,6 +7,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { styles, houseProfileStyles } from '../styleSheet';
 import { useNavigation } from '@react-navigation/native';
 import RecentActivity from '../components/RecentActivity';
+import ChangeSelfIncome from '../components/ChangeSelfIncome';
+import Input from '../components/Inputs';
+
 
  
 LogBox.ignoreLogs([
@@ -22,6 +25,7 @@ const HouseProfileScreen = ({route}) => {
     const house = route.params; // first get, no update from dta base
     const [hKey, setHKey] = useState('');
     const [hIncome, setHIncom] = useState(undefined)
+    const [changeIncom, setChangeIncom] = useState(false)
     const [hExpedns, setHExpedns] = useState(undefined)
 
 
@@ -42,9 +46,14 @@ const HouseProfileScreen = ({route}) => {
     }, [hIncome])
 
     useEffect(() => {
-        setHExpedns(firebase.getHouseExpendsAmount(updatedHouse.outComeToCurHouse))
+        setHExpedns(firebase.getHouseExpendsAmount(updatedHouse.expends))
         setLoading(false)
     }, [updatedHouse])
+
+    const handleCreateExpend = () => {
+        firebase.changePartnerIncomeOfHouse(hKey,user.email,hIncome)
+        setChangeIncom(false)
+    }
 
     return (
         <SafeAreaView style={houseProfileStyles.container}>
@@ -104,10 +113,36 @@ const HouseProfileScreen = ({route}) => {
                     </View>
                 </View> */}
 
-                <RecentActivity map = {updatedHouse.outComeToCurHouse?updatedHouse.outComeToCurHouse:[]} slice={3}/>
+                <RecentActivity map = {updatedHouse.expends?updatedHouse.expends:[]} slice={3}/>
 
                 <View style={[styles.container,{alignSelf:'center'}]}>
-                    <TouchableOpacity
+                        <TouchableOpacity
+                            title="Change Income"
+                            onPress={() => {setChangeIncom(true)}}
+                            style={styles.button}
+                            >
+                            <Text style={styles.buttonText}>Change Income</Text>
+                        </TouchableOpacity>
+                        {changeIncom && (
+                            <ScrollView style={{backgroundColor: 'white'}}>
+
+                            <View style={[styles.container, {marginTop:30,marginHorizontal:30}]}>
+                                <Input name="Change" icon="money" onChangeText={text => setHIncom(text)} />
+                            </View>
+                            <View style={[styles.container,{marginTop: 55}]}>
+                                <View style={styles.buttonContainer}>
+                                    <TouchableOpacity
+                                        title="Change"
+                                        onPress={handleCreateExpend}
+                                        style={styles.button}
+                                        >
+                                        <Text style={styles.buttonText}>Change</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </ScrollView>
+                        )}
+                        <TouchableOpacity
                             title="Add Expenditure"
                             onPress={() => {navigation.navigate('AddNewExpenditure',house)}}
                             style={styles.button}

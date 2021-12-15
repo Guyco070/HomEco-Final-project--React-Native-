@@ -21,8 +21,6 @@ const AddNewExpenditureScreen = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
 
-    const [searchVal, setSearch] = useState('');
-
     const [catchImage, setCatchImage] = useState('');
     const [company, setCompany] = useState('');
     const [desc, setDescription] = useState('');
@@ -48,7 +46,7 @@ const AddNewExpenditureScreen = ({route}) => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addExpendToHouse(house.hName,house.cEmail,house.outComeToCurHouse , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType})
+            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType})
             navigation.replace("HouseProfile",house)
         }else alert("Sorry, you must fill in all the fields!")
     }

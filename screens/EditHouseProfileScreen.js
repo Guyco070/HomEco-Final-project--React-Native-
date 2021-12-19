@@ -11,6 +11,8 @@ import { ListItem, Avatar } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { set } from 'react-native-reanimated';
+import Loading from '../components/Loading';
+
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 
@@ -24,9 +26,12 @@ const EditHouseProfileScreen =({route}) => {
     const [catchImage, setCatchImage] = useState('');
     const [hImage, setImage] = useState('');
     const [hName, setHName] = useState('');
+    const [newHName, setNewHName] = useState('');
     const [hPartners, setPartners] = useState([]);
+    const [oldHPartners, setOldHPartners] = useState([]);
     const [partnersList, setPartnersList] = useState([]);
     const [desc, setDesc] = useState('');
+    const [hKey, setHKey] = useState('');
 
     const [loading, setLoading] = useState(true);
 
@@ -39,8 +44,11 @@ const EditHouseProfileScreen =({route}) => {
         const house = route.params
         setImage(house.hImage)
         setHName(house.hName)
-        setDesc(house.desc)
-        firebase.getUserArrayFromPartnersDict(route.params["partners"]).then(arr => set(setPartners(arr)))
+        setNewHName(house.hName)
+        setDesc(house.description)
+        setHKey(firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail))
+        firebase.getUserArrayFromPartnersDict(route.params["partners"])
+        .then(arr => {setPartners(arr); setOldHPartners(arr)})
     }, [route])
 
     
@@ -58,24 +66,37 @@ const EditHouseProfileScreen =({route}) => {
           }
         }
 
-    const handleCreateHouse = () => {
-        if(hName == '')
-            alert("Sorry, can't create house without name")
+    const handleUpdateHouse = () => {
+        // TODO: for hName upddate the key need to change and we need to set permisions has they ware for partners whose already been ther and set default to new partners (using oldHPartners)
+        if(newHName != '' && newHName != hName)
+        {
+           handleUpdateHouseName() 
+           setHKey(firebase.getHouseKeyByNameAndCreatorEmail(newHName,route.params["cEmail"]))
+        }
         else{
-            firebase.getByDocIdFromFirestore("houses",firebase.getHouseKeyByNameAndCreatorEmail(hName,user["email"]))
-            .then((house) => {
-                if(house)
-                    alert("You have already created a house named \"" + hName + "\".\nPlease select another name.\nThanks!")
-                else {
-                    firebase.addHouseToFirestore(hName, user["email"] ,[user,...hPartners], catchImage)
-                    .then((creattedHouse) =>{
-                        console.log('House created: ', hName)
-                        navigation.replace("HouseProfile",creattedHouse)
+            firebase.updateDocAllColsAtFirestore("houses",hKey,{hImage:catchImage, description: desc, partners: firebase.updateHousePartners(hPartners, oldHPartners)})
+        }
+        navigation.replace("HouseProfile",{hKeyP: hKey})
+    }
+
+    const handleUpdateHouseName = () => {
+        firebase.getByDocIdFromFirestore("houses",firebase.getHouseKeyByNameAndCreatorEmail(newHName,user["email"]))
+        .then((house) => {
+            if(house)
+                alert("You have already created a house named \"" + newHName + "\".\nPlease select another name.\nThanks!")
+            else {
+                firebase.getByDocIdFromFirestore("houses",hKey)
+                .then((house) => {
+                    firebase.replaceUpdatedHouseToFirestore(house ,newHName , hPartners, catchImage, desc)
+                    .then((createdHouse) =>{
+                        firebase.deleteRowFromFirestore("houses",hKey)
+                        navigation.replace("HouseProfile",{hKeyP:firebase.getHouseKeyByNameAndCreatorEmail(newHName,house.cEmail)})
                     }
                     ).catch(error => alert(error.message));
-                }
-            }).catch(error => alert(error.message))
-        }
+                }).catch(error => alert(error.message))
+                .catch(error => alert(error.message))
+            }
+        })
     }
 
     const handlePartnersSearch = (search) => {
@@ -99,15 +120,16 @@ const EditHouseProfileScreen =({route}) => {
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
+            {loading? <Loading/> : <View>
             <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/>
 
             <View style={[styles.container, {marginTop:30,marginHorizontal:30}]}>
                 <Text style={styles.textTitle}>Let's Get Started</Text>
                 <Text style={[styles.textBody, {margin:10}]}>Create a house to manage</Text>
-                <Input name="House name" value={hName?hName:""} icon="user" onChangeText={text => setHName(text)} />
+                <Input name="House name" value={hName?newHName:""} icon="user" onChangeText={text => {setNewHName(text);}} />
                 <Input name={"Description"} value={desc?desc:""} icon="comment" onChangeText={text => setDesc(text)} />
                 </View>
-            <KeyboardAvoidingView style={[styles.container, {marginHorizontal:30}]}>
+            <KeyboardAvoidingView style={[styles.container, {marginHorizontal:30,marginTop:20}]}>
                 <Input name="Search partners here..."  icon = "search" onChangeText={handlePartnersSearch} />
             </KeyboardAvoidingView>
             <View>
@@ -142,6 +164,7 @@ const EditHouseProfileScreen =({route}) => {
                     hPartners
                         .map((l,i) => 
                         (
+                            l.email != user["email"] &&
                             <ListItem key={i} topDivider bottomDivider  Component={TouchableScale}
                             friction={90} //
                             tension={100} // These props are passed to the parent component (here TouchableScale)
@@ -167,13 +190,15 @@ const EditHouseProfileScreen =({route}) => {
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         title="Save"
-                        onPress={handleCreateHouse}
+                        onPress={handleUpdateHouse}
                         style={styles.button}
                         >
                         <Text style={styles.buttonText}>Save</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+            </View>
+            }
         </ScrollView>
     )
 }

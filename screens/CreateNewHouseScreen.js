@@ -50,7 +50,7 @@ const CreateNewHouseScreen = () => {
                 else {
                     firebase.addHouseToFirestore(hName, user["email"] ,[user,...hPartners], catchImage, desc)
                     .then((creattedHouse) =>{
-                        navigation.replace("HouseProfile",creattedHouse)
+                        navigation.replace("HouseProfile",{hKeyP:firebase.getHouseKeyByNameAndCreatorEmail(creattedHouse.hName,creattedHouse.cEmail)})
                     }
                     ).catch(error => alert(error.message));
                 }

@@ -14,12 +14,15 @@ import Loading from '../components/Loading';
 
 
 const EditUserProfileScreen = () => {
+    const navigation = useNavigation()
+
     const [user, setUser] = useState([]);
     const [uImage, setImage] = useState('');
     const [fName, setFName] = useState('');
     const [lName, setLName] = useState('');
     const [bDate, setBDate] = useState('');
     const [phone, setPhone] = useState('');
+    const [catchImage, setCatchImage] = useState('');
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
@@ -41,12 +44,16 @@ const EditUserProfileScreen = () => {
           if (!_image.cancelled) {
             setImage(_image.uri);
             cloudinary.uploadImageToCloudinary("houses",_image).then((url)=>{ setCatchImage(url); }).catch((e) => alert(e.message))
+            navigation.replace("Home")
           }
         }
 
     const handleEditProfile = () => {
         if(fName!=""){
             firebase.updateCollectAtFirestore("users",user["email"],"fName",capitalize(fName))
+        }
+        if(catchImage){
+            firebase.updateCollectAtFirestore("users",user["email"],"uImage",catchImage)
         }
         if(lName!=""){
             firebase.updateCollectAtFirestore("users",user["email"],"lName",capitalize(lName))

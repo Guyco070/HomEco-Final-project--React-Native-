@@ -152,7 +152,13 @@ const updateCollectAtFirestore = async(collect,key, col, newValue) => {
   console.log(newValue)
   const Data = doc(db, collect, key);
 
-  await updateDoc(Data , col = col,newValue);
+  await updateDoc(Data , col = col,newValue)
+}
+
+const updateDocAllColsAtFirestore = async(collect,key,newValuesDict) => {
+  console.log(newValuesDict)
+  const Data = doc(db, collect, key)
+  await updateDoc(Data , newValuesDict)
 }
 
 const setDefaultHousePartners = (partners) => {
@@ -182,7 +188,7 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
   let date = new Date()
   date = date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
   partners = setDefaultHousePartners(partners)
-  house = {
+  const house = {
     hName: hName,
     cEmail: cEmail,
     partners: partners,
@@ -192,6 +198,46 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
     description: description ? description : tempHouseDescripton
    }
   await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail),house );
+  return house
+}
+
+const updateHousePartners = (partners, oldPartners) => {
+  let partnersDict = {}
+  let defPermitions = {"seeIncome": false, "seeMonthlyBills": false}
+
+    for(let i in partners){
+
+      for(let j in oldPartners)
+        if(partners[i] == oldPartners[j])
+          partnersDict[partners[i]["email"]] = oldPartners[i]
+
+      if(!(partners[i]["email"] in Object.keys(partnersDict))){
+        partnersDict[partners[i]["email"]] = {
+          user : partners[i],
+          isAuth: false,
+          nowIn : false,
+          defPermitions : defPermitions, 
+          incomeToCurHouse: 0, // {[ company, amount ]}
+          expends: {}, // {[ reasone, amount ]}
+          allowance: {} // {[ from, amount ],...}
+      }
+      return partnersDict
+    }
+  }
+}
+
+const replaceUpdatedHouseToFirestore = async(house, newHName, partners, hImage, description) => {
+  partners = updateHousePartners(partners,house.partners)
+  house = {
+    hName: newHName,
+    cEmail: house.cEmail,
+    partners: partners,
+    cDate: house.cDate,
+    expends: house.expends,
+    hImage: hImage ? hImage : tempHouseProfileImage,
+    description: description ? description : tempHouseDescripton
+   }
+  await setDoc(doc(collection(db, 'houses'), newHName + "&" + house.cEmail),house );
   return house
 }
 
@@ -224,7 +270,7 @@ const getHousePartnersByKey = async(hKey) => {
  }).catch((e) => {})
 }
 
-const getHouseIncome = async(hKey) => {
+const getHouseIncomeFromFirestore = async(hKey) => {
   return getHousePartnersByKey(hKey).then((partners) => {
     let hIncome = 0
    if(partners){
@@ -234,6 +280,14 @@ const getHouseIncome = async(hKey) => {
  }).catch((e) => alert(e.massege))
 }
 
+const getHouseIncome = (house) => {
+    let hIncome = 0
+   if(house.partners){
+      for(const key in house.partners) { hIncome += parseInt(partners[key].incomeToCurHouse)}
+    }
+     return hIncome
+}
+
 const getHouseExpendsAmount = (expends) => {
   let expendsAmount = 0
   for(const key in expends) expendsAmount+=parseInt(expends[key].amount)
@@ -241,11 +295,11 @@ const getHouseExpendsAmount = (expends) => {
 }
 
 const getUserArrayFromPartnersDict = async(dict) => {
-  let arr
+  let arr = []
   if(dict){
     // for(const key in dict) { arr.push(dict[key].user)}
     arr = Object.values(dict)
-    for(key in arr)
+    for(const key in arr)
       arr[key] = arr[key].user
   }
     return arr
@@ -318,7 +372,7 @@ const changePartnerIncomeOfHouse = async(hKey,uEmail,income) => {
      return {}
   }).catch((e) => alert(e.massege))
 }
-export { auth, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore,
-        setDefaultHousePartners ,addHouseToFirestore, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
+export { auth, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
+        setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
         getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse} 
 

@@ -19,10 +19,9 @@ LogBox.ignoreLogs([
 const HouseProfileScreen = ({route}) => {
     const navigation = useNavigation()
     const [loading, setLoading] = useState(true);
-
     const [user, setUser] = useState([]);
     const [updatedHouse, setUpdatedHouse] = useState([]);
-    const house = route.params; // first get, no update from dta base
+    const [house, setHouse] = useState(''); // first get, no update from dta base
     const [hKey, setHKey] = useState('');
     const [hIncome, setHIncom] = useState(undefined)
     const [changeIncom, setChangeIncom] = useState(false)
@@ -33,22 +32,25 @@ const HouseProfileScreen = ({route}) => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
     }, [])
 
+    useEffect(() => {    
+        if("hKeyP" in route.params){
+            console.log(route.params.hKeyP)    
+            setHKey(route.params.hKeyP)
+            firebase.getByDocIdFromFirestore("houses",route.params.hKeyP).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
+        }else if("house" in route.params) setHouse(route.params.house)
+    }, [route])
+
     useEffect(() => {
-        setHKey(firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail))
+        if(house){
+            setHExpedns(firebase.getHouseExpendsAmount(house.expends))
+            setHIncom(firebase.getHouseIncome(hKey))
+            setLoading(false)
+        }
     }, [house])
 
     useEffect(() => {
-        firebase.getHouseIncome(hKey).then((hIncome) => setHIncom(hIncome)).catch((e) => alert(e.message))
-    }, [hKey])
-
-    useEffect(() => {
-        firebase.getByDocIdFromFirestore("houses",hKey).then((uHouse)=>setUpdatedHouse(uHouse)).catch((e) =>{})
+        firebase.getByDocIdFromFirestore("houses",hKey).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
     }, [hIncome])
-
-    useEffect(() => {
-        setHExpedns(firebase.getHouseExpendsAmount(updatedHouse.expends))
-        setLoading(false)
-    }, [updatedHouse])
 
     useEffect(() => {
         if(hExpedns)
@@ -70,14 +72,16 @@ const HouseProfileScreen = ({route}) => {
 
     return (
         <SafeAreaView style={houseProfileStyles.container}>
+            {loading? <Loading/> : 
             <ScrollView showsVerticalScrollIndicator={false}>
             {/* <View style={houseProfileStyles.titleBar}>
                 <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
                 <Ionicons name="ios-ellipsis-vertical" size={24} color="#52575D"></Ionicons>
             </View> */}
+            
                 <View style={{ alignSelf: "center" }}>
                     <View style={houseProfileStyles.profileHouseImage}>
-                        <Image source={{uri:updatedHouse.hImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
+                        <Image source={{uri:house.hImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
                     </View>
                     {/* <View style={houseProfileStyles.dm}>
                         <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
@@ -89,24 +93,24 @@ const HouseProfileScreen = ({route}) => {
                 </View>
 
                 <View style={houseProfileStyles.infoContainer}>
-                    <Text style={[houseProfileStyles.text, { fontWeight: "200", fontSize: 36 }]}>{updatedHouse.hName}</Text>
-                    <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 14 }]}>{updatedHouse.description}</Text>
+                    <Text style={[houseProfileStyles.text, { fontWeight: "200", fontSize: 36 }]}>{house.hName}</Text>
+                    <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 14 }]}>{house.description}</Text>
                 </View>
-                {loading? <Loading/> : 
+                
                 <View style={houseProfileStyles.statsContainer}>
-                    { <View style={houseProfileStyles.statsBox}>
+                     <View style={houseProfileStyles.statsBox}>
                         <Text style={[houseProfileStyles.text, { fontSize: 24, color:  getReminderColor() }]}>{hIncome - hExpedns} $</Text>
                         <Text style={[houseProfileStyles.text, houseProfileStyles.subText]}>Remainder</Text>
-                    </View> }
-                    { <View style={[houseProfileStyles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
+                    </View> 
+                     <View style={[houseProfileStyles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
                         <Text style={[houseProfileStyles.text, { fontSize: 24 }]}>{hExpedns} $</Text>
                         <Text style={[houseProfileStyles.text, houseProfileStyles.subText]}>Expenses</Text>
-                    </View> }
-                    { <View style={houseProfileStyles.statsBox}>
+                    </View> 
+                      <View style={houseProfileStyles.statsBox}>
                         <Text style={[houseProfileStyles.text, { fontSize: 24 }]}>{hIncome} $</Text>
                         <Text style={[houseProfileStyles.text, houseProfileStyles.subText]}>Income</Text>
-                    </View> }
-                </View>}
+                    </View> 
+                </View>
 
                 {/* <View style={{ marginTop: 32 }}>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -126,7 +130,7 @@ const HouseProfileScreen = ({route}) => {
                     </View>
                 </View> */}
 
-                <RecentActivity map = {updatedHouse.expends?updatedHouse.expends:[]} slice={3}/>
+                <RecentActivity map = {house.expends?house.expends:[]} slice={3}/>
 
                 <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
                         <TouchableOpacity
@@ -160,7 +164,7 @@ const HouseProfileScreen = ({route}) => {
                         </TouchableOpacity>
                 </View>
             
-            </ScrollView>
+            </ScrollView>}
         </SafeAreaView>
     );
 }

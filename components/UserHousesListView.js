@@ -49,7 +49,7 @@ const UserHousesListView = (props) => {
                             friction={90} //
                             tension={100} // These props are passed to the parent component (here TouchableScale)
                             activeScale={0.95}
-                            onPress={() => { navigation.navigate('HouseProfile',l);} }
+                            onPress={() => { navigation.navigate('HouseProfile',{hKeyP:firebase.getHouseKeyByNameAndCreatorEmail(l.hName,l.cEmail)});} }
                             >
                                 <ListItem.Content>
                                 <ListItem.Title style={styles.listTextItem} >{l.hName}</ListItem.Title>

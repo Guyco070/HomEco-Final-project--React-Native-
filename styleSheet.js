@@ -160,7 +160,7 @@ const houseProfileStyles = StyleSheet.create({
         fontSize: 12,
         color: "#AEB5BC",
         textTransform: "uppercase",
-        fontWeight: "500"
+        fontWeight: "500",
     },
     profileHouseImage: {
         marginTop: 25,
@@ -239,7 +239,6 @@ const houseProfileStyles = StyleSheet.create({
         shadowOpacity: 1
     },
     recent: {
-        marginLeft: 78,
         marginTop: 32,
         marginBottom: 6,
         fontSize: 10
@@ -259,5 +258,147 @@ const houseProfileStyles = StyleSheet.create({
         marginRight: 20
     }
 });
+const TodoSheet = StyleSheet.create({
+      body :{
+        margin: 0,
+        padding: 0,
+        // fontfamily: sansserif,
+        color: "white",
+      },
+      App :{
+        // fontfamily: sansserif,
+        textAlign: "center",
+      },
+      
+      appbackground: {
+        backgroundColor: "white",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: 100,
+      },
+      
+      maincontainer: {
+        backgroundColor: "#ffd966",
+        width: 350,
+        // height: "min-content",
+        borderRadius: 10,
+        padding: 20,
+        shadowColor: "#FF000023",
+        shadowOffset: {hight:10,with:10},
+        shadowOpacity: 0
+      }
+      ,
+      title :{
+        textAlign: "center",
+      },
+      
+      additembox: {
+        backgroundColor: "#CABFAB",
+        color: "#ec645b",
+        marginTop: 1,
+        marginBottom: 1,
+        display: "flex",
+        alignItems: "center",
+        borderRadius: 10,
+        padding: 0,
+        flexDirection:"row",
 
-export {styles, imageUploaderStyles, houseProfileStyles}
+      },
+
+      additeminput :{
+        // boxsizing: "border-box",
+        // border: "none",
+        backgroundColor: "transparent",
+        color: "#595651",
+        width: "80%",
+        height: 30,
+        marginRight: 25,
+      },
+      
+    //   input:placeholder {
+    //     color: "#ec645b",
+    //   }
+    //   input:focus {
+    //     outline: 0,
+    //   }
+      
+      itemlist: {
+        display: "flex",
+        flexDirection: "column",
+      },
+      
+      itemcontainer: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        // padding: "20px 0 20px 0",
+        // borderbottom: "1px #fbc1bb solid",
+        flexDirection:"row",
+        borderBottomColor:"#CABFAB",
+        borderBottomWidth:1,
+    
+      },
+      
+      itemname: {
+        marginVertical:7
+      },
+      
+      
+      itemactionbuttons: {
+        width: "30%", 
+        display: "flex",
+        justifyContent: "space-between",
+      },
+      
+      removebutton: {
+        color: "white",
+        backgroundColor: "red",
+      },
+      
+      total: {
+        // float: "right",
+        padding: 10,
+      },
+      
+      quantity: {
+        display: "flex",
+        alignItems: "center",
+        borderWidth: 1,
+        backgroundColor: "white",
+        borderRadius: 50,
+        fontSize: 12,
+        color: "#ec645b",
+        minWidth: 70,
+        justifyContent: "space-between",
+        flexDirection:"row"
+      },
+      trash: {
+        display: "flex",
+        alignItems: "center",
+        fontSize: 12,
+        justifyContent: "space-between",
+        flexDirection:"row"
+      },
+      button: {
+        backgroundColor: "transparent",
+        // border: "none",
+        margin: 3,
+        color: "#ec645b",
+      },
+    //   button:focus {
+    //     outline: 0,
+    //   }
+      
+    //   button:hover {
+    //     cursor: pointer,
+    //   }
+      
+      completed: {
+        textDecorationLine: 'line-through', 
+        textDecorationStyle: 'solid',
+        marginHorizontal:7,
+        maxWidth:'70%'
+      }
+})
+export {styles, imageUploaderStyles, houseProfileStyles, TodoSheet}

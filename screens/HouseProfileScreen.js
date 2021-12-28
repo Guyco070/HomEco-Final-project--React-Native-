@@ -9,6 +9,10 @@ import { useNavigation } from '@react-navigation/native';
 import RecentActivity from '../components/RecentActivity';
 import ChangeSelfIncome from '../components/ChangeSelfIncome';
 import Input from '../components/Inputs';
+import BarcodeScanner from '../components/BarcodeScanner';
+import { Button } from 'react-native-elements/dist/buttons/Button';
+import TodoList from '../components/TodoList/TodoList';
+import Toast from 'react-native-toast-message';
 
 
  
@@ -129,10 +133,32 @@ const HouseProfileScreen = ({route}) => {
                         <Text style={[houseProfileStyles.text, { fontSize: 12, color: "#DFD8C8", textTransform: "uppercase" }]}>Media</Text>
                     </View>
                 </View> */}
-
+                {/* <TouchableOpacity
+                            title="Scann barcode"
+                            onPress={() => navigation.navigate('BarcodeScanner')}
+                            style={styles.button}
+                            >
+                            <Text style={styles.buttonText}>Scann barcode</Text>
+                        </TouchableOpacity> */}
+            {loading?(<Loading/>) :
+                (<ScrollView 
+                >  
+                    <View style={[houseProfileStyles.recent,{width:'80%'}]}>
+                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Shopping List</Text>
+                    </View>
+                    <TodoList hKey = {hKey} listName={"shoppingList"}/>
+                </ScrollView>)
+            }
                 <RecentActivity map = {house.expends?house.expends:[]} slice={3}/>
 
                 <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
+                <TouchableOpacity
+                            title="Add Expenditure"
+                            onPress={() => {navigation.navigate('AddNewExpenditure',house)}}
+                            style={styles.button}
+                            >
+                            <Text style={styles.buttonText}>Add Expenditure</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             title="Change Income"
                             onPress={() => {setChangeIncom(!changeIncom)}}
@@ -148,13 +174,7 @@ const HouseProfileScreen = ({route}) => {
                                     <Text style={[styles.textBody , {color: 'blue',marginBottom:10}]} onPress={handleCreateExpend}>Save new income</Text>
                         </View>
                         )}
-                        <TouchableOpacity
-                            title="Add Expenditure"
-                            onPress={() => {navigation.navigate('AddNewExpenditure',house)}}
-                            style={styles.button}
-                            >
-                            <Text style={styles.buttonText}>Add Expenditure</Text>
-                        </TouchableOpacity>
+
                         <TouchableOpacity
                             title="Edit"
                             onPress={() => {navigation.navigate('EditHouseProfile',house)}}
@@ -163,7 +183,7 @@ const HouseProfileScreen = ({route}) => {
                             <Text style={styles.buttonText}>Edit</Text>
                         </TouchableOpacity>
                 </View>
-            
+                
             </ScrollView>}
         </SafeAreaView>
     );

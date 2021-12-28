@@ -19,7 +19,7 @@ const UserHousesListView = (props) => {
 
     
 
-    useEffect(() => {
+    useEffect(() => { 
             firebase.getHousesByUserEmail(props.user["email"])
             .then((houses) => {sethousesList(houses); setLoading(false);})
             .catch((e)=>alert(e.massege))    // before opening the page

@@ -1,17 +1,10 @@
 // Import the functions you need from the SDKs you need
-import { getAuth } from "@firebase/auth";
-import { map } from "@firebase/util";
-import { getApps, initializeApp } from "firebase/app";
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
-import { Alert } from "react-native";
-
-
-
-
-
+import { getAuth } from "@firebase/auth"
+import { getApps, initializeApp } from "firebase/app"
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc } from 'firebase/firestore'
+import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -50,7 +43,6 @@ const storage = getStorage(app)
 const auth = getAuth();
 
 
-
 const tempUserProfileImage = 'https://cdn4.iconfinder.com/data/icons/evil-icons-user-interface/64/avatar-512.png'
 const tempHouseProfileImage = 'https://cdn3.iconfinder.com/data/icons/luchesa-vol-9/128/Home-512.png'
 
@@ -83,6 +75,7 @@ const getByDocIdFromFirestore = async(collect, docId) =>{
     // doc.data() will be undefined in this case
     console.log("No such document!");
   }
+
   return docSnap.data()
 }
 
@@ -195,7 +188,10 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
     cDate: date,
     expends: {},
     hImage: hImage ? hImage : tempHouseProfileImage,
-    description: description ? description : tempHouseDescripton
+    description: description ? description : tempHouseDescripton,
+    shoppingList:[{ itemName: 'item 1', quantity: 1, isSelected: false },
+                  { itemName: 'item 2', quantity: 3, isSelected: true },
+                  { itemName: 'item 3', quantity: 2, isSelected: false },]
    }
   await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail),house );
   return house
@@ -235,7 +231,8 @@ const replaceUpdatedHouseToFirestore = async(house, newHName, partners, hImage, 
     cDate: house.cDate,
     expends: house.expends,
     hImage: hImage ? hImage : tempHouseProfileImage,
-    description: description ? description : tempHouseDescripton
+    description: description ? description : tempHouseDescripton,
+    shoppingList: house.shoppingList
    }
   await setDoc(doc(collection(db, 'houses'), newHName + "&" + house.cEmail),house );
   return house
@@ -372,7 +369,17 @@ const changePartnerIncomeOfHouse = async(hKey,uEmail,income) => {
      return {}
   }).catch((e) => alert(e.massege))
 }
-export { auth, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
+
+const addProductToFirestore = async(barcode, name, brand) => {
+  await setDoc(doc(collection(db, 'products'), barcode), {
+      barcode: barcode,
+      name: name,
+      brand: brand,
+     });
+}
+
+export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
-        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse} 
+        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse,
+        addProductToFirestore} 
 

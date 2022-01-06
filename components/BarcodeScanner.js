@@ -10,10 +10,11 @@ import Input from '../components/Inputs';
 import { TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import * as st from '../styleSheet';
+import * as shufersal from '../barcodeScripts/ShufersalScraping';
 
 
 const BarcodeScanner = (props) => {
-    const [hasPermission, setHasPermission] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [text, setText] = useState('Not yet scanned')
   const navigation = useNavigation()
@@ -38,17 +39,24 @@ const BarcodeScanner = (props) => {
     setScanned(true);
     setText(data)
     console.log(data)
-    const prom = firebase.getByDocIdFromFirestore('products',data).then((prod)=>{
-        if(prod){
-            setText(prod["name"])
-            props.onScannExtraFunc(prod["name"])
-            
-        }else {
-            setText(data)
-            const updateInTe = {}
-            updateInTe["barcode"] = data
-            setNewProd(updateInTe)
-        }
+    shufersal.getDescriptionByUPC(data).then((fromShufersal) => {
+      if(fromShufersal){
+        setText(fromShufersal["name"])
+        props.onScannExtraFunc(fromShufersal["name"])
+      }else{
+        const prom = firebase.getByDocIdFromFirestore('products',data).then((prod)=>{
+            if(prod){
+                setText(prod["name"])
+                props.onScannExtraFunc(prod["name"])
+                
+            }else {
+                setText(data)
+                const updateInTe = {}
+                updateInTe["barcode"] = data
+                setNewProd(updateInTe)
+            }
+        })
+      }
     })
     
     console.log('Type: ' + type + '\nData: ' + data)

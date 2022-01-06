@@ -5489,6 +5489,13 @@ expo-keep-awake@~10.0.0:
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-10.0.0.tgz#275a3e02f99bc0429790047add126c1dcce60d63"
   integrity sha512-x5zRTjIvSry/EISKvjWpnLERGZj5maCwEouOfiDk0JPa0UTg/zFkT7pmiadAfHT95XUgjjb2DOku+wj6J7el7Q==
 
+expo-localization@~11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/expo-localization/-/expo-localization-11.0.0.tgz#ae384c59ae708a4b2e7ff7dfead1d9ee9c06b482"
+  integrity sha512-LLK7+pYScM5ob8/IsnCb4JVQb6AvWP5anTIikaZmpz7XCUJ0KHaCPY8YfUjVSSwWspSMLxpqKEZtAra+bHxYZA==
+  dependencies:
+    rtl-detect "^1.0.2"
+
 expo-modules-autolinking@~0.3.4:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/expo-modules-autolinking/-/expo-modules-autolinking-0.3.4.tgz#25ce32ca933fedab2a5eb139e91327d123aa6066"
@@ -10622,6 +10629,11 @@ react-native-firebaseui-auth@^1.3.0:
   resolved "https://registry.yarnpkg.com/react-native-firebaseui-auth/-/react-native-firebaseui-auth-1.3.0.tgz#1a600bbb11617f2dd831eceb8fccc3db65076a0e"
   integrity sha512-PCvabaoyOxk0gFZubL0yC9KB5vCkhvY/z+y+27pdlhpbJAKaMbTF1XK4gqCpk6Mb8NJk7s14CJK54/ewRJuhQQ==
 
+react-native-fontawesome@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-fontawesome/-/react-native-fontawesome-7.0.0.tgz#9050d50e03c5264c071292b885ab189f29accfad"
+  integrity sha512-UBZXyTLO8rK2NMf7Eomzb70b6cpL5JlBI4xwJGnRroRofrIXUxPelmm0Ojs6OcMs4ucAyPidCOxbJDJlmb2vdA==
+
 react-native-fs@^2.18.0:
   version "2.18.0"
   resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.18.0.tgz#987b99cc90518ef26663a8d60e62104694b41c21"
@@ -10705,12 +10717,24 @@ react-native-size-matters@^0.3.1:
   resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz#24d0cfc335a2c730f6d58bd7b43ea5a41be4b49f"
   integrity sha512-mKOfBLIBFBcs9br1rlZDvxD5+mAl8Gfr5CounwJtxI6Z82rGrMO+Kgl9EIg3RMVf3G855a85YVqHJL2f5EDRlw==
 
+react-native-toast-message@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.1.1.tgz#4d56add4ced45153a2d66649d21363de10952637"
+  integrity sha512-0ZfmphT8RtrWUuZ28y/zwo/aKtvbMtWK4taEDFxOTf6Lwj29YuBv7mA0Nh/I2Xl4/prnMuZe/lZUORcKNuYfkQ==
+
 react-native-touchable-scale@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/react-native-touchable-scale/-/react-native-touchable-scale-2.1.2.tgz#0c34ddd2b9b7ec6a02ea114076cf8b95f6219d3b"
   integrity sha512-0pM2GQkggP8HDqJVytQm909KpN2TqmoSv0EqVt1/9iBpJX08xnX5OvUddjXuG318KghKORRuEsiAZCwMtOmmoA==
   dependencies:
     prop-types "^15.6.0"
+
+react-native-translation@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-translation/-/react-native-translation-1.1.0.tgz#3258e4acf182a5f8cef4be92bba3e165b2f2754f"
+  integrity sha512-vfhN+apMEQ34Yi4DZNqV/kJibp/rZEEtvjRBGjs8da8eCPo7cxy9n8UFjiJjGiyMI2Wy80Mh2Bzkk3PiIepSbg==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-native-vector-icons@^9.0.0:
   version "9.0.0"
@@ -11233,6 +11257,11 @@ rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"
   integrity sha512-nfMOlASu9OnRJo1mbEk2cz0D56a1MBNrJ7orjRZQG10XDyuvwksKbuXNp6qa+kbn839HwjwhBzhFmdsaEAfauA==
+
+rtl-detect@^1.0.2:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/rtl-detect/-/rtl-detect-1.0.4.tgz#40ae0ea7302a150b96bc75af7d749607392ecac6"
+  integrity sha512-EBR4I2VDSSYr7PkBmFy04uhycIpDKp+21p/jARYXlCSjQksTBQcJ0HFUPOO79EPPH5JS6VAhiIQbycf0O3JAxQ==
 
 run-parallel@^1.1.9:
   version "1.2.0"

@@ -11,6 +11,7 @@ import SheetJSApp from '../barcodeScripts/productsFileScript.js';
 import TodoList from '../components/TodoList/TodoList';
 import Loading from '../components/Loading';
 import ShoppingApi from '../barcodeScripts/ShoppingApi';
+import * as shufersal from '../barcodeScripts/ShufersalScraping';
 
 
 const HomeScreen = () => {
@@ -22,6 +23,7 @@ const HomeScreen = () => {
     useEffect(() => {
         console.log(firebase.auth.currentUser?.email)
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); setLoading(false); })    // before opening the page
+
       }, [])
 
     const createNewHouseScreen = () => {
@@ -46,6 +48,13 @@ const HomeScreen = () => {
              {/*uploade products drom excel*/ }
             {/* <SheetJSApp/> */}
             {/* <ShoppingApi/> */}
+            <TouchableOpacity
+                    onPress={() => shufersal.getDescriptionByUPC("7290010066582") }
+                    style={styles.button}
+                    email = {user["email"]}
+                    >
+                    <Text style={styles.buttonText}>Shufersal</Text>
+            </TouchableOpacity>
             <TouchableOpacity
                     onPress={createNewHouseScreen}
                     style={styles.button}

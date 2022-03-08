@@ -18,7 +18,7 @@ import AddNewExpenditureScreen from './screens/AddNewExpenditureScreen';
 import BarcodeScanner from './components/BarcodeScanner';
 import ImageViewer from './components/ImageViewer';
 import { I18nManager } from 'react-native'
-import UserProfileScreen from './screens/UserProfilrScreen';
+import UserProfileScreen from './screens/UserProfileScreen';
 
 
 console.disableYellowBox = true;

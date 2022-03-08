@@ -13,6 +13,7 @@ import BarcodeScanner from '../components/BarcodeScanner';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import TodoList from '../components/TodoList/TodoList';
 import Toast from 'react-native-toast-message';
+import TouchableScale from 'react-native-touchable-scale';
 
 
  
@@ -91,9 +92,14 @@ const HouseProfileScreen = ({route}) => {
                         <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
                     </View> */}
                     <View style={houseProfileStyles.active}></View>
-                    <View style={houseProfileStyles.userProfileImage}>
-                        <Image source={{uri:user.uImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
-                    </View>
+                            <View style={houseProfileStyles.userProfileImage}>
+                                <TouchableScale
+                                style={[houseProfileStyles.userProfileImage,{borderWidth:0}]} 
+                                onPress={() => {navigation.navigate('UserProfileScreen',{hKeyP:firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})}}
+                                >
+                                    <Image source={{uri:user.uImage}} style={houseProfileStyles.image} resizeMode="center" ></Image>
+                                </TouchableScale>
+                            </View>
                 </View>
 
                 <View style={houseProfileStyles.infoContainer}>
@@ -152,7 +158,7 @@ const HouseProfileScreen = ({route}) => {
                 <RecentActivity map = {house.expends?house.expends:[]} slice={3}/>
 
                 <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
-                <TouchableOpacity
+                        <TouchableOpacity
                             title="Add Expenditure"
                             onPress={() => {navigation.navigate('AddNewExpenditure',house)}}
                             style={styles.button}

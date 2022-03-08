@@ -4,10 +4,16 @@ import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import Loading from '../components/Loading';
 import { getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate } from '../firebase';
-import { styles,houseProfileStyles } from '../styleSheet';
+import { styles,houseProfileStyles,docImageUploaderStyles } from '../styleSheet';
+import UploadDocumentImage from '../components/UploadDocumentImage';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 
 const RecentActivity = ({map,slice}) => {
+    const navigation = useNavigation()
+
     const [loading, setLoading] = useState(true);
     const [sorteList, setSorteList] = useState(true);
     let isExpended = {}
@@ -46,7 +52,7 @@ const RecentActivity = ({map,slice}) => {
                         .map((l, i) => 
                         (
                             <View key={i}>
-                                <View style={[styles.container],{ alignItems: "center" }}>
+                                <View style={[styles.container]}>
                                     <View style={houseProfileStyles.recentItem}>
                                         <View style={houseProfileStyles.activityIndicator}>
                                         </View>
@@ -58,11 +64,44 @@ const RecentActivity = ({map,slice}) => {
                                                         {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>
                                                        
                                                     </Text>
+                                                    
                                                     {isExpendedConst && isExpendedConst[l.date.toDate()] &&
                                                         <Text style = {houseProfileStyles.textWithTopAndButDividers}>
                                                            <Text style={{ fontWeight: "400" }}>{"Description: " + l.desc}</Text>
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Billing type:" + l.billingType}</Text>
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Creator: " + l.partner}</Text>
+                                                           {"\n"}
+                                                           <View>
+                                                                {("invoices" in l) && <Text style = {houseProfileStyles.textWithButDivider}>
+                                                                    {"\n"}
+                                                                   <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
+                                                                </Text>}
+                                                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
+                                                            
+                                                                    {("invoices" in l) && l.invoices.map((val, index) => ( 
+                                                                        <View style={docImageUploaderStyles.mediaImageContainer}>
+                                                                            <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} changeable={false} navigation={navigation}/>
+                                                                        </View>
+                                                                        ))
+                                                                    }
+                                                                
+                                                                </ScrollView>
+                                                                {("contracts" in l) &&
+                                                                <Text style = {houseProfileStyles.textWithButDivider}>
+                                                                    {"\n"}
+                                                                     <Text style={{ fontWeight: "400" }}>{"Warranty / contract: "}</Text>
+                                                                </Text>}
+                                                                
+                                                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
+                                                                    {("contracts" in l) && l.contracts.map((val, index) => ( 
+                                                                        <View style={docImageUploaderStyles.mediaImageContainer}>
+                                                                            <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} changeable={false} navigation={navigation}/>
+                                                                        </View>
+                                                                        ))
+                                                                    }
+                                                                </ScrollView>
+                                                            </View> 
+
                                                         </Text>
                                                         }
                                                 </TouchableOpacity>

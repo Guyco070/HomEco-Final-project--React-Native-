@@ -12,6 +12,7 @@ import TodoList from '../components/TodoList/TodoList';
 import Loading from '../components/Loading';
 import ShoppingApi from '../barcodeScripts/ShoppingApi';
 import * as shufersal from '../barcodeScripts/ShufersalScraping';
+import General from '../screens/General';
 
 
 const HomeScreen = () => {

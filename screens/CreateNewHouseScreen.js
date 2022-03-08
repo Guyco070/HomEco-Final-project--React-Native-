@@ -16,6 +16,7 @@ import { Divider } from 'react-native-elements/dist/divider/Divider';
 
 const CreateNewHouseScreen = () => {
     const navigation = useNavigation()
+    
     const [user, setUser] = useState([]);
 
     const [searchVal, setSearch] = useState('');

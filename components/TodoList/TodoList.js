@@ -35,7 +35,7 @@ const TodoList = ({hKey,listName}) => {
 		if(items && items.length>0)
 			firebase.updateCollectAtFirestore("houses", hKey, listName, items)
 					.then(firebase.getByDocIdFromFirestore('houses', hKey)
-								.then((house) => setItems(house.shoppingList)))
+								.then((house) => {if('shoppingList' in house) setItems(house.shoppingList)}))
       },[isChanged])
 
 	const handleAddButtonClick = () => {
@@ -141,7 +141,7 @@ const TodoList = ({hKey,listName}) => {
 					<TextInput style={TodoSheet.additeminput} value={inputValue} onChangeText={(text) => setinputValue(text)} placeholder='Add an item...' />
 				</View>
 				<View style={TodoSheet.itemlist}>
-					{ items.slice(0,slice).map((item, index) => (
+					{ items && items.slice(0,slice).map((item, index) => (
 						<View style={TodoSheet.itemcontainer}>
 							<View style={TodoSheet.itemname}>
 								{item.isSelected ? (
@@ -181,12 +181,19 @@ const TodoList = ({hKey,listName}) => {
 					
 				</View>
 				<View style={{marginTop:4}}>
-				<Text>View: {slice<items.length?slice:items.length}/{items.length}</Text>
+				{
+					items &&
+					<Text>View: {slice<items.length?slice:items.length}/{items.length}</Text>
+				}
+				{
+					!items &&
+					<Text>View: 0/0</Text>
+				}
 				{/* <Text>Total: {totalItemCount}</Text> */}
 				</View>
 				<View style={{flexDirection:"row" ,alignSelf:'center'}}>
 					{ !isExpended ?
-						<TouchableOpacity onPress={()=>{setSlice(items.length); setIsExpended(true)}}>
+						<TouchableOpacity onPress={()=>{if(items) setSlice(items.length); setIsExpended(true)}}>
 							<>
 								<Icon
 									name='chevron-down' size={22}  type='ionicon' />

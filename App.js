@@ -16,11 +16,17 @@ import EditHouseProfileScreen from './screens/EditHouseProfileScreen';
 import General from './screens/General';
 import AddNewExpenditureScreen from './screens/AddNewExpenditureScreen';
 import BarcodeScanner from './components/BarcodeScanner';
+import ImageViewer from './components/ImageViewer';
+import { I18nManager } from 'react-native'
+import UserProfileScreen from './screens/UserProfilrScreen';
+
 
 console.disableYellowBox = true;
 
 const Stack = createNativeStackNavigator();
-
+// I18nManager.forceRTL(false);
+// I18nManager.allowRTL(false);
+// I18nManager.swapLeftAndRightInRTL(false);
 
 export default function App() {
   return (
@@ -37,6 +43,8 @@ export default function App() {
         <Stack.Screen name="AddNewExpenditure" component={AddNewExpenditureScreen} />
         <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} />
         <Stack.Screen name="General" component={General} />
+        <Stack.Screen name="ImageViewer" component={ImageViewer} options={{headerShown: false}}/>
+        <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
 

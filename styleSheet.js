@@ -124,8 +124,46 @@ const imageUploaderStyles=StyleSheet.create({
         alignItems:"center",
         justifyContent:'center'
     }
+
 })
 
+const docImageUploaderStyles=StyleSheet.create({
+    container:{
+        elevation:2,
+        height:150,
+        width:150, 
+        backgroundColor:'#efefef',
+        position:'relative',
+        overflow:'hidden',
+        borderColor:"#0782F9",
+        borderWidth:1,
+
+        borderRadius: 12,
+        overflow: "hidden",
+    },
+    uploadBtnContainer:{
+        opacity:0.7,
+        position:'absolute',
+        right:0,
+        bottom:0,
+        backgroundColor:'lightgrey',
+        width:'100%',
+        height:'25%',
+    },
+    uploadBtn:{
+        display:'flex',
+        alignItems:"center",
+        justifyContent:'center'
+    },
+
+    mediaImageContainer: {
+        width: 180,
+        height: 200,
+        borderRadius: 12,
+        overflow: "hidden",
+    },
+
+})
 
 
 const houseProfileStyles = StyleSheet.create({
@@ -145,10 +183,17 @@ const houseProfileStyles = StyleSheet.create({
         borderBottomWidth: 1,
         borderTopWidth: 1
     },
+    textWithButDivider:{
+        fontFamily: "HelveticaNeue",
+        color: "#52575D",
+        borderBottomColor: 'lightgrey', 
+        borderBottomWidth: 1,
+    },
     image: {
         flex: 1,
         height: undefined,
-        width: undefined
+        width: undefined,
+        borderRadius:100,
     },
     titleBar: {
         flexDirection: "row",
@@ -167,7 +212,8 @@ const houseProfileStyles = StyleSheet.create({
         width: 200,
         height: 200,
         borderRadius: 100,
-        overflow: "hidden"
+        overflow: "hidden",
+        
     },
     dm: {
         backgroundColor: "#41444B",
@@ -199,7 +245,9 @@ const houseProfileStyles = StyleSheet.create({
         borderRadius: 30,
         justifyContent: "center",
         borderWidth: 2,
-        borderColor:"#0782F9"
+        borderColor:"#0782F9",
+        elevation: 5,
+
     },
     infoContainer: {
         alignSelf: "center",
@@ -401,4 +449,4 @@ const TodoSheet = StyleSheet.create({
         maxWidth:'70%'
       }
 })
-export {styles, imageUploaderStyles, houseProfileStyles, TodoSheet}
+export {styles, imageUploaderStyles,docImageUploaderStyles, houseProfileStyles, TodoSheet}

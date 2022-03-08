@@ -1,4 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
+import { Dimensions } from 'react-native';
 
 const apiUrl = 'https://api.cloudinary.com/v1_1/guyco10/image/upload';
 
@@ -61,5 +62,13 @@ const deleteImageFromCloudinary = (image) => {
       })
     }
 
+    const addDocImage = async () => {
+      return await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          quality: 1,
+          base64: true,
+        })
+      }
 
-  export { uploadImageToCloudinary ,deleteImageFromCloudinary , addImage}
+  export { uploadImageToCloudinary ,deleteImageFromCloudinary , addImage , addDocImage}

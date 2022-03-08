@@ -1,5 +1,5 @@
 
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { StyleSheet, Text, TouchableOpacity, View,SafeAreaView, ScrollView } from 'react-native';

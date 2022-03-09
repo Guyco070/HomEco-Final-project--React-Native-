@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox } from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Alert } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
-import { styles, houseProfileStyles, docImageUploaderStyles } from '../styleSheet'
+import { styles, houseProfileStyles, docImageUploaderStyles, TodoSheet } from '../styleSheet'
 import * as ImagePicker from 'expo-image-picker';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -20,7 +20,7 @@ LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',
    ]);
 
-const AddNewExpenditureScreen = ({route}) => {
+const EditExpenditureScreen = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
 
@@ -31,13 +31,22 @@ const AddNewExpenditureScreen = ({route}) => {
     const [company, setCompany] = useState('');
     const [desc, setDescription] = useState('');
     const [amount, setAmount] = useState('');
+    const [house, setHouse] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
 
-    const house = route.params;
+    const exp = route.params.exp;
+    const hKey = route.params.hKey;
 
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
+        firebase.getByDocIdFromFirestore("houses",hKey).then((house)=> {setHouse(house); }).catch((e) =>{})
+        setInvoCatchImage(exp.invoices)
+        setContractCatchImage(exp.contracts)
+        setBillingType(exp.billingType)
+        setCompany(exp.company)
+        setDescription(exp.desc)
+        setAmount(exp.amount)
       }, [])
 
     const addImage = async (from,index) => {
@@ -69,23 +78,50 @@ const AddNewExpenditureScreen = ({route}) => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages})
-            navigation.replace("HouseProfile",{hKeyP: firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
+            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: exp.date.toDate(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages})
+            navigation.replace("HouseProfile",{hKeyP:hKey})
         }else alert("Sorry, you must fill in all the fields!")
+    }
+
+    const handleDeleteExpenditure = () => {
+        Alert.alert(
+            "Are your sure?",
+            "Are you sure you want to remove this beautiful box?",
+            [
+              // The "Yes" button
+              {
+                text: "Yes",
+                onPress: () => {
+                    firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                },
+              },
+              // The "No" button
+              // Does nothing but dismiss the dialog when tapped
+              {
+                text: "No",
+              },
+            ]
+          );
     }
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
+            <View style={TodoSheet.trash}>
+                <TouchableOpacity style={{margin:25} } onPress={handleDeleteExpenditure} >
+                    <Icon name="trash"  type="ionicon"/>
+                </TouchableOpacity>
+            </View>
+
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
 
             <View style={[styles.container]}>
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
 
                 {/* \n alowed to insert vakue to company input but make big deviding between invoices and contracts - fix*/}
-                <Text style={[styles.textTitle, {marginBottom:20}]}>{"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"}Add New Expenditure</Text> 
-                <Input name="Company" icon="building" onChangeText={text => setCompany(text)} />
-                <Input name="Description" icon="comment" onChangeText={text => setDescription(text)} />
-                <Input name="Amount" icon="money" onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
+                <Text style={[styles.textTitle, {marginBottom:20}]}>{"\n\n\n\n\n\n\n\n\n\n\n\n\n"}Edit Expenditure</Text> 
+                <Input name="Company" icon="building" value={company?company:""} onChangeText={text => setCompany(text)} />
+                <Input name="Description" icon="comment" value={desc?desc:""} onChangeText={text => setDescription(text)} />
+                <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
                 <Picker
                     selectedValue={billingType}
                     style={{ height: 50, width: 150}}
@@ -156,11 +192,11 @@ const AddNewExpenditureScreen = ({route}) => {
             <View style={[styles.container,{marginTop: 55}]}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                        title="Create"
+                        title="Update"
                         onPress={handleCreateExpend}
                         style={styles.button}
                         >
-                        <Text style={styles.buttonText}>Create</Text>
+                        <Text style={styles.buttonText}>Update</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -168,4 +204,4 @@ const AddNewExpenditureScreen = ({route}) => {
     )
 }
 
-export default AddNewExpenditureScreen
+export default EditExpenditureScreen

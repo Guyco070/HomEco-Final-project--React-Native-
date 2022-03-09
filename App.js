@@ -19,6 +19,7 @@ import BarcodeScanner from './components/BarcodeScanner';
 import ImageViewer from './components/ImageViewer';
 import { I18nManager } from 'react-native'
 import UserProfileScreen from './screens/UserProfileScreen';
+import EditExpenditureScreen from './screens/EditExpenditureScreen';
 
 
 console.disableYellowBox = true;
@@ -45,6 +46,9 @@ export default function App() {
         <Stack.Screen name="General" component={General} />
         <Stack.Screen name="ImageViewer" component={ImageViewer} options={{headerShown: false}}/>
         <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
+        <Stack.Screen name="EditExpenditureScreen" component={EditExpenditureScreen} />
+
+        
       </Stack.Navigator>
     </NavigationContainer>
 

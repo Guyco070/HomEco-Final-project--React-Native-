@@ -142,9 +142,7 @@ const addUserToFirestore = async(email, fName, lName, phone, bDate, uImage ) => 
 }
 
 const updateCollectAtFirestore = async(collect,key, col, newValue) => {
-  console.log(newValue)
   const Data = doc(db, collect, key);
-
   await updateDoc(Data , col = col,newValue)
 }
 
@@ -333,9 +331,18 @@ const getCurentPartnerOfHouse = async(hName,cEmail,curUEmail) => {
 //   }).catch((e) => {console.log("getExpendsOfUserAtHouse - " + e.massege)})
 // }
 
-const addExpendToHouse = async(hName, cEmail,expends, expend) => {
-    expends[expend.date] = expend
-    updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
+const addExpendToHouse = async(hName, cEmail,expends, expend) => 
+{
+  expends[expend.date] = expend
+  updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
+}
+
+const removeExpendFromHouse = async(hName, cEmail,expends, expend) => 
+{
+  delete expends[expend.date.toDate()]
+  console.log("expends[expend.date]")
+  console.log(expends)
+  updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
 }
 
 const getSortedArrayDateFromDict = (dict) => {
@@ -383,6 +390,6 @@ const addProductToFirestore = async(barcode, name, brand) => {
 
 export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
-        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse,
+        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse, removeExpendFromHouse, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse,
         addProductToFirestore} 
 

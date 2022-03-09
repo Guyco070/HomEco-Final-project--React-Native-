@@ -77,7 +77,8 @@ const EditHouseProfileScreen =({route}) => {
               {
                 text: "Yes",
                 onPress: () => {
-                    firebase.deleteRowFromFirestore("houses", hKey).then(navigation.replace("Home"))
+                    firebase.deleteRowFromFirestore("houses", hKey).then(
+                    navigation.replace("Home"))
                 },
               },
               // The "No" button

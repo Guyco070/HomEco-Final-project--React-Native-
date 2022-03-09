@@ -289,7 +289,8 @@ const houseProfileStyles = StyleSheet.create({
     recent: {
         marginTop: 32,
         marginBottom: 6,
-        fontSize: 10
+        fontSize: 10,
+        marginLeft: 40
     },
     recentItem: {
         flexDirection: "row",

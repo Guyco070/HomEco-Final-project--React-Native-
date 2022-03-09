@@ -16,6 +16,7 @@ import Toast from 'react-native-toast-message';
 import TouchableScale from 'react-native-touchable-scale';
 
 
+
  
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',
@@ -149,15 +150,15 @@ const HouseProfileScreen = ({route}) => {
             {loading?(<Loading/>) :
                 (<ScrollView 
                 >  
-                    <View style={[houseProfileStyles.recent,{width:'80%'}]}>
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Shopping List</Text>
-                    </View>
-                    <TodoList hKey = {hKey} listName={"shoppingList"}/>
-                    <TodoList hKey = {hKey} listName={"tasksList"}/>
 
+                    <TodoList hKey = {hKey} listName={"shoppingList"}/>
+
+                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Tasks List</Text>
+                    <TodoList hKey = {hKey} listName={"tasksList"}/>
                 </ScrollView>)
             }
-                <RecentActivity map = {house.expends?house.expends:[]} slice={3}/>
+                <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey}/>
 
                 <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
                         <TouchableOpacity

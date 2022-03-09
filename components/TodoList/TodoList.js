@@ -135,9 +135,9 @@ const TodoList = ({hKey,listName}) => {
 		<View style={[TodoSheet.appbackground, {margin: 15}]}>
 			<View style={[TodoSheet.maincontainer,style]}>
 				<View style={TodoSheet.additembox}>
-					<TouchableOpacity style={{marginHorizontal:5}} onPress={() => setIsScanning(!isScanning)}>
+					{ (listName == 'shoppingList') && <TouchableOpacity style={{marginHorizontal:5}} onPress={() => setIsScanning(!isScanning)}>
 						<Icon name="scan-circle-outline"  type="ionicon" color={"grey"} />
-					</TouchableOpacity>
+					</TouchableOpacity> }
 					<TouchableOpacity onPress={() => handleAddButtonClick()}>
 						<Icon name="add-outline"  type="ionicon" color={"grey"} />
 					</TouchableOpacity>
@@ -164,12 +164,12 @@ const TodoList = ({hKey,listName}) => {
 								)}
 							</View>
 							<View style={TodoSheet.trash}>
-								{item.isSelected || listName=='tasksList'? 
+								{item.isSelected? 
 								<TouchableOpacity style={{marginHorizontal:25} } onPress={() => handleRemove(index)}>
 									<Icon name="trash"  type="ionicon"/>
 								</TouchableOpacity>
 								:
-								<View style={TodoSheet.quantity}>
+								(listName=='shoppingList') && <View style={TodoSheet.quantity}>
 									<TouchableOpacity onPress={() => handleQuantityDecrease(index)}>
 										<Icon name="chevron-forward-outline" type="ionicon" /> 
 									</TouchableOpacity>

@@ -7,11 +7,13 @@ import { getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate } from '
 import { styles,houseProfileStyles,docImageUploaderStyles } from '../styleSheet';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import * as firebase from '../firebase'
 
 
 
 
-const RecentActivity = ({map,slice}) => {
+const RecentActivity = ({map,slice,hKey}) => {
     const navigation = useNavigation()
 
     const [loading, setLoading] = useState(true);
@@ -19,12 +21,15 @@ const RecentActivity = ({map,slice}) => {
     let isExpended = {}
     const [isExpendedConst, setIsExpendedConst] = useState(true);
     const [newSlice,setNewSlice] = useState(1)
+    const [cEmail,setHouseCreator] = useState(1)
 
     
 
     useEffect(() => {
         setSorteList(getSortedArrayDateFromDict(map))
         setNewSlice(slice)
+        firebase.getByDocIdFromFirestore("houses",hKey).then((house)=>setHouseCreator(house.cEmail)).catch((e) =>{})
+
       },[map])
 
       useEffect(() => {
@@ -40,6 +45,9 @@ const RecentActivity = ({map,slice}) => {
             setIsExpendedConst(isExpended)
       }
 
+      const handleEdit = (exp) => {
+        navigation.navigate('EditExpenditureScreen',{hKey, exp})
+      }
     return (
         <View>
         {loading?(<Loading/>) :
@@ -55,11 +63,13 @@ const RecentActivity = ({map,slice}) => {
                                 <View style={[styles.container]}>
                                     <View style={houseProfileStyles.recentItem}>
                                         <View style={houseProfileStyles.activityIndicator}>
+
                                         </View>
                                             <View style={{ width: 250 }}>
                                                 <TouchableOpacity onPress={()=> {setIsExpended(l.date)}}>
                                                     <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
                                                         <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
+
                                                         {"\n"}Company: <Text style={{ fontWeight: "400" }}>{l.company}</Text>
                                                         {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>
                                                        
@@ -98,10 +108,19 @@ const RecentActivity = ({map,slice}) => {
                                                                             <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} changeable={false} navigation={navigation}/>
                                                                         </View>
                                                                         ))
-                                                                    }
+                                                                    }                 
                                                                 </ScrollView>
                                                             </View> 
-
+                                                            {"\n"}
+                                                            { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
+                                                            <View style={{alignSelf: 'center', alignItems: 'center'}}>
+                                                                
+                                                            <TouchableOpacity  onPress={ () => handleEdit(l) }>
+                                                                <Icon  name="edit"  type="icon" color={"grey"} />
+                                                            </TouchableOpacity>
+                                                            </View>
+                                                                }
+                                                            {"\n"}
                                                         </Text>
                                                         }
                                                 </TouchableOpacity>

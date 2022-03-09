@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity,KeyboardAvoidingView } from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
-import { styles } from '../styleSheet'
+import { styles, TodoSheet } from '../styleSheet'
 import * as ImagePicker from 'expo-image-picker';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -12,6 +12,8 @@ import TouchableScale from 'react-native-touchable-scale';
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { set } from 'react-native-reanimated';
 import Loading from '../components/Loading';
+import { Icon } from 'react-native-elements/dist/icons/Icon';
+
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
@@ -65,6 +67,27 @@ const EditHouseProfileScreen =({route}) => {
             cloudinary.uploadImageToCloudinary("houses",_image).then((url)=>{ setCatchImage(url); }).catch((e) => alert(e.message))
           }
         }
+    
+    const handleDeleteHouse = () => {
+        Alert.alert(
+            "Are your sure?",
+            "Are you sure you want to remove this beautiful box?",
+            [
+              // The "Yes" button
+              {
+                text: "Yes",
+                onPress: () => {
+                    firebase.deleteRowFromFirestore("houses", hKey).then(navigation.replace("Home"))
+                },
+              },
+              // The "No" button
+              // Does nothing but dismiss the dialog when tapped
+              {
+                text: "No",
+              },
+            ]
+          );
+    }
 
     const handleUpdateHouse = () => {
         // TODO: for hName upddate the key need to change and we need to set permisions has they ware for partners whose already been ther and set default to new partners (using oldHPartners)
@@ -120,6 +143,11 @@ const EditHouseProfileScreen =({route}) => {
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
+            <View style={TodoSheet.trash}>
+                <TouchableOpacity style={{marginHorizontal:25} } onPress={handleDeleteHouse} >
+                    <Icon name="trash"  type="ionicon"/>
+                </TouchableOpacity>
+            </View>
             {loading? <Loading/> : <View>
             <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/>
 

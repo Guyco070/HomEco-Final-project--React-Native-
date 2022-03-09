@@ -153,6 +153,8 @@ const HouseProfileScreen = ({route}) => {
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Shopping List</Text>
                     </View>
                     <TodoList hKey = {hKey} listName={"shoppingList"}/>
+                    <TodoList hKey = {hKey} listName={"tasksList"}/>
+
                 </ScrollView>)
             }
                 <RecentActivity map = {house.expends?house.expends:[]} slice={3}/>

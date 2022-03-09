@@ -191,6 +191,9 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
     description: description ? description : tempHouseDescripton,
     shoppingList:[{ itemName: 'item 1', quantity: 1, isSelected: false },
                   { itemName: 'item 2', quantity: 3, isSelected: true },
+                  { itemName: 'item 3', quantity: 2, isSelected: false },],
+    tasksList:[{ itemName: 'item 1', quantity: 1, isSelected: false },
+                  { itemName: 'item 2', quantity: 3, isSelected: true },
                   { itemName: 'item 3', quantity: 2, isSelected: false },]
    }
   await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail),house );

@@ -27,15 +27,14 @@ const TodoList = ({hKey,listName}) => {
 	const [isScanning, setIsScanning] = useState(false);
 
 	useEffect(() => {
-		if(listName == "shoppingList")
-        	firebase.getByDocIdFromFirestore('houses', hKey).then((house) => setItems(house.shoppingList))
+        firebase.getByDocIdFromFirestore('houses', hKey).then((house) => setItems(house[listName]))
       },[])
 
 	  useEffect(() => {
 		if(items && items.length>0)
 			firebase.updateCollectAtFirestore("houses", hKey, listName, items)
 					.then(firebase.getByDocIdFromFirestore('houses', hKey)
-								.then((house) => {if('shoppingList' in house) setItems(house.shoppingList)}))
+								.then((house) => {if(listName in house) setItems(house[listName])}))
       },[isChanged])
 
 	const handleAddButtonClick = () => {
@@ -128,9 +127,13 @@ const TodoList = ({hKey,listName}) => {
 		setTotalItemCount(totalItemCount);
 	};
 
+	let style = {}
+	if(listName == 'tasksList'){
+		style = {backgroundColor:'#99C365'}
+	}
 	return (
-		<View style={TodoSheet.appbackground}>
-			<View style={TodoSheet.maincontainer}>
+		<View style={[TodoSheet.appbackground, {margin: 15}]}>
+			<View style={[TodoSheet.maincontainer,style]}>
 				<View style={TodoSheet.additembox}>
 					<TouchableOpacity style={{marginHorizontal:5}} onPress={() => setIsScanning(!isScanning)}>
 						<Icon name="scan-circle-outline"  type="ionicon" color={"grey"} />
@@ -161,7 +164,7 @@ const TodoList = ({hKey,listName}) => {
 								)}
 							</View>
 							<View style={TodoSheet.trash}>
-								{item.isSelected ? 
+								{item.isSelected || listName=='tasksList'? 
 								<TouchableOpacity style={{marginHorizontal:25} } onPress={() => handleRemove(index)}>
 									<Icon name="trash"  type="ionicon"/>
 								</TouchableOpacity>

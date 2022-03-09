@@ -25,7 +25,11 @@ const UserHousesListView = (props) => {
             .catch((e)=>alert(e.massege))    // before opening the page
       },[props])
 
-
+      useEffect(() => { 
+        firebase.getHousesByUserEmail(props.user["email"])
+        .then((houses) => {sethousesList(houses); setLoading(false);})
+        .catch((e)=>alert(e.massege))    // before opening the page
+  },[])
     const addImage = async () => {
         let _image = await cloudinary.addImage()
           if (!_image.cancelled) {

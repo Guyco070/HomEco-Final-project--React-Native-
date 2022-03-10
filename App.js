@@ -21,7 +21,7 @@ import ImageViewer from './components/ImageViewer';
 import { I18nManager } from 'react-native'
 import UserProfileScreen from './screens/UserProfileScreen';
 import EditExpenditureScreen from './screens/EditExpenditureScreen';
-
+import EditSelfIncomeScreen from './screens/EditSelfIncomeScreen';
 
 console.disableYellowBox = true;
 
@@ -49,7 +49,8 @@ export default function App() {
         <Stack.Screen name="ImageViewer" component={ImageViewer} options={{headerShown: false}}/>
         <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
         <Stack.Screen name="EditExpenditureScreen" component={EditExpenditureScreen} />
-
+        <Stack.Screen name="EditSelfIncome" component={EditSelfIncomeScreen} />
+        
         
       </Stack.Navigator>
     </NavigationContainer>

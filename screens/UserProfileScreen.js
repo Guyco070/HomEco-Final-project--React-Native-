@@ -6,7 +6,7 @@ import Loading from '../components/Loading';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { styles, houseProfileStyles } from '../styleSheet';
 import { useNavigation } from '@react-navigation/native';
-import RecentActivity from '../components/RecentActivity';
+import SelfIncomeListViewer from '../components/SelfIncomeListViewer';
 import ChangeSelfIncome from '../components/ChangeSelfIncome';
 import Input from '../components/Inputs';
 import BarcodeScanner from '../components/BarcodeScanner';
@@ -55,7 +55,7 @@ const UserProfileScreen = ({route}) => {
                 <View style={[styles.container,{marginVertical:15}]}>
                     <UserHousesListView user={user} viewImage={true}/>
                 </View>
-                {/* <RecentActivity map = {house.expends?house.expends:[]} slice={3}/> */}
+                <SelfIncomeListViewer map = {user.incomes?user.incomes:[]} slice={3}/>
 
                  <View style={[styles.container,{alignSelf:'center', width:'150%'}]}>
                  <      TouchableOpacity

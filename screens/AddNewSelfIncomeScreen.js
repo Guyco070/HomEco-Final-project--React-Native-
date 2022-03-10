@@ -30,7 +30,7 @@ const AddNewSelfIncomeScreen = () => {
     const [company, setCompany] = useState('');
     const [desc, setDescription] = useState('');
     const [amount, setAmount] = useState('');
-    const [billingType, setBillingType] = useState("Income type");
+    const [incomeType, setIncomeType] = useState("Income type");
 
 
     useEffect(() => {
@@ -41,8 +41,6 @@ const AddNewSelfIncomeScreen = () => {
         let _image = await cloudinary.addDocImage()
           if (!_image.cancelled) {
             setImage(_image.uri);
-
-            console.log("index = " + index)
 
             if(index==-1){
                 if(from == 'payslip')
@@ -59,10 +57,10 @@ const AddNewSelfIncomeScreen = () => {
         };
 
     const handleCreateIncome = () => {
-        if(billingType == "Icome type") alert("Sorry, Billing type is the title... ")
+        if(incomeType == "Icome type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addUserSelfIncome(user.email,user.incomes , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, Payslips: catchPayslipsImages})
+            firebase.addUserSelfIncome(user.email,user.incomes , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, incomeType: incomeType, payslips: catchPayslipsImages})
             navigation.replace("UserProfileScreen")
         }else alert("Sorry, you must fill in all the fields!")
     }
@@ -73,16 +71,14 @@ const AddNewSelfIncomeScreen = () => {
 
             <View style={[styles.container]}>
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
-
-                {/* \n alowed to insert vakue to company input but make big deviding between Payslips - fix*/}
                 <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Self Income</Text> 
                 <Input name="Company" icon="building" onChangeText={text => setCompany(text)} />
                 <Input name="Description" icon="comment" onChangeText={text => setDescription(text)} />
                 <Input name="Amount" icon="money" onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
                 <Picker
-                    selectedValue={billingType}
+                    selectedValue={incomeType}
                     style={{ height: 50, width: 150}}
-                    onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
+                    onValueChange={(incomeType, itemIndex) => { setIncomeType(incomeType) }}
                 >
                     <Picker.Item label="Icome type" value="Icome type"/>
                     <Picker.Item label="One-time" value="One-time"/>
@@ -103,17 +99,16 @@ const AddNewSelfIncomeScreen = () => {
                         catchPayslipsImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
                                 <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('payslip',index)} changeable={true} navigation={navigation}/>
-                                {console.log(index)}
                             </View>
                             ))
                         }
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
                             <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('payslip',-1)} changeable={true} navigation={navigation}/>
                         </View>
+
                     </ScrollView>
                 </View> 
-
-                </View>
+            </View>
             <View style={[styles.container]}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity

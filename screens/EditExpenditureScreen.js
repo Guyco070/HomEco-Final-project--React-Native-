@@ -124,10 +124,9 @@ const EditExpenditureScreen = ({route}) => {
             <View style={[styles.container]}>
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
 
-                {/* \n alowed to insert vakue to company input but make big deviding between invoices and contracts - fix*/}
                 {("date" in exp) ? 
-                <Text style={[styles.textTitle, {marginBottom:20}]}>{"\n\n\n\n\n\n\n\n\n\n\n\n\n"}Edit Expenditure</Text> 
-                : <Text style={[styles.textTitle, {marginBottom:20}]}>{"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"}Add Shopping List As Expenditure</Text> }
+                <Text style={[styles.textTitle, {marginBottom:20}]}>Edit Expenditure</Text> 
+                : <Text style={[styles.textTitle, {marginBottom:20}]}>Add Shopping List As Expenditure</Text> }
                 <Input name="Company" icon="building" value={company?company:""} onChangeText={text => setCompany(text)} />
                 <Input name="Description" icon="comment" value={desc?desc:""} onChangeText={text => setDescription(text)} />
                 <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
@@ -146,11 +145,11 @@ const EditExpenditureScreen = ({route}) => {
                     <Picker.Item label="Biennial" value="Biennial" />
                 </Picker>
 
-                <View style={{ marginTop: 32 }}>
+                <View style={{ marginTop: 32, height: 440 }}>
                     <Text style = {houseProfileStyles.textWithButDivider}>
                         <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
                     </Text>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{height: 20}} >
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{height: 70}} >
                     {
                         catchInvoImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
@@ -179,7 +178,7 @@ const EditExpenditureScreen = ({route}) => {
                         <Text style={{ fontWeight: "400" }}>{"Warranty / contract: "}</Text>
                     </Text>
                     
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{height: 150}}>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{height: 30}}>
                         {catchContractImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
                                 <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} onPress={() => addImage('contract',index)} changeable={true} navigation={navigation}/>
@@ -198,7 +197,7 @@ const EditExpenditureScreen = ({route}) => {
                 </View> 
 
                 </View>
-            <View style={[styles.container,{marginTop: 55}]}>
+            <View style={[styles.container,{marginTop: 5}]}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         title="Update"

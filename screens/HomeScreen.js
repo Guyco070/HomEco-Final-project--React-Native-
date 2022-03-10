@@ -42,7 +42,7 @@ const HomeScreen = () => {
     }
 
     return (
-        <View style={[styles.container],styles.container}>
+        <View style={[styles.container]}>
             {loading ?    <Loading/>:<><Text style={styles.textBody}>{ user["fName"]+ " " + user["lName"] } </Text>
             <Text style={styles.textBody}>Email: { user["email"] } </Text>
             <UserHousesListView user={user}/>
@@ -65,11 +65,6 @@ const HomeScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText} onPress={handleSignOut} >Sign out</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate('EditUserProfile')}>
-                    <Text style={styles.buttonText}>Edit User</Text>
             </TouchableOpacity></>}
         </View>
     )

@@ -43,8 +43,13 @@ const UserHousesListView = (props) => {
         (<ScrollView 
         style={{width:'80%',}}
         >
-            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {props.user.uImage} onPress={addImage} changeable={false} />
-            
+            {   !(props?.viewImage) &&
+                <TouchableScale
+                onPress={() => {navigation.navigate('UserProfileScreen')}}
+                >
+                    <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {props.user.uImage} onPress={addImage} changeable={false} />
+                </TouchableScale>
+            }
             {housesList && 
                     housesList 
                         .map((l, i) => 

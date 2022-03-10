@@ -14,6 +14,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import TodoList from '../components/TodoList/TodoList';
 import Toast from 'react-native-toast-message';
 import TouchableScale from 'react-native-touchable-scale';
+import { Timestamp } from 'firebase/firestore';
 
 
 
@@ -152,8 +153,7 @@ const HouseProfileScreen = ({route}) => {
                 >  
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Shopping List</Text>
 
-                    <TodoList hKey = {hKey} listName={"shoppingList"}/>
-
+                    <TodoList hKey = {hKey} listName={"shoppingList"} uEmail = {user.email} navigation={navigation}/>
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Tasks List</Text>
                     <TodoList hKey = {hKey} listName={"tasksList"}/>
                 </ScrollView>)

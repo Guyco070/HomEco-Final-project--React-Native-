@@ -12,7 +12,7 @@ import * as firebase from '../../firebase'
 import Toast from 'react-native-toast-message';
 
 
-const TodoList = ({hKey,listName}) => {
+const TodoList = ({hKey,listName,uEmail, navigation}) => {
 	// HINT: each "item" in our list names a name,
 	// a boolean to tell if its been completed, and a quantity
 	const [items, setItems] = useState([]);
@@ -26,8 +26,16 @@ const TodoList = ({hKey,listName}) => {
 	const [slice, setSlice] = useState(3);
 	const [isScanning, setIsScanning] = useState(false);
 
+    const [isAllMarked, setIsAllMarked] = useState(false);
+
+
 	useEffect(() => {
         firebase.getByDocIdFromFirestore('houses', hKey).then((house) => setItems(house[listName]))
+
+		let tempIsAllMarked = true
+		for(let item in items)
+			if(!items[item].isSelected) {tempIsAllMarked = false; break;}
+		setIsAllMarked(tempIsAllMarked)
       },[])
 
 	  useEffect(() => {
@@ -111,6 +119,11 @@ const TodoList = ({hKey,listName}) => {
 
 		setItems(newItems);
 		setIsChanged(!isChanged)
+
+		let tempIsAllMarked = true
+		for(let item in items)
+			if(!items[item].isSelected) {tempIsAllMarked = false; break;}
+		setIsAllMarked(tempIsAllMarked)
 	};
 
 	const handleRemove = (index) => {
@@ -235,6 +248,14 @@ const TodoList = ({hKey,listName}) => {
 				</View>
 				</ScrollView>
 			</Modal>}
+			{listName=="shoppingList" && isAllMarked &&
+			<TouchableOpacity
+					title="Add  As Expenditure"
+					onPress={() => { firebase.shoppingListToString(items).then((SL) => navigation.navigate('EditExpenditureScreen',{hKey, exp:{ partner:uEmail,company: "", desc: SL , amount: '', billingType: "One-time", invoices: [], contracts: []}}))}}
+					style={[styles.button,{alignSelf:'center',backgroundColor:'#ffa000', width: 200}]}
+					>
+					<Text style={[styles.buttonText,]}>Add  As Expenditure</Text>
+				</TouchableOpacity>}
 		</View>
 	);
 };

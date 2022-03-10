@@ -34,6 +34,7 @@ const EditExpenditureScreen = ({route}) => {
     const [house, setHouse] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
 
+
     const exp = route.params.exp;
     const hKey = route.params.hKey;
 
@@ -47,6 +48,8 @@ const EditExpenditureScreen = ({route}) => {
         setCompany(exp.company)
         setDescription(exp.desc)
         setAmount(exp.amount)
+        if(!("date" in exp))
+            alert(exp.desc)
       }, [])
 
     const addImage = async (from,index) => {
@@ -78,7 +81,10 @@ const EditExpenditureScreen = ({route}) => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: exp.date.toDate(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages})
+            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date:("date" in exp)?exp.date.toDate():new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages}).then(()=>{
+            if(!("date" in exp)) 
+                firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
+            })
             navigation.replace("HouseProfile",{hKeyP:hKey})
         }else alert("Sorry, you must fill in all the fields!")
     }
@@ -106,11 +112,12 @@ const EditExpenditureScreen = ({route}) => {
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
+            {("date" in exp) &&
             <View style={TodoSheet.trash}>
                 <TouchableOpacity style={{margin:25} } onPress={handleDeleteExpenditure} >
                     <Icon name="trash"  type="ionicon"/>
                 </TouchableOpacity>
-            </View>
+            </View>}
 
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
 
@@ -118,7 +125,9 @@ const EditExpenditureScreen = ({route}) => {
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
 
                 {/* \n alowed to insert vakue to company input but make big deviding between invoices and contracts - fix*/}
+                {("date" in exp) ? 
                 <Text style={[styles.textTitle, {marginBottom:20}]}>{"\n\n\n\n\n\n\n\n\n\n\n\n\n"}Edit Expenditure</Text> 
+                : <Text style={[styles.textTitle, {marginBottom:20}]}>{"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"}Add Shopping List As Expenditure</Text> }
                 <Input name="Company" icon="building" value={company?company:""} onChangeText={text => setCompany(text)} />
                 <Input name="Description" icon="comment" value={desc?desc:""} onChangeText={text => setDescription(text)} />
                 <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
@@ -196,7 +205,10 @@ const EditExpenditureScreen = ({route}) => {
                         onPress={handleCreateExpend}
                         style={styles.button}
                         >
-                        <Text style={styles.buttonText}>Update</Text>
+                        {("date" in exp)?
+                            <Text style={styles.buttonText}>Update</Text>:
+                            <Text style={styles.buttonText}>Create</Text>
+                        }
                     </TouchableOpacity>
                 </View>
             </View>

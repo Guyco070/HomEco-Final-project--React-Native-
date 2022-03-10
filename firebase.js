@@ -345,6 +345,14 @@ const removeExpendFromHouse = async(hName, cEmail,expends, expend) =>
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
 }
 
+const shoppingListToString = async(shoppingList) => 
+{
+  let str = ''
+  for(const key in shoppingList) { str += (parseInt(key)+1) + ". " +shoppingList[key].itemName + " (" + shoppingList[key].quantity +")\n "}
+  //str = str.substring(0,str.length-2)
+  return str.toString()
+}
+
 const getSortedArrayDateFromDict = (dict) => {
   let array = Object.values(dict)
   return array.sort((a,b) => {
@@ -390,6 +398,6 @@ const addProductToFirestore = async(barcode, name, brand) => {
 
 export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
-        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse, removeExpendFromHouse, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse,
+        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse, removeExpendFromHouse,shoppingListToString, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse,
         addProductToFirestore} 
 

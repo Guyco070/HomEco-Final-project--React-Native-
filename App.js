@@ -15,6 +15,7 @@ import HouseProfileScreen from './screens/HouseProfileScreen';
 import EditHouseProfileScreen from './screens/EditHouseProfileScreen';
 import General from './screens/General';
 import AddNewExpenditureScreen from './screens/AddNewExpenditureScreen';
+import AddNewSelfIncomeScreen from './screens/AddNewSelfIncomeScreen';
 import BarcodeScanner from './components/BarcodeScanner';
 import ImageViewer from './components/ImageViewer';
 import { I18nManager } from 'react-native'
@@ -42,6 +43,7 @@ export default function App() {
         <Stack.Screen name="EditHouseProfile" component={EditHouseProfileScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="AddNewExpenditure" component={AddNewExpenditureScreen} />
+        <Stack.Screen name="AddNewSelfIncome" component={AddNewSelfIncomeScreen} />
         <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} />
         <Stack.Screen name="General" component={General} />
         <Stack.Screen name="ImageViewer" component={ImageViewer} options={{headerShown: false}}/>

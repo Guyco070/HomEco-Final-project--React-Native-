@@ -136,7 +136,8 @@ const addUserToFirestore = async(email, fName, lName, phone, bDate, uImage ) => 
       phone: phone,
       bDate: bDate,
       email: email.replace(' ',''),
-      uImage: uImage ? uImage : tempUserProfileImage
+      uImage: uImage ? uImage : tempUserProfileImage,
+      incomes: {}
      });
     //  uploadImageToStorage('users',uImage ? uImage : tempUserProfileImage,email).then(alert()).catch()
 }
@@ -337,11 +338,21 @@ const addExpendToHouse = async(hName, cEmail,expends, expend) =>
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
 }
 
+const addUserSelfIncome = async(uEmail,incomes, income) => 
+{
+  incomes[income.date] = income
+  updateCollectAtFirestore("users", uEmail, "incomes", incomes)
+}
+
+const removeUserSelfIncome = async(uEmail,incomes, income) => 
+{
+  delete incomes[income.date.toDate()]
+  updateCollectAtFirestore("users",  uEmail, "incomes", incomes)
+}
+
 const removeExpendFromHouse = async(hName, cEmail,expends, expend) => 
 {
   delete expends[expend.date.toDate()]
-  console.log("expends[expend.date]")
-  console.log(expends)
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
 }
 
@@ -398,6 +409,6 @@ const addProductToFirestore = async(barcode, name, brand) => {
 
 export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
-        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse, removeExpendFromHouse,shoppingListToString, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse,
+        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse,shoppingListToString, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse,
         addProductToFirestore} 
 

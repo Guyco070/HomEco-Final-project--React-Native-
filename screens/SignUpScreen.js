@@ -47,7 +47,6 @@ const SignUpScreen = props => {
         .then((userCredential) => {
             const user = userCredential.user;
             firebase.addUserToFirestore(email.toLowerCase(),fName, lName, phone, bDate, catchImage )
-            console.log('Registered with: ', user.email)
             signInWithEmailAndPassword(firebase.auth, email, password)
         })
         .catch(error => alert(error.message, email, password));

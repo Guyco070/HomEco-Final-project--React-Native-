@@ -66,8 +66,6 @@ const EditSelfIncomeScreen = ({route}) => {
         const tempCatchPayslipsImages = []
         let i = 0
         for(let key in catchPayslipsImages) {
-            console.log(i)
-
             if(index != key) {
                 tempCatchPayslipsImages[i] = catchPayslipsImages[key]
             }

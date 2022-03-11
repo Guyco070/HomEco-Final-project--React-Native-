@@ -82,13 +82,13 @@ const RecentActivity = ({map,slice,hKey}) => {
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Creator: " + l.partner}</Text>
                                                            {"\n"}
                                                            <View>
-                                                                {("invoices" in l) && <Text style = {houseProfileStyles.textWithButDivider}>
+                                                                {("invoices" in l) && (l.invoices.length != 0) && <Text style = {houseProfileStyles.textWithButDivider}>
                                                                     {"\n"}
                                                                    <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
                                                                 </Text>}
                                                                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
                                                             
-                                                                    {("invoices" in l) && l.invoices.map((val, index) => ( 
+                                                                    {("invoices" in l) && (l.invoices.length != 0) && l.invoices.map((val, index) => ( 
                                                                         <View style={docImageUploaderStyles.mediaImageContainer}>
                                                                             <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} changeable={false} navigation={navigation}/>
                                                                         </View>
@@ -96,14 +96,14 @@ const RecentActivity = ({map,slice,hKey}) => {
                                                                     }
                                                                 
                                                                 </ScrollView>
-                                                                {("contracts" in l) &&
+                                                                {("contracts" in l) && (l.contracts.length != 0) &&
                                                                 <Text style = {houseProfileStyles.textWithButDivider}>
                                                                     {"\n"}
                                                                      <Text style={{ fontWeight: "400" }}>{"Warranty / contract: "}</Text>
                                                                 </Text>}
                                                                 
                                                                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
-                                                                    {("contracts" in l) && l.contracts.map((val, index) => ( 
+                                                                    {("contracts" in l) && (l.contracts.length != 0) && l.contracts.map((val, index) => ( 
                                                                         <View style={docImageUploaderStyles.mediaImageContainer}>
                                                                             <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} changeable={false} navigation={navigation}/>
                                                                         </View>

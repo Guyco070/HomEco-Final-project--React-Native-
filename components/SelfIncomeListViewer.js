@@ -57,7 +57,7 @@ const SelfIncomeListViewer = ({map,slice}) => {
         >  
         <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Self Income</Text>
 
-            {sorteList &&  sorteList.slice(0,newSlice)
+            {sorteList && sorteList.length != 0 ?  sorteList.slice(0,newSlice)
                         .map((l, i) => 
                         (
                             <View key={i}>
@@ -79,37 +79,23 @@ const SelfIncomeListViewer = ({map,slice}) => {
                                                     {isExpendedConst && isExpendedConst[l.date.toDate()] &&
                                                         <Text style = {houseProfileStyles.textWithTopAndButDividers}>
                                                            <Text style={{ fontWeight: "400" }}>{"Description: " + l.desc}</Text>
-                                                           {"\n"}<Text style={{ fontWeight: "400" }}>{"Billing type:" + l.billingType}</Text>
+                                                           {"\n"}<Text style={{ fontWeight: "400" }}>{"Income type:" + l.incomeType}</Text>
                                                            {"\n"}
                                                            <View>
-                                                                {("payslips" in l) && <Text style = {houseProfileStyles.textWithButDivider}>
+                                                                {("payslips" in l) && (l.payslips.length != 0) && <Text style = {houseProfileStyles.textWithButDivider}>
                                                                     {"\n"}
-                                                                   <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
+                                                                   <Text style={{ fontWeight: "400" }}>{"Payslips: "}</Text>
                                                                 </Text>}
                                                                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
                                                             
-                                                                    {("payslips" in l) && l.payslips.map((val, index) => ( 
+                                                                    {("payslips" in l) && (l.payslips.length != 0) && l.payslips.map((val, index) => ( 
                                                                         <View style={docImageUploaderStyles.mediaImageContainer}>
                                                                             <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} changeable={false} navigation={navigation}/>
                                                                         </View>
                                                                         ))
                                                                     }
                                                                 
-                                                                </ScrollView>
-                                                                {("contracts" in l) &&
-                                                                <Text style = {houseProfileStyles.textWithButDivider}>
-                                                                    {"\n"}
-                                                                     <Text style={{ fontWeight: "400" }}>{"Warranty / contract: "}</Text>
-                                                                </Text>}
-                                                                
-                                                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
-                                                                    {("contracts" in l) && l.contracts.map((val, index) => ( 
-                                                                        <View style={docImageUploaderStyles.mediaImageContainer}>
-                                                                            <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} changeable={false} navigation={navigation}/>
-                                                                        </View>
-                                                                        ))
-                                                                    }                 
-                                                                </ScrollView>
+                                                                </ScrollView>     
                                                             </View> 
                                                             {"\n"}
                                                             { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
@@ -139,7 +125,9 @@ const SelfIncomeListViewer = ({map,slice}) => {
                                 </View>
                             </View>
                         )
-            )}
+            ):
+            <Text style={[houseProfileStyles.subText, {marginHorizontal:55,marginBottom:10,fontSize:10}]}>- Empty -</Text>
+        }
         </ScrollView>)}
             <View style={{flexDirection:"row" ,alignSelf:'center'}}>
             { newSlice < sorteList.length &&

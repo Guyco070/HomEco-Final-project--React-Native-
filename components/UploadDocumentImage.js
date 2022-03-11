@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Image, View, Platform, TouchableOpacity, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { styles,docImageUploaderStyles } from '../styleSheet';
+import { styles,docImageUploaderStyles,TodoSheet } from '../styleSheet';
 import * as ImagePicker from 'expo-image-picker';
+import Icon from 'react-native-fontawesome';
 
 
 export default function UploadDocumentImage(props) {
@@ -28,12 +29,21 @@ export default function UploadDocumentImage(props) {
           <Image source={props.image ? {uri: props.image} : props.tempImage}
                       resizeMode="center" style={styles.image}/>
       {props.changeable &&
+      <>
           <View style={docImageUploaderStyles.uploadBtnContainer}>
             <TouchableOpacity onPress={props.onPress} style={docImageUploaderStyles.uploadBtn}  >
                   <Text >{ props.image ? 'Edit' : 'Upload'} Image</Text>
                   <AntDesign name="camera" size={17} color="black" />
               </TouchableOpacity>
-          </View>}
+          </View>
+          <View style={docImageUploaderStyles.removeBtnContainer}>
+        
+          {props.onRemove != -1 && 
+          <TouchableOpacity  style={docImageUploaderStyles.removeBtn} onPress={props.onRemove}>
+                  <AntDesign name="close" size={17} color="black" />
+          </TouchableOpacity>}
+        </View>
+        </>}
       </View>
       </TouchableOpacity>
     </View>

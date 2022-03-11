@@ -62,6 +62,19 @@ const EditSelfIncomeScreen = ({route}) => {
         }
     }
 
+    const onRemove = async (index) => {
+        const tempCatchPayslipsImages = []
+        let i = 0
+        for(let key in catchPayslipsImages) {
+            console.log(i)
+
+            if(index != key) {
+                tempCatchPayslipsImages[i] = catchPayslipsImages[key]
+            }
+        }
+        setPayslipsCatchImage([...tempCatchPayslipsImages])
+    } 
+
     const handleAddButtonClick = () => {
         };
 
@@ -141,12 +154,12 @@ const EditSelfIncomeScreen = ({route}) => {
                     {
                         catchPayslipsImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
-                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('payslip',index)} changeable={true} navigation={navigation}/>
+                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('payslip',index)} onRemove={() => onRemove(index)} changeable={true} navigation={navigation}/>
                             </View>
                             ))
                         }
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
-                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('payslip',-1)} changeable={true} navigation={navigation}/>
+                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('payslip',-1)} onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
 
                     </ScrollView>

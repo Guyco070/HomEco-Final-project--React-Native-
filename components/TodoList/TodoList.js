@@ -33,13 +33,16 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
         firebase.getByDocIdFromFirestore('houses', hKey).then((house) => setItems(house[listName]))
 
 		let tempIsAllMarked = true
-		for(let item in items)
-			if(!items[item].isSelected) {tempIsAllMarked = false; break;}
+		if(items.length == 0)
+			tempIsAllMarked = false
+		else
+			for(let item in items)
+				if(!items[item].isSelected) {tempIsAllMarked = false; break;}
 		setIsAllMarked(tempIsAllMarked)
       },[])
 
 	  useEffect(() => {
-		if(items && items.length>0)
+		if(items)
 			firebase.updateCollectAtFirestore("houses", hKey, listName, items)
 					.then(firebase.getByDocIdFromFirestore('houses', hKey)
 								.then((house) => {if(listName in house) setItems(house[listName])}))
@@ -50,6 +53,8 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
 	};
 
 	const handleAddButtonClickGetVal = (inputValue) => {
+		alert("xxx")
+
 		if(inputValue){
 			let isIn = -1
 			for(let i in items)
@@ -121,8 +126,11 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
 		setIsChanged(!isChanged)
 
 		let tempIsAllMarked = true
-		for(let item in items)
-			if(!items[item].isSelected) {tempIsAllMarked = false; break;}
+		if(items.length == 0)
+			tempIsAllMarked = false
+		else
+			for(let item in items)
+				if(!items[item].isSelected) {tempIsAllMarked = false; break;}
 		setIsAllMarked(tempIsAllMarked)
 	};
 

@@ -155,6 +155,17 @@ const docImageUploaderStyles=StyleSheet.create({
         alignItems:"center",
         justifyContent:'center'
     },
+    removeBtnContainer:{
+        position:'absolute',
+        left:0,
+        top:0,
+    },
+    removeBtn:{
+        display:'flex',
+        alignItems:"flex-start",
+        margin: 5,
+        justifyContent:'center'
+    },
 
     mediaImageContainer: {
         width: 180,

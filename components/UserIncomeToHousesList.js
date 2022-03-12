@@ -3,10 +3,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Text, View,Image,ScrollView, TouchableOpacity,KeyboardAvoidingView, Alert } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
-import Input from '../components/Inputs';
+import Input from './Inputs';
 import { docImageUploaderStyles, houseProfileStyles, styles } from '../styleSheet'
 import * as ImagePicker from 'expo-image-picker';
-import UploadProfileImage from '../components/UploadProfileImage';
+import UploadProfileImage from './UploadProfileImage';
 import { ListItem, Avatar } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
 import { Divider } from 'react-native-elements/dist/divider/Divider';
@@ -93,7 +93,7 @@ const UserIncomeToHosesList = (props) => {
                                         <View style={[styles.container, { marginHorizontal:30, width:'100%'}]}>
                                             <Input name="Change" icon="money" onChangeText={text => {hIncomeToChange[i] = text; setHIncomeToChange([...hIncomeToChange])}} />
                                         </View>
-                                        <Text style={[styles.textBody , {color: 'blue',marginBottom:10}]} onPress={() => handleChangeIncomeTohouse(l,i)}>Save new income</Text>
+                                        <Text style={[styles.textBody , {color: 'blue',marginBottom:25,marginTop:10}]} onPress={() => handleChangeIncomeTohouse(l,i)}>Save new income</Text>
                                     </View>
                                 )}
                             </>

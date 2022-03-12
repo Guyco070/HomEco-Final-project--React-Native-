@@ -13,6 +13,7 @@ import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { set } from 'react-native-reanimated';
 import Loading from '../components/Loading';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
+import ChangePermissions from '../components/ChangePermissions';
 
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
@@ -31,6 +32,7 @@ const EditHouseProfileScreen =({route}) => {
     const [newHName, setNewHName] = useState('');
     const [hPartners, setPartners] = useState([]);
     const [oldHPartners, setOldHPartners] = useState([]);
+    const [oldHFullPartners, setOldHFullPartners] = useState([]);
     const [partnersList, setPartnersList] = useState([]);
     const [desc, setDesc] = useState('');
     const [hKey, setHKey] = useState('');
@@ -45,12 +47,15 @@ const EditHouseProfileScreen =({route}) => {
       useEffect(() => {
         const house = route.params
         setImage(house.hImage)
+        setCatchImage(house.hImage)
         setHName(house.hName)
         setNewHName(house.hName)
         setDesc(house.description)
         setHKey(firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail))
+        setOldHFullPartners(route.params["partners"])
         firebase.getUserArrayFromPartnersDict(route.params["partners"])
-        .then(arr => {setPartners(arr); setOldHPartners(arr)})
+        .then(arr => {setPartners(arr); setOldHPartners(arr);
+        })
     }, [route])
 
     
@@ -98,7 +103,7 @@ const EditHouseProfileScreen =({route}) => {
            setHKey(firebase.getHouseKeyByNameAndCreatorEmail(newHName,route.params["cEmail"]))
         }
         else{
-            firebase.updateDocAllColsAtFirestore("houses",hKey,{hImage:catchImage, description: desc, partners: firebase.updateHousePartners(hPartners, oldHPartners)})
+            firebase.updateDocAllColsAtFirestore("houses",hKey,{hImage:catchImage, description: desc, partners: firebase.updateHousePartners(hPartners, oldHPartners, oldHFullPartners)})
         }
         navigation.replace("HouseProfile",{hKeyP: hKey})
     }
@@ -215,6 +220,9 @@ const EditHouseProfileScreen =({route}) => {
                     <Divider  orientation="horizontal" width={1} style={{color: 'lightgrey' }}/>
                 </View>
             }
+
+
+            <ChangePermissions house={route.params} onPress={setOldHFullPartners} oldHFullPartners={oldHFullPartners} hPartners={hPartners}/>
             <View style={styles.container}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity

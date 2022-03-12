@@ -55,7 +55,9 @@ const RecentActivity = ({map,slice,hKey}) => {
         style={{width:'80%',}}
         >  
         <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
-
+        { sorteList.length == 0 &&
+              <Text style={[houseProfileStyles.subText, {marginHorizontal:55,marginBottom:10,fontSize:10}]}>- None -</Text>
+             }
             {sorteList &&  sorteList.slice(0,newSlice)
                         .map((l, i) => 
                         (

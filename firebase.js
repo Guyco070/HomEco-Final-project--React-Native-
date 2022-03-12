@@ -148,14 +148,13 @@ const updateCollectAtFirestore = async(collect,key, col, newValue) => {
 }
 
 const updateDocAllColsAtFirestore = async(collect,key,newValuesDict) => {
-  console.log(newValuesDict)
   const Data = doc(db, collect, key)
   await updateDoc(Data , newValuesDict)
 }
 
 const setDefaultHousePartners = (partners) => {
   let partnersDict = {}
-  let defPermitions = {"seeIncome": false, "seeMonthlyBills": false}
+  let permissions = {"seeIncome": false, "seeMonthlyBills": false}
 
 
   for(let i in partners){
@@ -163,16 +162,16 @@ const setDefaultHousePartners = (partners) => {
       user : partners[i],
       isAuth: false,
       nowIn : false,
-      defPermitions : defPermitions, 
+      permissions : permissions, 
       incomeToCurHouse: 0, // {[ company, amount ]}
       expends: {}, // {[ reasone, amount ]}
       allowance: {} // {[ from, amount ],...}
     }
-    defPermitions = {"seeIncome": true, "seeMonthlyBills": true}
+    permissions = {"seeIncome": true, "seeMonthlyBills": true}
   }
   partnersDict[partners[0].email].isAuth = true
   partnersDict[partners[0].email].nowIn = true
-  partnersDict[partners[0].email].defPermitions = defPermitions
+  partnersDict[partners[0].email].permissions = permissions
   return partnersDict
 }
 
@@ -199,29 +198,51 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
   return house
 }
 
-const updateHousePartners = (partners, oldPartners) => {
+const updateHousePartners = (partners, oldPartners, oldHFullPartners) => {
   let partnersDict = {}
-  let defPermitions = {"seeIncome": false, "seeMonthlyBills": false}
+  let permissions = {"seeIncome": false, "seeMonthlyBills": false}
+  console.log("partners")
+  console.log(partners)
+  console.log("oldHFullPartners")
+  console.log(oldHFullPartners)
 
     for(let i in partners){
 
       for(let j in oldPartners)
         if(partners[i] == oldPartners[j])
-          partnersDict[partners[i]["email"]] = oldPartners[i]
-
-      if(!(partners[i]["email"] in Object.keys(partnersDict))){
-        partnersDict[partners[i]["email"]] = {
-          user : partners[i],
-          isAuth: false,
-          nowIn : false,
-          defPermitions : defPermitions, 
-          incomeToCurHouse: 0, // {[ company, amount ]}
-          expends: {}, // {[ reasone, amount ]}
-          allowance: {} // {[ from, amount ],...}
+          partnersDict[partners[i]["email"]] = oldHFullPartners[oldPartners[j].email]
+        
+      if(!(partners[i]["email"] in partnersDict)){
+        if(!(partners[i]["email"] in oldHFullPartners)){
+            partnersDict[partners[i]["email"]] = {
+              user : partners[i],
+              isAuth: false,
+              nowIn : false,
+              permissions : permissions, 
+              incomeToCurHouse: 0, // {[ company, amount ]}
+              expends: {}, // {[ reasone, amount ]}
+              allowance: {} // {[ from, amount ],...}
+          }
+        }else{
+          const curPartner = [partners[i]["email"]]
+            partnersDict[curPartner] = {
+              user : oldHFullPartners[curPartner].user,
+              isAuth: oldHFullPartners[curPartner].isAuth,
+              nowIn : oldHFullPartners[curPartner].nowIn,
+              permissions : oldHFullPartners[curPartner].permissions, 
+              incomeToCurHouse: oldHFullPartners[curPartner].incomeToCurHouse, // {[ company, amount ]}
+              expends: oldHFullPartners[curPartner].expends, // {[ reasone, amount ]}
+              allowance: oldHFullPartners[curPartner].allowance // {[ from, amount ],...}
+          }
+        }
+      console.log("partners[i]")
+      console.log(partners[i]["email"])
       }
-      return partnersDict
-    }
   }
+  console.log("partnersDict")
+    console.log(partnersDict)
+
+    return partnersDict
 }
 
 const replaceUpdatedHouseToFirestore = async(house, newHName, partners, hImage, description) => {
@@ -282,7 +303,7 @@ const getHouseIncomeFromFirestore = async(hKey) => {
 const getHouseIncome = (house) => {
     let hIncome = 0
    if(house.partners){
-      for(const key in house.partners) { hIncome += parseInt(partners[key].incomeToCurHouse)}
+      for(const key in house.partners) { hIncome += parseInt(house.partners[key].incomeToCurHouse); }
     }
      return hIncome
 }

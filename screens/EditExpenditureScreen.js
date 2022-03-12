@@ -168,7 +168,7 @@ const EditExpenditureScreen = ({route}) => {
                     <Text style = {houseProfileStyles.textWithButDivider}>
                         <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
                     </Text>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{height: 70}} >
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} style={{height: 70}} >
                     {
                         catchInvoImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>

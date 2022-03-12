@@ -48,7 +48,7 @@ const HouseProfileScreen = ({route}) => {
     useEffect(() => {
         if(house){
             setHExpedns(firebase.getHouseExpendsAmount(house.expends))
-            setHIncom(firebase.getHouseIncome(hKey))
+            setHIncom(firebase.getHouseIncome(house))
             setLoading(false)
         }
     }, [house])

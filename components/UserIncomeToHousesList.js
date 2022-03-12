@@ -30,15 +30,15 @@ const UserIncomeToHosesList = (props) => {
                 let tempChangeHIncome = []
                 let tempChangeHIncomeToChange = []
                 for(let i in houses){
-                    console.log(houses[i])
                     tempChangeIncome[i] = false
                     tempChangeHIncome[i] = firebase.getUserIncomeToHouse(houses[i], props.user["email"])
                     tempChangeHIncomeToChange[i] = tempChangeHIncome[i]
                 }
                 
-                
+               
                 setChangeIncome([...tempChangeIncome])
                 setHIncome([...tempChangeHIncome])
+                
                 setHIncomeToChange([...tempChangeHIncomeToChange])
                 
                 sethousesList(houses); 

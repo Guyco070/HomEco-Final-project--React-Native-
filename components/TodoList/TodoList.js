@@ -15,7 +15,7 @@ import Toast from 'react-native-toast-message';
 const TodoList = ({hKey,listName,uEmail, navigation}) => {
 	// HINT: each "item" in our list names a name,
 	// a boolean to tell if its been completed, and a quantity
-	const [items, setItems] = useState([]);
+	const [items, setItems] = useState();
 
 	const [inputValue, setinputValue] = useState('');
 	const [totalItemCount, setTotalItemCount] = useState(6);
@@ -30,15 +30,16 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
 
 
 	useEffect(() => {
-        firebase.getByDocIdFromFirestore('houses', hKey).then((house) => setItems(house[listName]))
-
-		let tempIsAllMarked = true
-		if(items.length == 0)
-			tempIsAllMarked = false
-		else
-			for(let item in items)
-				if(!items[item].isSelected) {tempIsAllMarked = false; break;}
-		setIsAllMarked(tempIsAllMarked)
+        firebase.getByDocIdFromFirestore('houses', hKey).then((house) => {setItems(house[listName])
+			let tempIsAllMarked = true
+			if(items.length == 0)
+				tempIsAllMarked = false
+			else
+				for(let item in items)
+					if(!items[item].isSelected) {tempIsAllMarked = false; break;}
+			setIsAllMarked(tempIsAllMarked)
+		})
+		
       },[])
 
 	  useEffect(() => {

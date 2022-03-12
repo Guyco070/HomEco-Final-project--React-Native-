@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/checkbox": "^0.5.12",
     "@react-native-community/google-signin": "^5.0.0",
     "@react-native-firebase/app": "^13.1.0",
     "@react-navigation/drawer": "^6.1.8",

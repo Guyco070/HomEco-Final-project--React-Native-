@@ -4,7 +4,7 @@ import { Text, View,Image,ScrollView, TouchableOpacity,KeyboardAvoidingView, Ale
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
-import { styles } from '../styleSheet'
+import { houseProfileStyles, styles } from '../styleSheet'
 import * as ImagePicker from 'expo-image-picker';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -43,13 +43,16 @@ const UserHousesListView = (props) => {
         (<ScrollView 
         style={{width:'80%',}}
         >
-            {   !(props?.viewImage) &&
+
+            {   (props?.viewImage) || !("viewImage" in props)  &&
                 <TouchableScale
                 onPress={() => {navigation.navigate('UserProfileScreen')}}
                 >
                     <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {props.user.uImage} onPress={addImage} changeable={false} />
                 </TouchableScale>
             }
+            {housesList &&  <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0}]}>My houses</Text>}
+
             {housesList && 
                     housesList 
                         .map((l, i) => 

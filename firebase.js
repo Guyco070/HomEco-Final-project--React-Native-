@@ -382,22 +382,27 @@ const getSrtDateAndTimeToViewFromSrtDate = (date) =>{
 }
 
 const changePartnerIncomeOfHouse = async(hKey,uEmail,income) => {
-
   let partner = getHousePartnersByKey(hKey).then((partners) => {
-   if(partners){
-      console.log(partners)
       if(partners){
         for(const key in partners) { 
           if(partners[key].user["email"] == uEmail) {
             partners[key]["incomeToCurHouse"] = income
           } 
         }
-      updateCollectAtFirestore("houses", hKey, "partners" ,partners)
+        updateCollectAtFirestore("houses", hKey, "partners" ,partners)
       }
-    }
-     return {}
+      return {}
   }).catch((e) => alert(e.massege))
 }
+
+const getUserIncomeToHouse = (house,uEmail) => {
+      if(house.partners){
+        for(const key in house.partners) { 
+          if(house.partners[key].user["email"] == uEmail)
+            return house.partners[key]["incomeToCurHouse"]
+        }    
+      }
+    }
 
 const addProductToFirestore = async(barcode, name, brand) => {
   await setDoc(doc(collection(db, 'products'), barcode), {
@@ -409,6 +414,6 @@ const addProductToFirestore = async(barcode, name, brand) => {
 
 export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
-        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse,shoppingListToString, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse,
+        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse,shoppingListToString, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse,
         addProductToFirestore} 
 

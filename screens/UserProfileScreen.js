@@ -14,6 +14,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import TodoList from '../components/TodoList/TodoList';
 import Toast from 'react-native-toast-message';
 import UserHousesListView from '../components/UserHousesListView';
+import UserIncomeToHousesList from '../components/UserIncomeToHousesList';
 
 
  
@@ -52,14 +53,19 @@ const UserProfileScreen = ({route}) => {
                     <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.phone}</Text> 
                     <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.bDate}</Text> 
                 </View>
-                <View style={[styles.container,{marginVertical:15}]}>
-                    <UserHousesListView user={user} viewImage={true}/>
-                </View>
+
                 <SelfIncomeListViewer map = {user.incomes?user.incomes:[]} slice={3}/>
 
+                <View style={[styles.container,{marginVertical:15}]}>
+                    <UserHousesListView user={user} viewImage={false}/>
+                </View>
+               
+                <View style={[styles.container,{marginVertical:15}]}>
+                    <UserIncomeToHousesList user={user} viewImage={false}/>
+                </View>
                  <View style={[styles.container,{alignSelf:'center', width:'150%'}]}>
                  <      TouchableOpacity
-                            title="Add Expenditure"
+                            title="Add New Self Income"
                             onPress={() => {navigation.navigate('AddNewSelfIncome')}}
                             style={styles.button}
                             >

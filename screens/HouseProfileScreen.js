@@ -27,11 +27,9 @@ const HouseProfileScreen = ({route}) => {
     const navigation = useNavigation()
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState([]);
-    const [updatedHouse, setUpdatedHouse] = useState([]);
     const [house, setHouse] = useState(''); // first get, no update from dta base
     const [hKey, setHKey] = useState('');
     const [hIncome, setHIncom] = useState(undefined)
-    const [changeIncom, setChangeIncom] = useState(false)
     const [hExpedns, setHExpedns] = useState(undefined)
 
 
@@ -70,11 +68,6 @@ const HouseProfileScreen = ({route}) => {
         if(hIncome < hExpedns)
             return '#FF6347'
         else return 'lightgreen'
-    }
-
-    const handleCreateExpend = () => {
-        firebase.changePartnerIncomeOfHouse(hKey,user.email,hIncome)
-        setChangeIncom(false)
     }
 
     return (
@@ -168,21 +161,6 @@ const HouseProfileScreen = ({route}) => {
                             >
                             <Text style={styles.buttonText}>Add Expenditure</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            title="Change Income"
-                            onPress={() => {setChangeIncom(!changeIncom)}}
-                            style={styles.button}
-                            >
-                            <Text style={styles.buttonText}>Change Income</Text>
-                        </TouchableOpacity>
-                        {changeIncom && (
-                        <View style={[styles.buttonContainer,{marginBottom:0}]}>
-                            <View style={[styles.container, { marginHorizontal:30, width:'100%'}]}>
-                                <Input name="Change" icon="money" onChangeText={text => setHIncom(text)} />
-                            </View>
-                                    <Text style={[styles.textBody , {color: 'blue',marginBottom:10}]} onPress={handleCreateExpend}>Save new income</Text>
-                        </View>
-                        )}
 
                         <TouchableOpacity
                             title="Edit"

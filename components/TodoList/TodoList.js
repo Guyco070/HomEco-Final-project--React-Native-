@@ -53,8 +53,6 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
 	};
 
 	const handleAddButtonClickGetVal = (inputValue) => {
-		alert("xxx")
-
 		if(inputValue){
 			let isIn = -1
 			for(let i in items)

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { Directions } from 'react-native-gesture-handler'
 
 const styles = StyleSheet.create({
     container: {
@@ -33,10 +34,10 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#0782F9',
         width: '50%',
-        padding: 15,
-        borderRadius: 10,
+        padding: 10,
+        borderRadius: 100,
         alignItems: 'center',
-        marginTop: 10
+        marginTop: 30
     },
     buttonOutline: {
         backgroundColor: 'white',
@@ -176,6 +177,42 @@ const docImageUploaderStyles=StyleSheet.create({
 
 })
 
+const modelContent = StyleSheet.create({
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop:10,
+        
+    },
+    modalView: {
+        flexDirection: "row",
+        margin: 10,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 100,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+        width: 0,
+        height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    button: {
+        borderWidth:5,
+        borderColor:'#0782F9',
+        alignItems:'center',
+        justifyContent:'center',
+        width:70,
+        height:70,
+        marginHorizontal:10,
+        backgroundColor:'#fff',
+        borderRadius:50,
+    },
+});
 
 const houseProfileStyles = StyleSheet.create({
     container: {
@@ -461,4 +498,4 @@ const TodoSheet = StyleSheet.create({
         maxWidth:'70%'
       }
 })
-export {styles, imageUploaderStyles,docImageUploaderStyles, houseProfileStyles, TodoSheet}
+export {styles, imageUploaderStyles,docImageUploaderStyles, houseProfileStyles, TodoSheet, modelContent}

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox } from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal, Pressable} from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
-import { styles, houseProfileStyles, docImageUploaderStyles } from '../styleSheet'
+import { styles, houseProfileStyles, docImageUploaderStyles,modelContent } from '../styleSheet'
 import * as ImagePicker from 'expo-image-picker';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -13,6 +13,8 @@ import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
+import { Ionicons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
@@ -23,7 +25,7 @@ LogBox.ignoreLogs([
 const AddNewExpenditureScreen = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
-
+    const [modalOpen, setModalOpen] = useState(false)
     let [catchInvoImages, setInvoCatchImage] = useState([]);
     let [catchContractImages, setContractCatchImage] = useState([]);
     const [hImage, setImage] = useState('');
@@ -38,6 +40,7 @@ const AddNewExpenditureScreen = ({route}) => {
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
+        setModalOpen(true);
       }, [])
 
     const addImage = async (from,index) => {
@@ -64,7 +67,12 @@ const AddNewExpenditureScreen = ({route}) => {
 
     const handleAddButtonClick = () => {
         };
+    const handleAddDescription = (desc) => {
+        setModalOpen(false);
+        setDescription(desc);
+        console.log(desc);
 
+        };
     const handleCreateExpend = () => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
@@ -82,11 +90,11 @@ const AddNewExpenditureScreen = ({route}) => {
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
                 <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Expenditure</Text> 
                 <Input name="Company" icon="building" onChangeText={text => setCompany(text)} />
-                <Input name="Description" icon="comment" onChangeText={text => setDescription(text)} />
                 <Input name="Amount" icon="money" onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
+                <Text style={{height:50,width:100,marginTop:5}}>Recurrence</Text>
                 <Picker
                     selectedValue={billingType}
-                    style={{ height: 50, width: 150}}
+                    style={{ height: 130, width: 130,marginTop:1}}
                     onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
                 >
                     <Picker.Item label="Billing type" value="Billing type"/>
@@ -98,8 +106,63 @@ const AddNewExpenditureScreen = ({route}) => {
                     <Picker.Item label="Annual" value="Annual" />
                     <Picker.Item label="Biennial" value="Biennial" />
                 </Picker>
-
-                <View style={{ marginTop: 32, height: 440 }}>
+                <View> 
+                    <Modal visible={modalOpen}
+                            animationType="slide"
+                            transparent={true}
+                            >
+                        <View style = {modelContent.centeredView}>
+                            <View style = {modelContent.modalView}>
+                                <TouchableOpacity
+                                    title="Home"
+                                    leftIcon="Home"
+                                    onPress={() => handleAddDescription("Home")}
+                                    style={modelContent.button}
+                                    >
+                                        <Ionicons 
+                                            name={"home"}
+                                            size={15}
+                                            color={'black'}    
+                                        />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    title="Food"
+                                    onPress={() => handleAddDescription("Food")}
+                                    style={modelContent.button}
+                                    >
+                                        <Ionicons 
+                                            name="md-fast-food"
+                                            size={15}
+                                            color={'black'}    
+                                        />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    title="Car"
+                                    onPress={() => handleAddDescription("Car")}
+                                    style={modelContent.button}
+                                    >
+                                        <Ionicons 
+                                            name={"car"}
+                                            size={15}
+                                            color={'black'}    
+                                        />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    title="Travel"
+                                    onPress={() => handleAddDescription("Travel")}
+                                    style={modelContent.button}
+                                    >
+                                        <Entypo 
+                                            name={"aircraft"}
+                                            size={15}
+                                            color={'black'}    
+                                        />
+                                </TouchableOpacity>
+                            </View>
+                        </View> 
+                    </Modal>
+                </View>
+                <View style={{ marginTop: 100, height: 440 }}>
                     <Text style = {houseProfileStyles.textWithButDivider}>
                         <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
                     </Text>

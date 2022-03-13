@@ -66,7 +66,6 @@ const LoginScreen = () => {
                         >
                         <Text style={styles.buttonText}>Login</Text>
                     </TouchableOpacity>
-
                     <Text style={styles.textBody}>{'\n'}</Text>
                     {/*<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />*/}
 

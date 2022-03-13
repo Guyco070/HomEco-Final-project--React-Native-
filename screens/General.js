@@ -28,7 +28,15 @@ export default function App() {
   // Scale Intially must be One...
   const scaleValue = useRef(new Animated.Value(1)).current;
   const closeButtonOffset = useRef(new Animated.Value(0)).current;
-  
+  const handleSignOut = () => {
+    signOut(firebase.auth)
+    .then(() => {
+        console.log("Logout")
+        navigation.replace("Login")
+    })
+    .catch(error => alert(error.message)
+    );
+}
 
   
   useEffect(() => {

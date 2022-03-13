@@ -45,7 +45,7 @@ export default function App() {
         <Stack.Screen name="AddNewExpenditure" component={AddNewExpenditureScreen} />
         <Stack.Screen name="AddNewSelfIncome" component={AddNewSelfIncomeScreen} />
         <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} />
-        <Stack.Screen name="General" component={General} />
+        <Stack.Screen name="Sidebar" component={General} />
         <Stack.Screen name="ImageViewer" component={ImageViewer} options={{headerShown: false}}/>
         <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
         <Stack.Screen name="EditExpenditureScreen" component={EditExpenditureScreen} />

@@ -30,6 +30,9 @@ const HomeScreen = () => {
     const createNewHouseScreen = () => {
         navigation.navigate("CreateNewHouse",user)
     }
+    const SideBar = () => {
+        navigation.navigate("Sidebar",user)
+    }
      
     const handleSignOut = () => {
         signOut(firebase.auth)
@@ -64,8 +67,13 @@ const HomeScreen = () => {
                     <Text style={styles.buttonText}>Create New House</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
+                <Text style={styles.buttonText} onPress={SideBar} >Go To Side Bar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText} onPress={handleSignOut} >Sign out</Text>
             </TouchableOpacity></>}
+
+
         </View>
     )
 }

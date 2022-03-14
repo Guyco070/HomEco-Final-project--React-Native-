@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox } from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox,Modal } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
-import { styles, houseProfileStyles, docImageUploaderStyles } from '../styleSheet'
+import { styles, houseProfileStyles, docImageUploaderStyles,modelContent } from '../styleSheet'
 import * as ImagePicker from 'expo-image-picker';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -13,7 +13,7 @@ import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
-
+import { Ionicons ,Foundation,FontAwesome5,FontAwesome} from '@expo/vector-icons';
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 LogBox.ignoreLogs([
@@ -23,7 +23,7 @@ LogBox.ignoreLogs([
 const AddNewSelfIncomeScreen = () => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
-
+    const [modalOpen, setModalOpen] = useState(false)
     let [catchPayslipsImages, setPayslipsCatchImage] = useState([]);
     const [hImage, setImage] = useState('');
 
@@ -35,7 +35,8 @@ const AddNewSelfIncomeScreen = () => {
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
-      }, [])
+        setModalOpen(true);  
+    }, [])
 
     const addImage = async (from,index) => {
         let _image = await cloudinary.addDocImage()
@@ -55,6 +56,11 @@ const AddNewSelfIncomeScreen = () => {
 
     const handleAddButtonClick = () => {
         };
+    const handleAddDescription = (desc) => {
+        setModalOpen(false);
+        setDescription(desc);
+        console.log(desc);
+    };
 
     const handleCreateIncome = () => {
         if(incomeType == "Icome type") alert("Sorry, Billing type is the title... ")
@@ -73,7 +79,6 @@ const AddNewSelfIncomeScreen = () => {
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
                 <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Self Income</Text> 
                 <Input name="Company" icon="building" onChangeText={text => setCompany(text)} />
-                <Input name="Description" icon="comment" onChangeText={text => setDescription(text)} />
                 <Input name="Amount" icon="money" onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
                 <Picker
                     selectedValue={incomeType}
@@ -89,7 +94,67 @@ const AddNewSelfIncomeScreen = () => {
                     <Picker.Item label="Annual" value="Annual" />
                     <Picker.Item label="Biennial" value="Biennial" />
                 </Picker>
-
+                <View style = {modelContent.centeredView}> 
+                    <Modal visible={modalOpen}
+                            animationType="slide"
+                            transparent={true}
+                            >
+                            <View style = {modelContent.modalView}>
+                                <TouchableOpacity
+                                    title="Gift"
+                                    onPress={() => handleAddDescription("Gift")}
+                                    style={modelContent.button}
+                                    >
+                                        <Ionicons 
+                                            name={"gift-sharp"}
+                                            size={20}
+                                            color={'#0782F9'} 
+                                            style={{top:10}}   
+                                        />
+                                        <Text style={{top:37}}>Gift</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    title="Business"
+                                    onPress={() => handleAddDescription("Business")}
+                                    style={modelContent.button}
+                                    >
+                                        <Foundation 
+                                            name="torso-business"
+                                            size={23} 
+                                            color="#0782F9" 
+                                            style={{top:12}}   
+                                        />
+                                        <Text style={{top:37,margin:1}}>Business</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    title="Loan"
+                                    onPress={() => handleAddDescription("Loan")}
+                                    style={modelContent.button}
+                                    >
+                                        <FontAwesome
+                                            name="bank"
+                                            size={20}
+                                            color="#0782F9"
+                                            style={{top:10}}
+                                            />
+                                    <Text style={{top:37,margin:1}}>Loan</Text>        
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    title="ExtraIncome"
+                                    onPress={() => handleAddDescription("Extra Income")}
+                                    style={modelContent.button}
+                                    >
+                                        <FontAwesome5
+                                            name="money-bill-wave"
+                                            size={20}
+                                            color="#0782F9"
+                                            style={{top:10}}
+                                            />
+                                    <Text style={{top:37,margin:1}}>Salary</Text>        
+                                </TouchableOpacity>
+                            </View>
+                    </Modal>
+                </View>
                 <View style={{ marginTop: 32, height: 220 }}>
                     <Text style = {houseProfileStyles.textWithButDivider}>
                         <Text style={{ fontWeight: "400" }}>{"Payslips: "}</Text>

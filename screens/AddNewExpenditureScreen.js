@@ -13,8 +13,7 @@ import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
-import { Ionicons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
+import { Ionicons ,Entypo} from '@expo/vector-icons';
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
@@ -106,12 +105,11 @@ const AddNewExpenditureScreen = ({route}) => {
                     <Picker.Item label="Annual" value="Annual" />
                     <Picker.Item label="Biennial" value="Biennial" />
                 </Picker>
-                <View> 
+                <View style = {modelContent.centeredView}> 
                     <Modal visible={modalOpen}
                             animationType="slide"
                             transparent={true}
                             >
-                        <View style = {modelContent.centeredView}>
                             <View style = {modelContent.modalView}>
                                 <TouchableOpacity
                                     title="Home"
@@ -121,9 +119,11 @@ const AddNewExpenditureScreen = ({route}) => {
                                     >
                                         <Ionicons 
                                             name={"home"}
-                                            size={15}
-                                            color={'black'}    
-                                        />
+                                            size={20}
+                                            color={'#0782F9'}
+                                            style={{top:10}}
+                                            />
+                                    <Text style={{top:37,margin:1}}>Home</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     title="Food"
@@ -132,9 +132,11 @@ const AddNewExpenditureScreen = ({route}) => {
                                     >
                                         <Ionicons 
                                             name="md-fast-food"
-                                            size={15}
-                                            color={'black'}    
-                                        />
+                                            size={20}
+                                            color={'#0782F9'}
+                                            style={{top:10}}
+                                            />
+                                    <Text style={{top:37,margin:1}}>Food</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     title="Car"
@@ -143,9 +145,11 @@ const AddNewExpenditureScreen = ({route}) => {
                                     >
                                         <Ionicons 
                                             name={"car"}
-                                            size={15}
-                                            color={'black'}    
-                                        />
+                                            size={20}
+                                            color={'#0782F9'}  
+                                            style={{top:10}}
+                                            />
+                                    <Text style={{top:37,margin:1}}>Car</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     title="Travel"
@@ -154,12 +158,13 @@ const AddNewExpenditureScreen = ({route}) => {
                                     >
                                         <Entypo 
                                             name={"aircraft"}
-                                            size={15}
-                                            color={'black'}    
-                                        />
+                                            size={20}
+                                            color={'#0782F9'}
+                                            style={{top:10}}
+                                            />
+                                    <Text style={{top:37,margin:1}}>Travel</Text>
                                 </TouchableOpacity>
                             </View>
-                        </View> 
                     </Modal>
                 </View>
                 <View style={{ marginTop: 100, height: 440 }}>

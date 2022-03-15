@@ -182,11 +182,8 @@ const modelContent = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop:200,
-        
     },
     modalView: {
-        flexDirection: "row",
         margin: 1,
         marginTop:450,
         backgroundColor: "white",
@@ -196,11 +193,16 @@ const modelContent = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
         width: 0,
-        height: 2
+        height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+    },
+    modalRowView: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop:10,
+        height:"100%"
     },
     button: {
         backgroundColor:'#0782F9',

@@ -31,6 +31,7 @@ const AddNewExpenditureScreen = ({route}) => {
 
     const [company, setCompany] = useState('');
     const [desc, setDescription] = useState('');
+    const [descIcon, setDescriptionIcon] = useState('home');
     const [amount, setAmount] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
 
@@ -39,7 +40,6 @@ const AddNewExpenditureScreen = ({route}) => {
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
-        setModalOpen(true);
       }, [])
 
     const addImage = async (from,index) => {
@@ -85,15 +85,30 @@ const AddNewExpenditureScreen = ({route}) => {
         <ScrollView style={{backgroundColor: 'white'}}>
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
 
-            <View style={[styles.container]}>
+            <View style={[styles.container,{backgroundColor: modalOpen?'rgba(52, 52, 52, 0.8)':'white'}]}>
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
                 <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Expenditure</Text> 
                 <Input name="Company" icon="building" onChangeText={text => setCompany(text)} />
                 <Input name="Amount" icon="money" onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
-                <Text style={{height:50,width:100,marginTop:5}}>Recurrence</Text>
+           
+                        <TouchableOpacity
+                                    title="Home"
+                                    leftIcon="Home"
+                                    onPress={() => setModalOpen(true)}
+                                    style={[modelContent.button,{marginBottom:0}]}
+                                    >
+                                        <Ionicons 
+                                            name={descIcon}
+                                            size={20}
+                                            color={'#0782F9'}
+                                            style={{top:10}}
+                                            />
+                                    <Text style={{top:37,margin:1}}>{desc}</Text>
+                                </TouchableOpacity>
+   
                 <Picker
                     selectedValue={billingType}
-                    style={{ height: 130, width: 130,marginTop:1}}
+                    style={{ height: 130, width: "50%",marginTop:10}}
                     onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
                 >
                     <Picker.Item label="Billing type" value="Billing type"/>
@@ -111,59 +126,117 @@ const AddNewExpenditureScreen = ({route}) => {
                             transparent={true}
                             >
                             <View style = {modelContent.modalView}>
-                                <TouchableOpacity
-                                    title="Home"
-                                    leftIcon="Home"
-                                    onPress={() => handleAddDescription("Home")}
-                                    style={modelContent.button}
-                                    >
-                                        <Ionicons 
-                                            name={"home"}
-                                            size={20}
-                                            color={'#0782F9'}
-                                            style={{top:10}}
-                                            />
-                                    <Text style={{top:37,margin:1}}>Home</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    title="Food"
-                                    onPress={() => handleAddDescription("Food")}
-                                    style={modelContent.button}
-                                    >
-                                        <Ionicons 
-                                            name="md-fast-food"
-                                            size={20}
-                                            color={'#0782F9'}
-                                            style={{top:10}}
-                                            />
-                                    <Text style={{top:37,margin:1}}>Food</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    title="Car"
-                                    onPress={() => handleAddDescription("Car")}
-                                    style={modelContent.button}
-                                    >
-                                        <Ionicons 
-                                            name={"car"}
-                                            size={20}
-                                            color={'#0782F9'}  
-                                            style={{top:10}}
-                                            />
-                                    <Text style={{top:37,margin:1}}>Car</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    title="Travel"
-                                    onPress={() => handleAddDescription("Travel")}
-                                    style={modelContent.button}
-                                    >
-                                        <Entypo 
-                                            name={"aircraft"}
-                                            size={20}
-                                            color={'#0782F9'}
-                                            style={{top:10}}
-                                            />
-                                    <Text style={{top:37,margin:1}}>Travel</Text>
-                                </TouchableOpacity>
+                                <View style={[modelContent.modalRowView,{paddingTop:40,}]}>
+                                    <TouchableOpacity
+                                        title="Home"
+                                        leftIcon="Home"
+                                        onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name={"home"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Food"
+                                        onPress={() => {handleAddDescription("Food"); setDescriptionIcon("md-fast-food")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name="md-fast-food"
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Food</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Car"
+                                        onPress={() => {handleAddDescription("Car"); setDescriptionIcon("car")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name={"car"}
+                                                size={20}
+                                                color={'#0782F9'}  
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Car</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Travel"
+                                        onPress={() => {handleAddDescription("Travel"); setDescriptionIcon("aircraft")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Entypo 
+                                                name={"aircraft"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Travel</Text>
+                                    </TouchableOpacity>
+                                    </View>
+
+                                <View style={[modelContent.modalRowView,{margin:0, height:0}]}>
+                                    <TouchableOpacity
+                                        title="Home"
+                                        leftIcon="Home"
+                                        onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name={"home"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Food"
+                                        onPress={() => {handleAddDescription("Food"); setDescriptionIcon("md-fast-food")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name="md-fast-food"
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Food</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Car"
+                                        onPress={() => {handleAddDescription("Car"); setDescriptionIcon("car")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name={"car"}
+                                                size={20}
+                                                color={'#0782F9'}  
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Car</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Travel"
+                                        onPress={() => {handleAddDescription("Travel"); setDescriptionIcon("aircraft")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Entypo 
+                                                name={"aircraft"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Other</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                     </Modal>
                 </View>

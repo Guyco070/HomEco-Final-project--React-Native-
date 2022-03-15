@@ -225,7 +225,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Travel"
-                                        onPress={() => {handleAddDescription("Travel"); setDescriptionIcon("aircraft")}}
+                                        onPress={() => {handleAddDescription("Travel"); setDescriptionIcon("airplane")}}
                                         style={modelContent.button}
                                         >
                                             <Entypo 

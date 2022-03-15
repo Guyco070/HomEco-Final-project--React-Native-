@@ -169,7 +169,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Travel"
-                                        onPress={() => {handleAddDescription("Travel"); setDescriptionIcon("aircraft")}}
+                                        onPress={() => {handleAddDescription("Travel"); setDescriptionIcon("airplane")}}
                                         style={modelContent.button}
                                         >
                                             <Entypo 
@@ -224,8 +224,8 @@ const AddNewExpenditureScreen = ({route}) => {
                                         <Text style={{top:37,margin:1}}>Car</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        title="Travel"
-                                        onPress={() => {handleAddDescription("Travel"); setDescriptionIcon("airplane")}}
+                                        title="Oter"
+                                        onPress={() => {handleAddDescription("Other"); setDescriptionIcon("airplane")}}
                                         style={modelContent.button}
                                         >
                                             <Entypo 
@@ -234,7 +234,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Other</Text>
+                                        <Text style={{top:37,margin:1}}>Oter</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>

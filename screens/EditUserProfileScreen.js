@@ -13,6 +13,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "fireb
 import Loading from '../components/Loading';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import LoginScreen from './LoginScreen';
 
 
 const EditUserProfileScreen = () => {
@@ -28,7 +29,7 @@ const EditUserProfileScreen = () => {
 
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [text, setText] = useState('Empty');
+    const [dateText, setDateText] = useState('Empty');
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
@@ -45,7 +46,7 @@ const EditUserProfileScreen = () => {
             let tempText = tempDate[0] + '/' + tempDate[1] + '/' + tempDate[2]
             tempDate = tempDate[1] + '/' + tempDate[0] + '/' + tempDate[2]
             setBDate(new Date(tempDate))
-            setText(tempText)
+            setDateText(tempText)
         }
         setPhone(user.phone)
     },[user])
@@ -57,8 +58,7 @@ const EditUserProfileScreen = () => {
         let tempDate = new Date(currentDate)
         let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let fTime = 'Hours: ' + tempDate.getHours() + " | Minutes: " + tempDate.getMinutes()
-        setText(fDate)
-        console.log(fDate + '\n' + fTime)
+        setDateText(fDate)
     }
 
     const showMode = (currentMode) => {
@@ -119,10 +119,8 @@ const EditUserProfileScreen = () => {
                         onPress={ () => showMode('date')}
                         style={{ textAlign:'left', flex:1}}
                         >
-                <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1 }}>{bDate? text : ""}</Text>
-                
+                    <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1 }}>{bDate? dateText : ""}</Text> 
                 </TouchableOpacity>
-                
             </View>
             
 
@@ -144,6 +142,8 @@ const EditUserProfileScreen = () => {
                         <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
             </View>
+            <Text style={[styles.textBody , {color: 'blue'}]} onPress={() => navigation.navigate('SignUp')}>Sign Up</Text>
+
         </ScrollView>
     )
 };

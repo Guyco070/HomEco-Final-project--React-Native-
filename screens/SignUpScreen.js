@@ -12,6 +12,8 @@ import { styles,imageUploaderStyles } from '../styleSheet';
 import Input from '../components/Inputs';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const SignUpScreen = props => {
@@ -25,14 +27,18 @@ const SignUpScreen = props => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    useEffect(() => {
-        const unsubscribe = firebase.auth.onAuthStateChanged(user => {
-            if(user){
-                navigation.replace("Home")
-            }
-        })
-        return unsubscribe
-    }, [])
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [dateText, setDateText] = useState('Empty');
+
+    // useEffect(() => {
+    //     const unsubscribe = firebase.auth.onAuthStateChanged(user => {
+    //         if(user){
+    //             navigation.replace("Home")
+    //         }
+    //     })
+    //     return unsubscribe
+    // }, [])
 
     const addImage = async () => {
         let _image = await cloudinary.addImage()
@@ -52,6 +58,21 @@ const SignUpScreen = props => {
         .catch(error => alert(error.message, email, password));
     }
 
+    const onDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || bDate;
+        setShow(Platform.OS === 'ios')
+        setBDate(currentDate)
+        let tempDate = new Date(currentDate)
+        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let fTime = 'Hours: ' + tempDate.getHours() + " | Minutes: " + tempDate.getMinutes()
+        setDateText(fDate)
+    }
+
+    const showMode = (currentMode) => {
+        setShow(true)
+        setMode(currentMode)
+      }
+
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage} changeable={true}/>
@@ -61,7 +82,27 @@ const SignUpScreen = props => {
                 <Input name="First Name" icon="user" onChangeText={text => setFName(text)} />
                 <Input name="Last Name" icon="user" onChangeText={text => setLName(text)} />
                 <Input name="Phone" icon="phone" keyboardType="phone-pad" onChangeText={text => setPhone(text)} /> 
-                <Input name="Birth Date" icon= 'birthday-cake' onChangeText={text => setBDate(text)} /> 
+                <View style={styles.dateInputButton}>
+                    <Icon name={'birthday-cake'} size={22}
+                                color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                    <TouchableOpacity
+                            title="Birth Date"
+                            onPress={ () => showMode('date')}
+                            style={{ textAlign:'left', flex:1}}
+                            >
+                        <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:bDate?'black':'grey' }}>{bDate? dateText : "Birth Day"}</Text> 
+                    </TouchableOpacity>
+                </View>
+                {show &&
+                    (<DateTimePicker 
+                    testID='dateTimePickeer'
+                    value = {bDate? bDate: new Date()}
+                    mode = {mode}
+                    is24Hour = {true}
+                    display='default'
+                    onChange={ onDateChange }
+                    />)
+                }
                 <Input name="Email" icon="envelope" keyboardType="email-address" onChangeText={text => setEmail(text)} /> 
                 <Input name="Password" icon="lock" pass={true} onChangeText={text => setPassword(text)} />
                 <Input name="Confirm Password" icon="lock" pass={true} onChangeText={(text) => {}}/>

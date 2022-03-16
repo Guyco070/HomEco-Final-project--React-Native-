@@ -35,7 +35,7 @@ const LoginScreen = () => {
         })
         .catch(error => {
             alert(error.message, email)
-            // firebase.deleteRowFromFirestore("users", "Ga").then(list => console.log("User Added"))
+            firebase.deleteRowFromFirestore("users", "Ga").then(list => console.log("User Added"))
         } 
         );
     }

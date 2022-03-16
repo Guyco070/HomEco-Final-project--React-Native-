@@ -112,7 +112,7 @@ const EditUserProfileScreen = () => {
             <Text style={{textAlign: "left"}} >Birth Day *</Text>
             
             <View style={styles.dateInputButton}>
-            <Icon name={'birthday-cake'} size={22}
+                <Icon name={'birthday-cake'} size={22}
                             color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
                 <TouchableOpacity
                         title="Birth Date"
@@ -142,7 +142,6 @@ const EditUserProfileScreen = () => {
                         <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
             </View>
-            <Text style={[styles.textBody , {color: 'blue'}]} onPress={() => navigation.navigate('SignUp')}>Sign Up</Text>
 
         </ScrollView>
     )

@@ -36,6 +36,10 @@ class Inputs extends Component {
                     secureTextEntry={this.props.pass}
                     onChangeText={this.props.onChangeText}
                     value = {this.props.value}
+                    onPressIn={this.props.onPress}
+                    disabled={this.props.disabled}
+                    accessible={this.props.accessible}
+                    focusable={this.props.focusable}
                     leftIcon={
                         <Icon 
                             name={this.props.icon}

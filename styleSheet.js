@@ -95,6 +95,19 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         alignSelf: 'center'
     },
+    dateInputButton:
+    {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        flexDirection:'row',
+        borderWidth:3.5,
+        width:'90%',
+        borderRadius:100,
+        borderColor:'#eee',
+        marginVertical:10,
+    }
 })
 
 

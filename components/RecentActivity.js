@@ -74,6 +74,7 @@ const RecentActivity = ({map,slice,hKey}) => {
 
                                                         {"\n"}Company: <Text style={{ fontWeight: "400" }}>{l.company}</Text>
                                                         {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>
+                                                        {l.isEvent && <>{"\n"}Event Time: <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.eventDate.toDate()))}</Text></>}
                                                        
                                                     </Text>
                                                     

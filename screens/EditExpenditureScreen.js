@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Alert } from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Alert,Modal} from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
-import { styles, houseProfileStyles, docImageUploaderStyles, TodoSheet } from '../styleSheet'
+import { styles, houseProfileStyles, docImageUploaderStyles, TodoSheet, modelContent } from '../styleSheet'
 import * as ImagePicker from 'expo-image-picker';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -12,8 +12,9 @@ import TouchableScale from 'react-native-touchable-scale';
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
-import { Icon } from 'react-native-elements/dist/icons/Icon';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Ionicons ,Entypo} from '@expo/vector-icons';
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 LogBox.ignoreLogs([
@@ -24,16 +25,26 @@ const EditExpenditureScreen = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
 
+    const [modalOpen, setModalOpen] = useState(false)
+
     let [catchInvoImages, setInvoCatchImage] = useState([]);
     let [catchContractImages, setContractCatchImage] = useState([]);
     const [hImage, setImage] = useState('');
 
     const [company, setCompany] = useState('');
     const [desc, setDescription] = useState('');
+    const [descIcon, setDescriptionIcon] = useState('home');
     const [amount, setAmount] = useState('');
     const [house, setHouse] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
 
+    const [isEvent, setIsEvent] = useState(false);
+
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [dateText, setDateText] = useState('Empty');
+
+    const [eventDate, setEventDate] = useState('');
 
     const exp = route.params.exp;
     const hKey = route.params.hKey;
@@ -48,8 +59,8 @@ const EditExpenditureScreen = ({route}) => {
         setCompany(exp.company)
         setDescription(exp.desc)
         setAmount(exp.amount)
-        if(!("date" in exp))
-            alert(exp.desc)
+        setIsEvent(exp.isEvent)
+        updateEventDateText(exp.eventDate)
       }, [])
 
     const addImage = async (from,index) => {
@@ -100,7 +111,7 @@ const EditExpenditureScreen = ({route}) => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date:("date" in exp)?exp.date.toDate():new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages}).then(()=>{
+            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date:("date" in exp)?exp.date.toDate():new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate}).then(()=>{
             if(!("date" in exp)) 
                 firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
             })
@@ -129,41 +140,255 @@ const EditExpenditureScreen = ({route}) => {
           );
     }
 
+    const handleAddDescription = (desc) => {
+        setModalOpen(false);
+        setDescription(desc);
+        };
+
+    const onDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || eventDate;
+        setShow(Platform.OS === 'ios')
+        setEventDate(currentDate)
+        let tempDate = new Date(currentDate)
+        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let minutes = tempDate.getMinutes()
+        if(parseInt(minutes) < 10)
+            minutes = "0" + minutes
+        let hours = tempDate.getHours()
+        if(parseInt(hours) < 10)
+            hours = "0" + hours
+        let fTime =  hours + ":" + minutes
+        setDateText(fDate + '  |  ' + fTime)
+        if(mode == 'date') showMode('time')
+    }
+
+    const updateEventDateText = (selectedDate) => {
+        const currentDate = selectedDate || eventDate;
+        setEventDate(currentDate.toDate())
+        let tempDate = new Date(currentDate.toDate())
+        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let minutes = tempDate.getMinutes()
+        if(parseInt(minutes) < 10)
+            minutes = "0" + minutes
+        let hours = tempDate.getHours()
+        if(parseInt(hours) < 10)
+            hours = "0" + hours
+        let fTime =  hours + ":" + minutes
+        setDateText(fDate + '  |  ' + fTime)
+    }
+
+    const showMode = (currentMode) => {
+        setShow(true)
+        setMode(currentMode)
+      }
+
+
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             {("date" in exp) &&
             <View style={TodoSheet.trash}>
                 <TouchableOpacity style={{margin:25} } onPress={handleDeleteExpenditure} >
-                    <Icon name="trash"  type="ionicon"/>
+                    <Icon name="trash"  type="ionicon" size={22}/>
                 </TouchableOpacity>
             </View>}
 
-            {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
-
-            <View style={[styles.container]}>
+            <View style={[styles.container,{backgroundColor: modalOpen?'rgba(52, 52, 52, 0.8)':'white'}]}>
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
 
                 {("date" in exp) ? 
                 <Text style={[styles.textTitle, {marginBottom:20}]}>Edit Expenditure</Text> 
                 : <Text style={[styles.textTitle, {marginBottom:20}]}>Add Shopping List As Expenditure</Text> }
                 <Input name="Company" icon="building" value={company?company:""} onChangeText={text => setCompany(text)} />
-                <Input name="Description" icon="comment" value={desc?desc:""} onChangeText={text => setDescription(text)} />
                 <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
-                <Picker
-                    selectedValue={billingType}
-                    style={{ height: 50, width: 150}}
-                    onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
-                >
-                    <Picker.Item label="Billing type" value="Billing type"/>
-                    <Picker.Item label="One-time" value="One-time"/>
-                    <Picker.Item label="Weekly" value="Weekly"/>
-                    <Picker.Item label="Fortnightly" value="Fortnightly"/>
-                    <Picker.Item label="Monthly" value="Monthly" />
-                    <Picker.Item label="Bi-monthly" value="Bi-monthly" />
-                    <Picker.Item label="Annual" value="Annual" />
-                    <Picker.Item label="Biennial" value="Biennial" />
-                </Picker>
+                
+                <TouchableOpacity
+                    title="Home"
+                    leftIcon="Home"
+                    onPress={() => setModalOpen(true)}
+                    style={[modelContent.button,{marginBottom:0}]}
+                    >
+                        <Ionicons 
+                            name={descIcon}
+                            size={20}
+                            color={'#0782F9'}
+                            style={{top:10}}
+                            />
+                    <Text style={{top:37,margin:1}}>{desc}</Text>
+                </TouchableOpacity>
+                <View style={{ width: "55%",marginTop:70,alignItems:'center', marginLeft:10,marginRight:10,marginBottom:25,borderRadius:10,borderColor:'grey', borderWidth:2}}>
+                    <Picker
+                        selectedValue={billingType}
+                        style={{ width: "100%" }}
+                        onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
+                        itemStyle={{ backgroundColor: "grey", color: "blue", fontFamily:"Ebrima", fontSize:17, textAlign:'center' }}
+                    >
+                        <Picker.Item label="Billing type" value="Billing type"/>
+                        <Picker.Item label="One-time" value="One-time"/>
+                        <Picker.Item label="Weekly" value="Weekly"/>
+                        <Picker.Item label="Fortnightly" value="Fortnightly"/>
+                        <Picker.Item label="Monthly" value="Monthly" />
+                        <Picker.Item label="Bi-monthly" value="Bi-monthly" />
+                        <Picker.Item label="Annual" value="Annual" />
+                        <Picker.Item label="Biennial" value="Biennial" />
+                    </Picker>
+                </View>
 
+                <ListItem.CheckBox
+                                        center
+                                        title="Set as event"
+                                        checkedIcon="dot-circle-o"
+                                        uncheckedIcon="circle-o"
+                                        checked={isEvent}
+                                        onPress={() => setIsEvent(!isEvent)}
+                                        containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
+                                        wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
+                                    />
+                { isEvent &&
+                <>
+                     <View style={styles.dateInputButton}>
+                        <Icon name={'calendar'} size={22}
+                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                        <TouchableOpacity
+                                title="Birth Date"
+                                onPress={ () => showMode('date')}
+                                style={{ textAlign:'left', flex:1}}
+                                >
+                            <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
+                        </TouchableOpacity>
+                    </View>
+                </>
+                }
+                {show &&
+                    (<DateTimePicker 
+                    testID='dateTimePickeer'
+                    value = {eventDate? eventDate: new Date()}
+                    mode = {mode}
+                    is24Hour = {true}
+                    display='default'
+                    onChange={ onDateChange }
+                    />)
+                }
+
+                <View style = {modelContent.centeredView}> 
+                    <Modal visible={modalOpen}
+                            animationType="slide"
+                            transparent={true}
+                            >
+                            <View style = {modelContent.modalView}>
+                                <View style={[modelContent.modalRowView,{paddingTop:40,}]}>
+                                    <TouchableOpacity
+                                        title="Home"
+                                        leftIcon="Home"
+                                        onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name={"home"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Food"
+                                        onPress={() => {handleAddDescription("Food"); setDescriptionIcon("md-fast-food")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name="md-fast-food"
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Food</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Car"
+                                        onPress={() => {handleAddDescription("Car"); setDescriptionIcon("car")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name={"car"}
+                                                size={20}
+                                                color={'#0782F9'}  
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Car</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Travel"
+                                        onPress={() => {handleAddDescription("Travel"); setDescriptionIcon("airplane")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Entypo 
+                                                name={"aircraft"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Travel</Text>
+                                    </TouchableOpacity>
+                                    </View>
+
+                                <View style={[modelContent.modalRowView,{margin:0, height:0}]}>
+                                    <TouchableOpacity
+                                        title="Home"
+                                        leftIcon="Home"
+                                        onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name={"home"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Food"
+                                        onPress={() => {handleAddDescription("Food"); setDescriptionIcon("md-fast-food")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name="md-fast-food"
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Food</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Car"
+                                        onPress={() => {handleAddDescription("Car"); setDescriptionIcon("car")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Ionicons 
+                                                name={"car"}
+                                                size={20}
+                                                color={'#0782F9'}  
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Car</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Other"
+                                        onPress={() => {handleAddDescription("Other"); setDescriptionIcon("airplane")}}
+                                        style={modelContent.button}
+                                        >
+                                            <Entypo 
+                                                name={"aircraft"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                        <Text style={{top:37,margin:1}}>Other</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                    </Modal>
+                </View>
                 <View style={{ marginTop: 32, height: 440 }}>
                     <Text style = {houseProfileStyles.textWithButDivider}>
                         <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>

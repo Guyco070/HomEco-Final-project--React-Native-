@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal, Pressable} from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal} from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
@@ -12,7 +12,8 @@ import TouchableScale from 'react-native-touchable-scale';
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
-import { Icon } from 'react-native-elements/dist/icons/Icon';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { Ionicons ,Entypo} from '@expo/vector-icons';
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
@@ -30,10 +31,18 @@ const AddNewExpenditureScreen = ({route}) => {
     const [hImage, setImage] = useState('');
 
     const [company, setCompany] = useState('');
-    const [desc, setDescription] = useState('');
+    const [desc, setDescription] = useState('Home');
     const [descIcon, setDescriptionIcon] = useState('home');
     const [amount, setAmount] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
+    const [isEvent, setIsEvent] = useState(false);
+
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [dateText, setDateText] = useState('Empty');
+
+    const [eventDate, setEventDate] = useState('');
+
 
     const house = route.params;
 
@@ -46,8 +55,6 @@ const AddNewExpenditureScreen = ({route}) => {
         let _image = await cloudinary.addDocImage()
           if (!_image.cancelled) {
             setImage(_image.uri);
-
-            console.log("index = " + index)
 
             if(index==-1){
                 if(from == 'invoice')
@@ -64,22 +71,41 @@ const AddNewExpenditureScreen = ({route}) => {
         }
     }
 
-    const handleAddButtonClick = () => {
-        };
     const handleAddDescription = (desc) => {
         setModalOpen(false);
         setDescription(desc);
-        console.log(desc);
-
         };
+
     const handleCreateExpend = () => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages})
+            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate})
             navigation.replace("HouseProfile",{hKeyP: firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
         }else alert("Sorry, you must fill in all the fields!")
     }
+
+    const onDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || eventDate;
+        setShow(Platform.OS === 'ios')
+        setEventDate(currentDate)
+        let tempDate = new Date(currentDate)
+        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let minutes = tempDate.getMinutes()
+        if(parseInt(minutes) < 10)
+            minutes = "0" + minutes
+        let hours = tempDate.getHours()
+        if(parseInt(hours) < 10)
+            hours = "0" + hours
+        let fTime =  hours + ":" + minutes
+        setDateText(fTime + '  |  ' + fDate)
+        if(mode == 'date') showMode('time')
+    }
+
+    const showMode = (currentMode) => {
+        setShow(true)
+        setMode(currentMode)
+      }
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
@@ -91,35 +117,72 @@ const AddNewExpenditureScreen = ({route}) => {
                 <Input name="Company" icon="building" onChangeText={text => setCompany(text)} />
                 <Input name="Amount" icon="money" onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
            
+                <TouchableOpacity
+                    title="Home"
+                    leftIcon="Home"
+                    onPress={() => setModalOpen(true)}
+                    style={[modelContent.button,{marginBottom:0}]}
+                    >
+                        <Ionicons 
+                            name={descIcon}
+                            size={20}
+                            color={'#0782F9'}
+                            style={{top:10}}
+                            />
+                    <Text style={{top:37,margin:1}}>{desc}</Text>
+                </TouchableOpacity>
+                <View style={{ width: "55%",marginTop:70,alignItems:'center', marginLeft:10,marginRight:10,marginBottom:25,borderRadius:10,borderColor:'grey', borderWidth:2}}>
+                    <Picker
+                        selectedValue={billingType}
+                        style={{width: "100%"}}
+                        onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
+                    >
+                        <Picker.Item label="Billing type" value="Billing type"/>
+                        <Picker.Item label="One-time" value="One-time"/>
+                        <Picker.Item label="Weekly" value="Weekly"/>
+                        <Picker.Item label="Fortnightly" value="Fortnightly"/>
+                        <Picker.Item label="Monthly" value="Monthly" />
+                        <Picker.Item label="Bi-monthly" value="Bi-monthly" />
+                        <Picker.Item label="Annual" value="Annual" />
+                        <Picker.Item label="Biennial" value="Biennial" />
+                    </Picker>
+                </View>
+                
+                <ListItem.CheckBox
+                                        center
+                                        title="Set as event"
+                                        checkedIcon="dot-circle-o"
+                                        uncheckedIcon="circle-o"
+                                        checked={isEvent}
+                                        onPress={() => setIsEvent(!isEvent)}
+                                        containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
+                                        wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
+                                    />
+                { isEvent &&
+                <>
+                     <View style={styles.dateInputButton}>
+                        <Icon name={'calendar'} size={22}
+                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
                         <TouchableOpacity
-                                    title="Home"
-                                    leftIcon="Home"
-                                    onPress={() => setModalOpen(true)}
-                                    style={[modelContent.button,{marginBottom:0}]}
-                                    >
-                                        <Ionicons 
-                                            name={descIcon}
-                                            size={20}
-                                            color={'#0782F9'}
-                                            style={{top:10}}
-                                            />
-                                    <Text style={{top:37,margin:1}}>{desc}</Text>
-                                </TouchableOpacity>
-   
-                <Picker
-                    selectedValue={billingType}
-                    style={{ height: 130, width: "50%",marginTop:10}}
-                    onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
-                >
-                    <Picker.Item label="Billing type" value="Billing type"/>
-                    <Picker.Item label="One-time" value="One-time"/>
-                    <Picker.Item label="Weekly" value="Weekly"/>
-                    <Picker.Item label="Fortnightly" value="Fortnightly"/>
-                    <Picker.Item label="Monthly" value="Monthly" />
-                    <Picker.Item label="Bi-monthly" value="Bi-monthly" />
-                    <Picker.Item label="Annual" value="Annual" />
-                    <Picker.Item label="Biennial" value="Biennial" />
-                </Picker>
+                                title="Birth Date"
+                                onPress={ () => showMode('date')}
+                                style={{ textAlign:'left', flex:1}}
+                                >
+                            <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
+                        </TouchableOpacity>
+                    </View>
+                </>
+                }
+                {show &&
+                    (<DateTimePicker 
+                    testID='dateTimePickeer'
+                    value = {eventDate? eventDate: new Date()}
+                    mode = {mode}
+                    is24Hour = {true}
+                    display='default'
+                    onChange={ onDateChange }
+                    />)
+                }
                 <View style = {modelContent.centeredView}> 
                     <Modal visible={modalOpen}
                             animationType="slide"
@@ -224,7 +287,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                         <Text style={{top:37,margin:1}}>Car</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        title="Oter"
+                                        title="Other"
                                         onPress={() => {handleAddDescription("Other"); setDescriptionIcon("airplane")}}
                                         style={modelContent.button}
                                         >
@@ -234,13 +297,13 @@ const AddNewExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Oter</Text>
+                                        <Text style={{top:37,margin:1}}>Other</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
                     </Modal>
                 </View>
-                <View style={{ marginTop: 100, height: 440 }}>
+                <View style={{ marginTop: 32, height: 440 }}>
                     <Text style = {houseProfileStyles.textWithButDivider}>
                         <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
                     </Text>

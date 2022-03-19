@@ -15,6 +15,8 @@ import UploadProfileImage from '../components/UploadProfileImage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Ionicons ,Entypo} from '@expo/vector-icons';
+import * as Notifications from 'expo-notifications';
+
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
@@ -36,12 +38,18 @@ const AddNewExpenditureScreen = ({route}) => {
     const [amount, setAmount] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
     const [isEvent, setIsEvent] = useState(false);
+    const [isWithNotification, setIsWithNotification] = useState(false);
 
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = useState('Empty');
 
+    const [modeNotification, setModeNotification] = useState('date');
+    const [showNotification, setShowNotification] = useState(false);
+    const [dateTextNotification, setDateTextNotification] = useState('Empty');
+    
     const [eventDate, setEventDate] = useState('');
+    const [notificationDate, setNotificationDate] = useState('');
 
 
     const house = route.params;
@@ -50,7 +58,12 @@ const AddNewExpenditureScreen = ({route}) => {
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
       }, [])
-
+    useEffect(() => {
+        if(mode == 'date') showMode('time')
+      }, [eventDate])
+      useEffect(() => {
+        if(modeNotification == 'date') showModeNotification('time')
+      }, [notificationDate])
     const addImage = async (from,index) => {
         let _image = await cloudinary.addDocImage()
           if (!_image.cancelled) {
@@ -99,7 +112,6 @@ const AddNewExpenditureScreen = ({route}) => {
             hours = "0" + hours
         let fTime =  hours + ":" + minutes
         setDateText(fTime + '  |  ' + fDate)
-        if(mode == 'date') showMode('time')
     }
 
     const showMode = (currentMode) => {
@@ -107,6 +119,26 @@ const AddNewExpenditureScreen = ({route}) => {
         setMode(currentMode)
       }
 
+      const onDateChangeNotification = (event, selectedDate) => {
+        const currentDate = selectedDate || notificationDate;
+        setShowNotification(Platform.OS === 'ios')
+        setNotificationDate(currentDate)
+        let tempDate = new Date(currentDate)
+        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let minutes = tempDate.getMinutes()
+        if(parseInt(minutes) < 10)
+            minutes = "0" + minutes
+        let hours = tempDate.getHours()
+        if(parseInt(hours) < 10)
+            hours = "0" + hours
+        let fTime =  hours + ":" + minutes
+        setDateTextNotification(fTime + '  |  ' + fDate)
+    }
+
+    const showModeNotification = (currentMode) => {
+        setShowNotification(true)
+        setModeNotification(currentMode)
+      }
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
@@ -171,7 +203,43 @@ const AddNewExpenditureScreen = ({route}) => {
                             <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
                         </TouchableOpacity>
                     </View>
+                    <ListItem.CheckBox
+                                        center
+                                        title="Set notification"
+                                        checkedIcon="dot-circle-o"
+                                        uncheckedIcon="circle-o"
+                                        checked={isWithNotification}
+                                        onPress={() => setIsWithNotification(!isWithNotification)}
+                                        containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
+                                        wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
+                                    />
+                    { isWithNotification && 
+                    <>
+                    <View style={styles.dateInputButton}>
+                        <Icon name={'calendar'} size={22}
+                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                        <TouchableOpacity
+                                title="Notification Date"
+                                onPress={ () => showModeNotification('date')}
+                                style={{ textAlign:'left', flex:1}}
+                                >
+                            <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:notificationDate?'black':'grey' }}>{notificationDate? (eventDate && notificationDate<eventDate? dateTextNotification:dateText): (eventDate? dateText : "Notification Date")}</Text> 
+                        </TouchableOpacity>
+                    </View>
+                    </>
+                    }
                 </>
+                }
+                {showNotification &&
+                    (<DateTimePicker 
+                    testID='dateTimePickeerNotification'
+                    value = {notificationDate? (eventDate && notificationDate<eventDate? notificationDate: (eventDate?eventDate: new Date())) : (eventDate? eventDate: new Date())}
+                    mode = {modeNotification}
+                    is24Hour = {true}
+                    display='default'
+                    onChange={ onDateChangeNotification }
+                    maximumDate={eventDate? eventDate:new Date()}
+                    />)
                 }
                 {show &&
                     (<DateTimePicker 

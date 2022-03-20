@@ -288,7 +288,7 @@ const EditExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                        <Text style={{top:37,margin:1}}>Home Bills</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Food"
@@ -344,7 +344,7 @@ const EditExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                        <Text style={{top:37,margin:1}}>Home Bills</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Food"

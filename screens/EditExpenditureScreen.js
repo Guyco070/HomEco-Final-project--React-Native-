@@ -279,7 +279,7 @@ const EditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Home"
                                         leftIcon="Home"
-                                        onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
+                                        onPress={() => {handleAddDescription("Home Bills"); setDescriptionIcon("home")}}
                                         style={modelContent.button}
                                         >
                                             <Ionicons 
@@ -335,7 +335,7 @@ const EditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Home"
                                         leftIcon="Home"
-                                        onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
+                                        onPress={() => {handleAddDescription("Home Bill"); setDescriptionIcon("home")}}
                                         style={modelContent.button}
                                         >
                                             <Ionicons 

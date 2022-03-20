@@ -171,7 +171,7 @@ const HouseProfileScreen = ({route}) => {
                         </TouchableOpacity>
                         <TouchableOpacity
                             title="Edit"
-                            onPress={() => {navigation.navigate('GraphScreen',house)}}
+                            onPress={() => {navigation.navigate('GraphScreen',{hKey:hKey})}}
                             style={styles.button}
                             >
                             <Text style={styles.buttonText}>Graph</Text>

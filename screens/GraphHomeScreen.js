@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -13,6 +13,7 @@ import {LineChart,BarChart,PieChart,ProgressChart,ContributionGraph,StackedBarCh
 const GraphHomeScreen = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
+    const [hKey, setHKey] = useState('');
     const [house, setHouse] = useState(''); // first get, no update from dta base
 
 
@@ -21,59 +22,63 @@ const GraphHomeScreen = ({route}) => {
 
     }, [])
     useEffect(() => {    
-        if("hKeyP" in route.params){
-            console.log(route.params.hKeyP)    
-            setHKey(route.params.hKeyP)
-            firebase.getByDocIdFromFirestore("houses",route.params.hKeyP).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
-        }
+        if("hKey" in route.params){ 
+            setHKey(route.params)
+            firebase.getByDocIdFromFirestore("houses",route.params.hKey).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
+        }else console.log(route.params)
     }, [route])
+    const GraphColor = ['#0000FF','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0']
+
+    const getData = () => {
+        let Data=[]
+        let j=0
+        let temp={};
+        for(let i in house.expends){
+            if(house.expends[i].desc in temp)
+                temp[house.expends[i].desc] += house.expends[i].amount
+            else temp[house.expends[i].desc] = house.expends[i].amount
+            console.log(Data) 
+            // temp = {
+            //     name:house.expends[i].desc,
+            //     population:parseFloat(house.expends[i].amount),
+            //     color:GraphColor[j],
+            //     legendFontColor: "#7F7F7F",
+            //     legendFontSize: 15
+            //  }
+             Data.push(temp)
+             j+=1
+        }
+        return Data
+    }
+
+    const screenWidth = Dimensions.get("window").width;
+
+    const chartConfig = {
+    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: "#08130D",
+    backgroundGradientToOpacity: 0.5,
+    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false // optional
+    };
+      
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             <View>
                 <Text>Bezier Line Chart</Text>
-                <LineChart
-                    data={{
-                    labels: ["January", "February", "March", "April", "May", "June"],
-                    datasets: [
-                        {
-                        data: [
-                            Math.random() * 100,
-                            Math.random() * 100,
-                            Math.random() * 100,
-                            Math.random() * 100,
-                            Math.random() * 100,
-                            Math.random() * 100
-                        ]
-                        }
-                    ]
-                    }}
-                    width={Dimensions.get("window").width} // from react-native
-                    height={220}
-                    yAxisLabel="$"
-                    yAxisSuffix="k"
-                    yAxisInterval={1} // optional, defaults to 1
-                    chartConfig={{
-                    backgroundColor: "#e26a00",
-                    backgroundGradientFrom: "#fb8c00",
-                    backgroundGradientTo: "#ffa726",
-                    decimalPlaces: 2, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    style: {
-                        borderRadius: 16
-                    },
-                    propsForDots: {
-                        r: "6",
-                        strokeWidth: "2",
-                        stroke: "#ffa726"
-                    }
-                    }}
-                    bezier
-                    style={{
-                    marginVertical: 8,
-                    borderRadius: 16
-                    }}
-                />
+                <PieChart
+                    data={getData()}
+                    width={screenWidth}
+                    height={300}
+                    chartConfig={chartConfig}
+                    accessor={"population"}
+                    backgroundColor={"transparent"}
+                    paddingLeft={"30"}
+                    center={[10, 50]}
+                    absolute={false}
+                    />
             </View>
         </ScrollView>
     )

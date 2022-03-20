@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal} from 'react-native';
 import * as firebase from '../firebase'
@@ -16,6 +16,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Ionicons ,Entypo} from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
+import CustomNotifications from '../CustomNotifications'
+import { async } from '@firebase/util';
+// import * as CustomNotificationsFuncs from '../CustomNotifications'
 
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
@@ -23,6 +26,15 @@ import * as Notifications from 'expo-notifications';
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',
    ]);
+
+   Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      vibrate: true
+    }),
+  });
 
 const AddNewExpenditureScreen = ({route}) => {
     const navigation = useNavigation()
@@ -40,11 +52,11 @@ const AddNewExpenditureScreen = ({route}) => {
     const [isEvent, setIsEvent] = useState(false);
     const [isWithNotification, setIsWithNotification] = useState(false);
 
-    const [mode, setMode] = useState('date');
+    const [mode, setMode] = useState('');
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = useState('Empty');
 
-    const [modeNotification, setModeNotification] = useState('date');
+    const [modeNotification, setModeNotification] = useState('');
     const [showNotification, setShowNotification] = useState(false);
     const [dateTextNotification, setDateTextNotification] = useState('Empty');
     
@@ -53,11 +65,32 @@ const AddNewExpenditureScreen = ({route}) => {
 
 
     const house = route.params;
-
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
+  
+    useEffect(() => {
+      registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+  
+      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        setNotification(notification);
+      });
+  
+      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        console.log(response);
+      });
+  
+      return () => {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(responseListener.current);
+      };
+    }, []);
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
       }, [])
+      
     useEffect(() => {
         if(mode == 'date') showMode('time')
       }, [eventDate])
@@ -89,12 +122,13 @@ const AddNewExpenditureScreen = ({route}) => {
         setDescription(desc);
         };
 
-    const handleCreateExpend = () => {
+    const handleCreateExpend = async() => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
             firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate})
             navigation.replace("HouseProfile",{hKeyP: firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
+            if(isWithNotification) { await schedulePushNotification("The event is approaching! 🕞",dateText,"data",new Date(notificationDate.setSeconds(0)))}; 
         }else alert("Sorry, you must fill in all the fields!")
     }
 
@@ -163,23 +197,23 @@ const AddNewExpenditureScreen = ({route}) => {
                             />
                     <Text style={{top:37,margin:1}}>{desc}</Text>
                 </TouchableOpacity>
-                <View style={{ width: "55%",marginTop:70,alignItems:'center', marginLeft:10,marginRight:10,marginBottom:25,borderRadius:10,borderColor:'grey', borderWidth:2}}>
+                <View style={{ width: "55%",marginTop:70,alignItems:'center', marginLeft:10,marginRight:10,marginBottom:25,borderRadius:10,borderColor:'lightgrey', borderWidth:2}}>
                     <Picker
                         selectedValue={billingType}
-                        style={{width: "100%"}}
+                        style={{width: "100%",}}
                         onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
                     >
-                        <Picker.Item label="Billing type" value="Billing type"/>
-                        <Picker.Item label="One-time" value="One-time"/>
-                        <Picker.Item label="Weekly" value="Weekly"/>
-                        <Picker.Item label="Fortnightly" value="Fortnightly"/>
-                        <Picker.Item label="Monthly" value="Monthly" />
-                        <Picker.Item label="Bi-monthly" value="Bi-monthly" />
-                        <Picker.Item label="Annual" value="Annual" />
-                        <Picker.Item label="Biennial" value="Biennial" />
+                        <Picker.Item label="       - Billing type -" value="Billing type"/>
+                        <Picker.Item label="       One-time" value="One-time"/>
+                        <Picker.Item label="       Weekly" value="Weekly"/>
+                        <Picker.Item label="       Fortnightly" value="Fortnightly"/>
+                        <Picker.Item label="       Monthly" value="Monthly" />
+                        <Picker.Item label="       Bi-monthly" value="Bi-monthly" />
+                        <Picker.Item label="       Annual" value="Annual" />
+                        <Picker.Item label="       Biennial" value="Biennial" />
                     </Picker>
                 </View>
-                
+                <View style={isEvent?{ width: "95%",alignItems:'center',borderRadius:10,borderColor:'lightgrey', borderWidth:2}:{}}>
                 <ListItem.CheckBox
                                         center
                                         title="Set as event"
@@ -203,16 +237,17 @@ const AddNewExpenditureScreen = ({route}) => {
                             <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
                         </TouchableOpacity>
                     </View>
-                    <ListItem.CheckBox
+                    { dateText != 'Empty' &&
+                     <ListItem.CheckBox
                                         center
                                         title="Set notification"
                                         checkedIcon="dot-circle-o"
                                         uncheckedIcon="circle-o"
                                         checked={isWithNotification}
-                                        onPress={() => setIsWithNotification(!isWithNotification)}
+                                        onPress={() => setIsWithNotification(!isWithNotification) }
                                         containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
                                         wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
-                                    />
+                                    />}
                     { isWithNotification && 
                     <>
                     <View style={styles.dateInputButton}>
@@ -220,7 +255,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                     color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
                         <TouchableOpacity
                                 title="Notification Date"
-                                onPress={ () => showModeNotification('date')}
+                                onPress={ () => {showModeNotification('date'); }}
                                 style={{ textAlign:'left', flex:1}}
                                 >
                             <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:notificationDate?'black':'grey' }}>{notificationDate? (eventDate && notificationDate<eventDate? dateTextNotification:dateText): (eventDate? dateText : "Notification Date")}</Text> 
@@ -230,6 +265,7 @@ const AddNewExpenditureScreen = ({route}) => {
                     }
                 </>
                 }
+                </View>
                 {showNotification &&
                     (<DateTimePicker 
                     testID='dateTimePickeerNotification'
@@ -388,18 +424,8 @@ const AddNewExpenditureScreen = ({route}) => {
                             <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('invoice',-1)} changeable={true} navigation={navigation}/>
                         </View>
                 
-                        { /* add button */ }
-                        {/*  <View style={docImageUploaderStyles.mediaImageContainer} >
-                            <TouchableOpacity style={{paddingVertical:75,alignItems:'center'}} onPress={() => handleAddButtonClick()} >
-                                <Icon style={{alignSelf:'center',height:150}} name="add-outline"  type="ionicon" color={"grey"} size={60}/>
-                            </TouchableOpacity>
-                        </View> */}
                     </ScrollView>
-                    {/* <View style={houseProfileStyles.mediaCount}>
-                        <Text style={[houseProfileStyles.text, { fontSize: 24, color: "#DFD8C8", fontWeight: "300" }]}>70</Text>
-                        <Text style={[houseProfileStyles.text, { fontSize: 12, color: "#DFD8C8", textTransform: "uppercase" }]}>Media</Text>
-                    </View> */}
-
+                   
                     <Text style = {houseProfileStyles.textWithButDivider}>
                         <Text style={{ fontWeight: "400" }}>{"Warranty / contract: "}</Text>
                     </Text>
@@ -437,5 +463,51 @@ const AddNewExpenditureScreen = ({route}) => {
         </ScrollView>
     )
 }
+
+
+async function schedulePushNotification(title,body,data,trigger) {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: title,
+        body: body,
+        data: { data: 'goes here' },
+      },
+    trigger
+    //   trigger: { seconds: 2 },
+    });
+  }
+  
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    return token;
+  }
+
+
 
 export default AddNewExpenditureScreen

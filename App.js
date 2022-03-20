@@ -7,6 +7,7 @@ import {createAppContainer} from "react-navigation"
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import SignUpScreen from './screens/SignUpScreen';
+import GraphHomeScreen from './screens/GraphHomeScreen';
 import EditUserProfileScreen from './screens/EditUserProfileScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -50,6 +51,7 @@ export default function App() {
         <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
         <Stack.Screen name="EditExpenditureScreen" component={EditExpenditureScreen} />
         <Stack.Screen name="EditSelfIncome" component={EditSelfIncomeScreen} />
+        <Stack.Screen name="GraphScreen" component={GraphHomeScreen} />
         
         
       </Stack.Navigator>

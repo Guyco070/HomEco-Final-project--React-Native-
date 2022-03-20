@@ -279,7 +279,7 @@ const EditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Home"
                                         leftIcon="Home"
-                                        onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
+                                        onPress={() => {handleAddDescription("Home Bills"); setDescriptionIcon("home")}}
                                         style={modelContent.button}
                                         >
                                             <Ionicons 
@@ -288,7 +288,7 @@ const EditExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                        <Text style={{top:37,margin:1}}>Home Bills</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Food"
@@ -335,7 +335,7 @@ const EditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Home"
                                         leftIcon="Home"
-                                        onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
+                                        onPress={() => {handleAddDescription("Home Bill"); setDescriptionIcon("home")}}
                                         style={modelContent.button}
                                         >
                                             <Ionicons 
@@ -344,7 +344,7 @@ const EditExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                        <Text style={{top:37,margin:1}}>Home Bills</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Food"

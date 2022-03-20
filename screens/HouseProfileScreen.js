@@ -169,6 +169,13 @@ const HouseProfileScreen = ({route}) => {
                             >
                             <Text style={styles.buttonText}>Edit</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            title="Edit"
+                            onPress={() => {navigation.navigate('GraphScreen',{hKey:hKey})}}
+                            style={styles.button}
+                            >
+                            <Text style={styles.buttonText}>Graph</Text>
+                        </TouchableOpacity>
                 </View>
                 
             </ScrollView>}

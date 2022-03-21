@@ -100,15 +100,17 @@ const GraphHomeScreen = ({route}) => {
 
             {house !='' && <View>
                 <VictoryChart>
-                    <VictoryGroup offset={20}>
+                    <VictoryGroup offset={15}>
                         <VictoryBar data={Graphs.getBarChartData(house.expends)["Expenditure"]} 
+                                    barWidth={15}
                                     style={{
                                         data: {
                                             fill:'blue',
                                         },
                                     }}                        
                         />
-                        <VictoryBar data={null}
+                        <VictoryBar data={Graphs.getBarChartData(house.expends)["Income"]}
+                                    barWidth={15}
                                     style={{
                                         data: {
                                             fill:'orange',
@@ -117,7 +119,8 @@ const GraphHomeScreen = ({route}) => {
                         />
                     </VictoryGroup>
                     <VictoryLegend
-                        x={Dimensions.get('screen').width / 2 - 50}
+                        x={Dimensions.get('screen').width / 2 - 70}
+                        orientation="horizontal"
                         data={[
                             {
                                 name:'Income',

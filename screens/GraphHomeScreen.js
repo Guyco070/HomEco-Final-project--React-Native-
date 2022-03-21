@@ -71,19 +71,6 @@ const GraphHomeScreen = ({route}) => {
         useShadowColorFromDataset: false // optional
     };
 ////////////////////////////////////
-    let AmountMonth=Graphs.getAmountMonth(house.expends)
-    const getBarChartData = () => {
-       const data = {Expenditure:[],Income:[]}
-       for(let i in AmountMonth){
-            data[Expenditure].push({x:i,y:AmountMonth[i]})
-            data[Income].push({x:i,y:50})
-       }
-       return data
-    };
-
-    const dataBar=getBarChartData()
-
-
 // const dataBar = {
 //     Expenditure: [null,{x:'May 5',y:20}],
 //     Income: [
@@ -111,17 +98,17 @@ const GraphHomeScreen = ({route}) => {
                     />
             </View>
 
-            {house != '' && <View>
+            {house !=' ' && <View>
                 <VictoryChart>
                     <VictoryGroup offset={20}>
-                        <VictoryBar data={dataBar.Income} 
+                        <VictoryBar data={Graphs.getAmountMonth(house.expends)} 
                                     style={{
                                         data: {
                                             fill:'blue',
                                         },
                                     }}                        
                         />
-                        <VictoryBar data={dataBar.Expenditure}
+                        <VictoryBar data={null}
                                     style={{
                                         data: {
                                             fill:'orange',

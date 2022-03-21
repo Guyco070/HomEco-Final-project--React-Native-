@@ -1,5 +1,5 @@
-import React, { useEffect,useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions } from "react-native";
+import React, { useEffect,useState,Component } from 'react'
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions,AppRegistry,Platform } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -8,6 +8,8 @@ import Input from '../components/Inputs';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import TouchableScale from 'react-native-touchable-scale';
 import {LineChart,BarChart,PieChart,ProgressChart,ContributionGraph,StackedBarChart} from "react-native-chart-kit";
+import { VictoryBar, VictoryChart, VictoryGroup, VictoryLegend, VictoryTheme } from "victory-native";
+
 
 
 const GraphHomeScreen = ({route}) => {
@@ -29,59 +31,113 @@ const GraphHomeScreen = ({route}) => {
     }, [route])
     const GraphColor = ['#0000FF','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0']
 
-    const getData = () => {
+    const getPieChartData = () => {
         let Data=[]
         let j=0
-        let temp={};
+        let tempAmount={}
+        let temp={}
         for(let i in house.expends){
-            if(house.expends[i].desc in temp)
-                temp[house.expends[i].desc] += house.expends[i].amount
-            else temp[house.expends[i].desc] = house.expends[i].amount
-            console.log(Data) 
-            // temp = {
-            //     name:house.expends[i].desc,
-            //     population:parseFloat(house.expends[i].amount),
-            //     color:GraphColor[j],
-            //     legendFontColor: "#7F7F7F",
-            //     legendFontSize: 15
-            //  }
-             Data.push(temp)
-             j+=1
+            if(house.expends[i].desc in tempAmount)
+                 tempAmount[house.expends[i].desc] += parseFloat(house.expends[i].amount)
+            else tempAmount[house.expends[i].desc] = parseFloat(house.expends[i].amount) 
+            
+        }
+        for(let k in tempAmount){
+            temp={
+                name:k,
+                population:tempAmount[k],
+                color:GraphColor[j],
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15
+            }
+            j+=1
+            Data.push(temp)
         }
         return Data
     }
 
-    const screenWidth = Dimensions.get("window").width;
+    const screenWidth = Dimensions.get("window").width
 
-    const chartConfig = {
-    backgroundGradientFrom: "#1E2923",
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#08130D",
-    backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
-    useShadowColorFromDataset: false // optional
+      
+    const chartPieConfig = {
+        backgroundGradientFrom: "#1E2923",
+        backgroundGradientFromOpacity: 0,
+        backgroundGradientTo: "#08130D",
+        backgroundGradientToOpacity: 0.5,
+        color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+        useShadowColorFromDataset: false // optional
     };
+////////////////////////////////////
+    const dataBar = {
+        Expenditure: [null,{x:'May 5',y:20}],
+        Income: [
+            {x:'April 4' , y:50},
+            {x:'May 5' , y:60},
+        ],
+    };
+/////////////////////////////////////////
+
       
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             <View>
                 <Text>Bezier Line Chart</Text>
                 <PieChart
-                    data={getData()}
+                    data={getPieChartData()}
                     width={screenWidth}
-                    height={300}
-                    chartConfig={chartConfig}
+                    height={200}
+                    chartConfig={chartPieConfig}
                     accessor={"population"}
                     backgroundColor={"transparent"}
-                    paddingLeft={"30"}
-                    center={[10, 50]}
+                    paddingLeft={"40"}
+                    center={[10, 10]}
                     absolute={false}
                     />
             </View>
+
+            <View>
+                <VictoryChart>
+                    <VictoryGroup offset={20}>
+                        <VictoryBar data={dataBar.Income} 
+                                    style={{
+                                        data: {
+                                            fill:'blue',
+                                        },
+                                    }}                        
+                        />
+                        <VictoryBar data={dataBar.Expenditure}
+                                    style={{
+                                        data: {
+                                            fill:'orange',
+                                        },
+                                    }}                     
+                        />
+                    </VictoryGroup>
+                    <VictoryLegend
+                        x={Dimensions.get('screen').width / 2 - 50}
+                        data={[
+                            {
+                                name:'Income',
+                                symbol: {
+                                    fill:'blue',
+                                },
+                            },
+                            {
+                                name:'Expenditure',
+                                symbol: {
+                                    fill:'orange'
+                                },
+                            },
+                        ]}
+                    />
+                </VictoryChart>
+            </View>
         </ScrollView>
     )
+
+    
 }
 
 

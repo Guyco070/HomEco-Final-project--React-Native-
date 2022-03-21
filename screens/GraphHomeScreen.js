@@ -111,7 +111,7 @@ const GraphHomeScreen = ({route}) => {
                     />
             </View>
 
-            <View>
+            {house != '' && <View>
                 <VictoryChart>
                     <VictoryGroup offset={20}>
                         <VictoryBar data={dataBar.Income} 
@@ -147,7 +147,7 @@ const GraphHomeScreen = ({route}) => {
                         ]}
                     />
                 </VictoryChart>
-            </View>
+            </View>}
         </ScrollView>
     );
 }

@@ -60,7 +60,8 @@ const EditExpenditureScreen = ({route}) => {
         setDescription(exp.desc)
         setAmount(exp.amount)
         setIsEvent(exp.isEvent)
-        updateEventDateText(exp.eventDate)
+        if(isEvent)
+            updateEventDateText(exp.eventDate)
       }, [])
 
     const addImage = async (from,index) => {

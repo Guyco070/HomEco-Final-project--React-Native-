@@ -98,10 +98,10 @@ const GraphHomeScreen = ({route}) => {
                     />
             </View>
 
-            {house !=' ' && <View>
+            {house !='' && <View>
                 <VictoryChart>
                     <VictoryGroup offset={20}>
-                        <VictoryBar data={Graphs.getAmountMonth(house.expends)} 
+                        <VictoryBar data={Graphs.getBarChartData(house.expends)["Expenditure"]} 
                                     style={{
                                         data: {
                                             fill:'blue',

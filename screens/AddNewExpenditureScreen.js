@@ -14,7 +14,7 @@ import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Ionicons ,Entypo} from '@expo/vector-icons';
+import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5} from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
 import CustomNotifications from '../CustomNotifications'
 import { async } from '@firebase/util';
@@ -325,7 +325,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                        <Text style={{top:37,margin:1,fontSize:12}}>Home</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Food"
@@ -338,7 +338,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Food</Text>
+                                        <Text style={{top:37,margin:1,fontSize:12}}>Food</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Car"
@@ -351,7 +351,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}  
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Car</Text>
+                                        <Text style={{top:37,margin:1,fontSize:12}}>Car</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Travel"
@@ -364,63 +364,62 @@ const AddNewExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Travel</Text>
+                                        <Text style={{top:37,margin:1,fontSize:12}}>Travel</Text>
                                     </TouchableOpacity>
                                     </View>
 
                                 <View style={[modelContent.modalRowView,{margin:0, height:0}]}>
                                     <TouchableOpacity
-                                        title="Home"
-                                        leftIcon="Home"
-                                        onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
+                                        title="Shopping"
+                                        onPress={() => {handleAddDescription("Shopping"); setDescriptionIcon("shopping-bag")}}
                                         style={modelContent.button}
                                         >
-                                            <Ionicons 
-                                                name={"home"}
+                                            <FontAwesome 
+                                                name="shopping-bag"
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                            />
+                                        <Text style={{top:37,margin:1,fontSize:12}}>Shopping</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        title="Bills"
+                                        onPress={() => {handleAddDescription("Bills"); setDescriptionIcon("money-check-alt")}}
+                                        style={modelContent.button}
+                                        >
+                                            <FontAwesome5
+                                                name="money-check-alt"
                                                 size={20}
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Home</Text>
+                                        <Text style={{top:37,margin:1,fontSize:12}}>Bills</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        title="Food"
-                                        onPress={() => {handleAddDescription("Food"); setDescriptionIcon("md-fast-food")}}
+                                        title="Education"
+                                        onPress={() => {handleAddDescription("Education"); setDescriptionIcon("graduation-cap")}}
                                         style={modelContent.button}
                                         >
-                                            <Ionicons 
-                                                name="md-fast-food"
-                                                size={20}
-                                                color={'#0782F9'}
-                                                style={{top:10}}
-                                                />
-                                        <Text style={{top:37,margin:1}}>Food</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        title="Car"
-                                        onPress={() => {handleAddDescription("Car"); setDescriptionIcon("car")}}
-                                        style={modelContent.button}
-                                        >
-                                            <Ionicons 
-                                                name={"car"}
+                                            <FontAwesome
+                                                name={"graduation-cap"}
                                                 size={20}
                                                 color={'#0782F9'}  
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Car</Text>
+                                        <Text style={{top:37,margin:1,fontSize:12}}>Education</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Other"
-                                        onPress={() => {handleAddDescription("Other"); setDescriptionIcon("airplane")}}
+                                        onPress={() => {handleAddDescription("Other"); setDescriptionIcon("question")}}
                                         style={modelContent.button}
                                         >
-                                            <Entypo 
-                                                name={"aircraft"}
+                                            <AntDesign 
+                                                name={"question"}
                                                 size={20}
                                                 color={'#0782F9'}
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1}}>Other</Text>
+                                        <Text style={{top:37,margin:1,fontSize:12}}>Other</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>

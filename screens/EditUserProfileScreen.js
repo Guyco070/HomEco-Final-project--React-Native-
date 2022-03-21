@@ -91,7 +91,7 @@ const EditUserProfileScreen = () => {
             firebase.updateCollectAtFirestore("users",user["email"],"lName",capitalize(lName))
         }
         if(bDate!=""){
-            firebase.updateCollectAtFirestore("users",user["email"],"bDate",text)
+            firebase.updateCollectAtFirestore("users",user["email"],"bDate",bDate)
         }
         if(phone!=""){
             firebase.updateCollectAtFirestore("users",user["email"],"phone",phone)

@@ -82,7 +82,7 @@ const GraphHomeScreen = ({route}) => {
     };
 
     const dataBar=getBarChartData()
-}
+
 
 // const dataBar = {
 //     Expenditure: [null,{x:'May 5',y:20}],
@@ -149,11 +149,10 @@ const GraphHomeScreen = ({route}) => {
                 </VictoryChart>
             </View>
         </ScrollView>
-    )
-
-    
+    );
 }
 
+    
 
 
     export default GraphHomeScreen

@@ -23,21 +23,13 @@ const getAmountMonth = (dict) => {
     else amountMonth[monthNames[array[i].date.toDate().getMonth()] + '\n' + array[i].date.toDate().getFullYear()] = parseInt(array[i].amount)
   }
   console.log(amountMonth)
-  getBarChartData()
-}
-
-
-let AmountMonth=getAmountMonth()
-
-const getBarChartData = () => {
   const data = {Expenditure:[],Income:[]}
-  for(let i in AmountMonth){
-       data[Expenditure].push({x:i,y:AmountMonth[i]})
+  for(let i in amountMonth){
+       data[Expenditure].push({x:i,y:amountMonth[i]})
        data[Income].push({x:i,y:50})
   }
-  console.log(data)
-  return data
-};
+  return data 
+}
 
 
 // const dataBar = {

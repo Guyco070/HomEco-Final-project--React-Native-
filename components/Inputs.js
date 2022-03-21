@@ -40,6 +40,7 @@ class Inputs extends Component {
                     disabled={this.props.disabled}
                     accessible={this.props.accessible}
                     focusable={this.props.focusable}
+                    keyboardAppearance={this.props.keyboardAppearance}
                     leftIcon={
                         <Icon 
                             name={this.props.icon}

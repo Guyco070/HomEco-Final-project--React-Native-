@@ -105,9 +105,6 @@ const EditExpenditureScreen = ({route}) => {
             setContractCatchImage([...tempCatchImages])
     } 
 
-    const handleAddButtonClick = () => {
-        };
-
     const handleCreateExpend = () => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)

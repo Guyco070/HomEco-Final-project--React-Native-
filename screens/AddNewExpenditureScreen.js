@@ -122,6 +122,25 @@ const AddNewExpenditureScreen = ({route}) => {
         setDescription(desc);
         };
 
+        const onRemove = async (from,index) => {
+            const tempCatchImages = []
+            let i = 0
+            let toChange = []
+            if(from == 'invoice')
+                toChange = catchInvoImages
+            else if(from == 'contract')
+                toChange = catchContractImages
+            for(let key in toChange) {
+                if(index != key) {
+                    tempCatchImages[i] = toChange[key]
+                }
+            }
+            if(from == 'invoice')
+                setInvoCatchImage([...tempCatchImages])
+            else if(from == 'contract')
+                setContractCatchImage([...tempCatchImages])
+        } 
+    
     const handleCreateExpend = async() => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
@@ -415,13 +434,13 @@ const AddNewExpenditureScreen = ({route}) => {
                     {
                         catchInvoImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
-                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('invoice',index)} changeable={true} navigation={navigation}/>
+                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('invoice',index)} onRemove={() => onRemove('invoice',index)} changeable={true} navigation={navigation}/>
                                 {console.log(index)}
                             </View>
                             ))
                         }
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
-                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('invoice',-1)} changeable={true} navigation={navigation}/>
+                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('invoice',-1)} onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
                 
                     </ScrollView>
@@ -433,12 +452,12 @@ const AddNewExpenditureScreen = ({route}) => {
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{height: 30}}>
                         {catchContractImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
-                                <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} onPress={() => addImage('contract',index)} changeable={true} navigation={navigation}/>
+                                <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} onPress={() => addImage('contract',index)} onRemove={() => onRemove('contract',index)} changeable={true} navigation={navigation}/>
                             </View>
                             ))
                         }
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
-                            <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} onPress={() => addImage('contract',-1)} changeable={true} navigation={navigation}/>
+                            <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} onPress={() => addImage('contract',-1)}  onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
 
                     </ScrollView>

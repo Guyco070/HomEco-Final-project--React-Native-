@@ -21,7 +21,7 @@ const getAmountMonth = (dict) => {
       amountMonth[monthNames[array[i].date.toDate().getMonth()] + '\n' + array[i].date.toDate().getFullYear()] += parseInt(array[i].amount)
     else amountMonth[monthNames[array[i].date.toDate().getMonth()] + '\n' + array[i].date.toDate().getFullYear()] = parseInt(array[i].amount)
   }
-
+  console.log(amountMonth)
   return amountMonth
 }
 

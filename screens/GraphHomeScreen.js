@@ -2,6 +2,7 @@ import React, { useEffect,useState,Component } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions,AppRegistry,Platform } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
+import * as Graphs from '../Graphs'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import Input from '../components/Inputs';
@@ -70,13 +71,26 @@ const GraphHomeScreen = ({route}) => {
         useShadowColorFromDataset: false // optional
     };
 ////////////////////////////////////
-    const dataBar = {
-        Expenditure: [null,{x:'May 5',y:20}],
-        Income: [
-            {x:'April 4' , y:50},
-            {x:'May 5' , y:60},
-        ],
+    let AmountMonth=Graphs.getAmountMonth(house.expends)
+    const getBarChartData = () => {
+       const data = {Expenditure:[],Income:[]}
+       for(let i in AmountMonth){
+            data[Expenditure].push({x:i,y:AmountMonth[i]})
+            data[Income].push({x:i,y:50})
+       }
+       return data
     };
+
+    const dataBar=getBarChartData()
+}
+
+// const dataBar = {
+//     Expenditure: [null,{x:'May 5',y:20}],
+//     Income: [
+//         {x:'April 4' , y:50},
+//         {x:'May 5' , y:60},
+//     ],
+// };
 /////////////////////////////////////////
 
       

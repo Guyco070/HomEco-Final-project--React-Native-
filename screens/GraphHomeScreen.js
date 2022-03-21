@@ -139,7 +139,4 @@ const GraphHomeScreen = ({route}) => {
     );
 }
 
-    
-
-
-    export default GraphHomeScreen
+export default GraphHomeScreen

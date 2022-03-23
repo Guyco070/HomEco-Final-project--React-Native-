@@ -52,9 +52,9 @@ const RecentActivity = ({map,slice,hKey}) => {
         <View>
         {loading?(<Loading/>) :
         (<ScrollView 
-        style={{width:'80%',}}
+        style={{width:'100%',}}
         >  
-        <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
+        <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{width: '100%'}]}>Recent Activity</Text>
         { sorteList.length == 0 &&
               <Text style={[houseProfileStyles.subText, {marginHorizontal:55,marginBottom:10,fontSize:10}]}>- None -</Text>
              }
@@ -67,7 +67,7 @@ const RecentActivity = ({map,slice,hKey}) => {
                                         <View style={houseProfileStyles.activityIndicator}>
 
                                         </View>
-                                            <View style={{ width: 250 }}>
+                                            <View style={{ width: "75%" }}>
                                                 <TouchableOpacity onPress={()=> {setIsExpended(l.date)}}>
                                                     <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
                                                         <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
@@ -79,7 +79,8 @@ const RecentActivity = ({map,slice,hKey}) => {
                                                     </Text>
                                                     
                                                     {isExpendedConst && isExpendedConst[l.date.toDate()] &&
-                                                        <Text style = {houseProfileStyles.textWithTopAndButDividers}>
+                                                        <View style={[houseProfileStyles.textWithTopAndButDividers, { flexDirection:'row', width:'95%'}]}>
+                                                        <Text style = {{width:'88%'}}>
                                                            <Text style={{ fontWeight: "400" }}>{"Description: " + l.desc}</Text>
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Billing type:" + l.billingType}</Text>
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Creator: " + l.partner}</Text>
@@ -114,17 +115,15 @@ const RecentActivity = ({map,slice,hKey}) => {
                                                                     }                 
                                                                 </ScrollView>
                                                             </View> 
-                                                            {"\n"}
-                                                            { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
-                                                            <View style={{alignSelf: 'center', alignItems: 'center'}}>
-                                                                
-                                                            <TouchableOpacity  onPress={ () => handleEdit(l) }>
-                                                                <Icon  name="edit"  type="icon" color={"grey"} />
-                                                            </TouchableOpacity>
-                                                            </View>
-                                                                }
-                                                            {"\n"}
                                                         </Text>
+                                                        { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
+                                                                <View style={{alignSelf: 'center', alignItems: 'flex-end', }}>     
+                                                                    <TouchableOpacity  onPress={ () => handleEdit(l) }>
+                                                                        <Icon  name="edit"  type="icon" color={"grey"} size={18}/>
+                                                                    </TouchableOpacity>
+                                                                </View>
+                                                                }
+                                                        </View>
                                                         }
                                                 </TouchableOpacity>
                                             </View>

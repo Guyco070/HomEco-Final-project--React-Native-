@@ -250,7 +250,8 @@ const houseProfileStyles = StyleSheet.create({
         borderBottomColor: 'lightgrey', 
         borderTopColor: 'lightgrey', 
         borderBottomWidth: 1,
-        borderTopWidth: 1
+        borderTopWidth: 1,
+        width:'88%'
     },
     textWithButDivider:{
         fontFamily: "HelveticaNeue",

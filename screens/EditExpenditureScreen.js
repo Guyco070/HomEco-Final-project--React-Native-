@@ -14,7 +14,7 @@ import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Ionicons ,Entypo} from '@expo/vector-icons';
+import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5} from '@expo/vector-icons';
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 LogBox.ignoreLogs([

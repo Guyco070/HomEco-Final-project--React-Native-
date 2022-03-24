@@ -71,14 +71,8 @@ const GraphHomeScreen = ({route}) => {
         useShadowColorFromDataset: false // optional
     };
 ////////////////////////////////////
-// const dataBar = {
-//     Expenditure: [null,{x:'May 5',y:20}],
-//     Income: [
-//         {x:'April 4' , y:50},
-//         {x:'May 5' , y:60},
-//     ],
-// };
-/////////////////////////////////////////
+const dataBar = Graphs.getBarChartData(house)
+////////////////////////////////////
 
       
     return (
@@ -101,7 +95,7 @@ const GraphHomeScreen = ({route}) => {
             {house !='' && <View>
                 <VictoryChart>
                     <VictoryGroup offset={15}>
-                        <VictoryBar data={Graphs.getBarChartData(house.expends)["Expenditure"]} 
+                        <VictoryBar data={dataBar["Expenditure"]} 
                                     barWidth={15}
                                     style={{
                                         data: {
@@ -109,7 +103,7 @@ const GraphHomeScreen = ({route}) => {
                                         },
                                     }}                        
                         />
-                        <VictoryBar data={Graphs.getBarChartData(house.expends)["Income"]}
+                        <VictoryBar data={dataBar["Income"]}
                                     barWidth={15}
                                     style={{
                                         data: {

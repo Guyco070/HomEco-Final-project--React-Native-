@@ -3,7 +3,7 @@ import { getAuth } from "@firebase/auth"
 import { getApps, initializeApp } from "firebase/app"
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
-import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc } from 'firebase/firestore'
+import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -74,6 +74,7 @@ const getByDocIdFromFirestore = async(collect, docId) =>{
   } else {
     // doc.data() will be undefined in this case
     console.log("No such document!");
+    return false
   }
 
   return docSnap.data()
@@ -357,6 +358,71 @@ const addExpendToHouse = async(hName, cEmail,expends, expend) =>
 {
   expends[expend.date] = expend
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
+
+  // Auto Classification
+   if(expend?.descOpitional != ''){
+      getByDocIdFromFirestore('expenditureTypesByOptionalDescription', expend.descOpitional).then(async(typeByOptionalDescription) => {
+          
+        if(typeByOptionalDescription)
+          if(expend.desc in typeByOptionalDescription)
+            updateCollectAtFirestore("expenditureTypesByOptionalDescription",expend.descOpitional , expend.desc, parseInt(typeByOptionalDescription[expend.desc]) + 1)
+          else updateCollectAtFirestore("expenditureTypesByOptionalDescription",expend.descOpitional , expend.desc, 1)
+        else{
+              const newDescription = {}
+              newDescription[expend.desc] = 1
+              await setDoc(doc(collection(db, 'expenditureTypesByOptionalDescription'), expend.descOpitional), newDescription); 
+            }
+      })
+   }
+  getByDocIdFromFirestore('expenditureTypesByCompany', expend.company).then(async(typeByCompany) => {
+      if(typeByCompany)
+        if(expend.desc in typeByCompany)
+          updateCollectAtFirestore("expenditureTypesByCompany", expend.company, expend.desc, parseInt(typeByCompany[expend.desc]) + 1)
+        else
+          updateCollectAtFirestore("expenditureTypesByCompany", expend.company, expend.desc, 1)
+      else{
+        const newCompany = {}
+        newCompany[expend.desc] = 1
+        await setDoc(doc(collection(db, 'expenditureTypesByCompany'), expend.company), newCompany); 
+      }
+  })
+
+}
+
+const getExpenditureTypeAutoByOptionalDescription = async(descOpitional) => {
+  return getByDocIdFromFirestore('expenditureTypesByOptionalDescription', descOpitional).then(async(typeByOptionalDescription) => {
+    if(typeByOptionalDescription){
+        // Create items array
+        let items = Object.keys(typeByOptionalDescription).map((key) => {
+          return [key, typeByOptionalDescription[key]];
+        });
+      
+        // Sort the array based on the second element
+        items.sort((first, second) => {
+          return second[1] - first[1];
+        });
+        return items[0][0]
+      }
+    return ''
+  })
+}
+
+const getExpenditureTypeAutoByCompany = async(company) => {
+  return getByDocIdFromFirestore('expenditureTypesByCompany', company).then(async(typeByCompany) => {
+        if(typeByCompany){
+          // Create items array
+          let items = Object.keys(typeByCompany).map((key) => {
+            return [key, typeByCompany[key]];
+          });
+
+          // Sort the array based on the second element
+          items.sort((first, second) => {
+            return second[1] - first[1];
+          });
+          return items[0][0]
+        }
+        else return ''
+    })
 }
 
 const addUserSelfIncome = async(uEmail,incomes, income) => 
@@ -387,6 +453,7 @@ const shoppingListToString = async(shoppingList) =>
 
 const getSortedArrayDateFromDict = (dict) => {
   let array = Object.values(dict)
+  if(array.length == 1) return [array[0]]
   return array.sort((a,b) => {
     // Turn your strings into dates, and then subtract them
     // to get a value that is either negative, positive, or zero.
@@ -436,5 +503,5 @@ const addProductToFirestore = async(barcode, name, brand) => {
 export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
         getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse,shoppingListToString, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse,
-        addProductToFirestore} 
+        addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany} 
 

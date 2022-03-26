@@ -45,8 +45,9 @@ const AddNewExpenditureScreen = ({route}) => {
     const [hImage, setImage] = useState('');
 
     const [company, setCompany] = useState('');
-    const [desc, setDescription] = useState('Home');
-    const [descIcon, setDescriptionIcon] = useState('home');
+    const [desc, setDescription] = useState('');
+    const [descOpitional, setDescriptionOpitional] = useState('');
+    const [descIcon, setDescriptionIcon] = useState('');
     const [amount, setAmount] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
     const [isEvent, setIsEvent] = useState(false);
@@ -90,7 +91,41 @@ const AddNewExpenditureScreen = ({route}) => {
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
       }, [])
-      
+
+    useEffect(() => {
+        if(descOpitional!=''){
+            firebase.getExpenditureTypeAutoByOptionalDescription(descOpitional).then((type) => {
+                if(type && type != '')
+                    setDescription(type)
+            })
+        }else{
+            firebase.getExpenditureTypeAutoByCompany(company).then((type) => {
+                if(type && type != '')
+                    setDescription(type)
+            })
+        }
+      }, [descOpitional])
+    
+      useEffect(() => {
+        if(descOpitional!=''){
+            firebase.getExpenditureTypeAutoByOptionalDescription(descOpitional).then((type) => {
+                if(type && type != '')
+                    setDescription(type)
+                else{
+                    firebase.getExpenditureTypeAutoByCompany(company).then((type) => {
+                        if(type && type != '')
+                            setDescription(type)
+                    })
+                }
+            })
+        }else{
+            firebase.getExpenditureTypeAutoByCompany(company).then((type) => {
+                if(type && type != '')
+                    setDescription(type)
+            })
+        }
+      }, [company])
+
     useEffect(() => {
         if(mode == 'date') showMode('time')
       }, [eventDate])
@@ -145,7 +180,7 @@ const AddNewExpenditureScreen = ({route}) => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate})
+            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional})
             navigation.replace("HouseProfile",{hKeyP: firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
             if(isWithNotification) { await schedulePushNotification("The event is approaching! 🕞",dateText,"data",new Date(notificationDate.setSeconds(0)))}; 
         }else alert("Sorry, you must fill in all the fields!")
@@ -192,6 +227,7 @@ const AddNewExpenditureScreen = ({route}) => {
         setShowNotification(true)
         setModeNotification(currentMode)
       }
+
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
@@ -201,6 +237,7 @@ const AddNewExpenditureScreen = ({route}) => {
                 <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Expenditure</Text> 
                 <Input name="Company" icon="building" onChangeText={text => setCompany(text)} />
                 <Input name="Amount" icon="money" onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
+                <Input name="Description" icon="file-text" onChangeText={text => {setDescriptionOpitional(text); }} />
            
                 <TouchableOpacity
                     title="Home"
@@ -210,12 +247,14 @@ const AddNewExpenditureScreen = ({route}) => {
                     >
                         <Ionicons 
                             name={descIcon}
-                            size={20}
+                            size={22}
                             color={'#0782F9'}
                             style={{top:10}}
                             />
-                    <Text style={{top:37,margin:1}}>{desc}</Text>
+                        <Text style={{top:10,margin:1}}></Text>
                 </TouchableOpacity>
+                <Text style={{top:10,margin:1}}>{desc}</Text>
+
                 <View style={{ width: "55%",marginTop:70,alignItems:'center', marginLeft:10,marginRight:10,marginBottom:25,borderRadius:10,borderColor:'lightgrey', borderWidth:2}}>
                     <Picker
                         selectedValue={billingType}
@@ -371,7 +410,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                 <View style={[modelContent.modalRowView,{margin:0, height:0}]}>
                                     <TouchableOpacity
                                         title="Shopping"
-                                        onPress={() => {handleAddDescription("Shopping"); setDescriptionIcon("shopping-bag")}}
+                                        onPress={() => {handleAddDescription("Shopping"); setDescriptionIcon("pricetags-outline")}}
                                         style={modelContent.button}
                                         >
                                             <FontAwesome 
@@ -384,7 +423,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Bills"
-                                        onPress={() => {handleAddDescription("Bills"); setDescriptionIcon("money-check-alt")}}
+                                        onPress={() => {handleAddDescription("Bills"); setDescriptionIcon("card-outline")}}
                                         style={modelContent.button}
                                         >
                                             <FontAwesome5
@@ -397,7 +436,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Education"
-                                        onPress={() => {handleAddDescription("Education"); setDescriptionIcon("graduation-cap")}}
+                                        onPress={() => {handleAddDescription("Education"); setDescriptionIcon("glasses-outline")}}
                                         style={modelContent.button}
                                         >
                                             <FontAwesome

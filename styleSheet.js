@@ -375,7 +375,19 @@ const houseProfileStyles = StyleSheet.create({
         borderRadius: 6,
         marginTop: 3,
         marginRight: 20
-    }
+    },
+    typeIcone: {
+        backgroundColor:'#0782F9',
+        borderWidth:2,
+        borderColor:'lightgrey',
+        alignItems:'center',
+        justifyContent:'center',
+        width:25,
+        height:25,
+        right:0,
+        backgroundColor:'#fff',
+        borderRadius:50,
+    },
 });
 const TodoSheet = StyleSheet.create({
       body :{

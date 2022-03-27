@@ -10,8 +10,16 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 
-
-
+const typeIcones ={
+    Home: 'home',
+    Food: "md-fast-food",
+    Car: "car",
+    Travel: "airplane",
+    Shopping: "pricetags-outline",
+    Bills: "card-outline",
+    Education: "glasses-outline",
+    Other: "question"
+}
 
 const RecentActivity = ({map,slice,hKey}) => {
     const navigation = useNavigation()
@@ -70,7 +78,20 @@ const RecentActivity = ({map,slice,hKey}) => {
                                             <View style={{ width: "75%" }}>
                                                 <TouchableOpacity onPress={()=> {setIsExpended(l.date)}}>
                                                     <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                                        <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
+                                                        <View style={{width:"100%", flexDirection: "row",marginTop:2}}>
+                                                            <Text style={{ fontWeight: "400" ,marginRight:20}}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
+                                                            <View
+                                                                style={[houseProfileStyles.typeIcone,]}
+                                                                >
+                                                                    <Ionicons 
+                                                                        name={typeIcones[l.desc]}
+                                                                        size={10}
+                                                                        color={'#41444B'}
+                                                                        style={{top:10}}
+                                                                        />
+                                                                    <Text style={{top:10,margin:1}}></Text>
+                                                            </View>    
+                                                        </View>
 
                                                         {"\n"}Company: <Text style={{ fontWeight: "400" }}>{l.company}</Text>
                                                         {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>

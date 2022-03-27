@@ -141,7 +141,7 @@ const EditExpenditureScreen = ({route}) => {
             })
         }
       }, [company])
-      
+
       useEffect(() => {
         if(mode == 'date' && !firstEventDateUpdate) {showMode('time'); setFirstEventDateUpdate(false)}; 
       }, [eventDate])
@@ -347,12 +347,14 @@ const EditExpenditureScreen = ({route}) => {
                     >
                         <Ionicons 
                             name={descIcon}
-                            size={20}
+                            size={22}
                             color={'#0782F9'}
                             style={{top:10}}
                             />
-                    <Text style={{top:37,margin:1}}>{desc}</Text>
+                        <Text style={{top:10,margin:1}}></Text>
                 </TouchableOpacity>
+                <Text style={{top:10,margin:1}}>{desc}</Text>
+
                 <View style={{ width: "55%",marginTop:70,alignItems:'center', marginLeft:10,marginRight:10,marginBottom:25,borderRadius:10,borderColor:'grey', borderWidth:2}}>
                     <Picker
                         selectedValue={billingType}
@@ -539,7 +541,7 @@ const EditExpenditureScreen = ({route}) => {
                                 <View style={[modelContent.modalRowView,{margin:0, height:0}]}>
                                     <TouchableOpacity
                                         title="Shopping"
-                                        onPress={() => {handleAddDescription("Shopping"); setDescriptionIcon("shopping-bag")}}
+                                        onPress={() => {handleAddDescription("Shopping"); setDescriptionIcon("pricetags-outline")}}
                                         style={modelContent.button}
                                         >
                                             <FontAwesome 
@@ -552,7 +554,7 @@ const EditExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Bills"
-                                        onPress={() => {handleAddDescription("Bills"); setDescriptionIcon("money-check-alt")}}
+                                        onPress={() => {handleAddDescription("Bills"); setDescriptionIcon("card-outline")}}
                                         style={modelContent.button}
                                         >
                                             <FontAwesome5
@@ -565,7 +567,7 @@ const EditExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Education"
-                                        onPress={() => {handleAddDescription("Education"); setDescriptionIcon("graduation-cap")}}
+                                        onPress={() => {handleAddDescription("Education"); setDescriptionIcon("glasses-outline")}}
                                         style={modelContent.button}
                                         >
                                             <FontAwesome

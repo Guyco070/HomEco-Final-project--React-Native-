@@ -109,6 +109,40 @@ const EditExpenditureScreen = ({route}) => {
       }, []);
 
       useEffect(() => {
+        if(descOpitional!=''){
+            firebase.getExpenditureTypeAutoByOptionalDescription(descOpitional).then((type) => {
+                if(type && type != '')
+                    setDescription(type)
+            })
+        }else{
+            firebase.getExpenditureTypeAutoByCompany(company).then((type) => {
+                if(type && type != '')
+                    setDescription(type)
+            })
+        }
+      }, [descOpitional])
+    
+      useEffect(() => {
+        if(descOpitional!=''){
+            firebase.getExpenditureTypeAutoByOptionalDescription(descOpitional).then((type) => {
+                if(type && type != '')
+                    setDescription(type)
+                else{
+                    firebase.getExpenditureTypeAutoByCompany(company).then((type) => {
+                        if(type && type != '')
+                            setDescription(type)
+                    })
+                }
+            })
+        }else{
+            firebase.getExpenditureTypeAutoByCompany(company).then((type) => {
+                if(type && type != '')
+                    setDescription(type)
+            })
+        }
+      }, [company])
+      
+      useEffect(() => {
         if(mode == 'date' && !firstEventDateUpdate) {showMode('time'); setFirstEventDateUpdate(false)}; 
       }, [eventDate])
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Alert,Modal} from 'react-native';
 import * as firebase from '../firebase'
@@ -14,7 +14,9 @@ import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Ionicons ,Entypo} from '@expo/vector-icons';
+import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5} from '@expo/vector-icons';
+import * as Notifications from 'expo-notifications';
+
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 LogBox.ignoreLogs([
@@ -34,17 +36,36 @@ const EditExpenditureScreen = ({route}) => {
     const [company, setCompany] = useState('');
     const [desc, setDescription] = useState('');
     const [descIcon, setDescriptionIcon] = useState('home');
+    const [descOpitional, setDescriptionOpitional] = useState('');
     const [amount, setAmount] = useState('');
     const [house, setHouse] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
 
     const [isEvent, setIsEvent] = useState(false);
+    const [isWithNotification, setIsWithNotification] = useState(false);
+
 
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = useState('Empty');
 
+   
+    const [modeNotification, setModeNotification] = useState('');
+    const [showNotification, setShowNotification] = useState(false);
+    const [dateTextNotification, setDateTextNotification] = useState('Empty');
+    
     const [eventDate, setEventDate] = useState('');
+    const [firstEventDateUpdate, setFirstEventDateUpdate] = useState(true);
+    const [notificationDate, setNotificationDate] = useState('');
+
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
+
+    const [notifications, setNotifications] = useState([]);
+    const [notificationsToRemove, setNotificationsToRemove] = useState([]);
+
 
     const exp = route.params.exp;
     const hKey = route.params.hKey;
@@ -59,10 +80,41 @@ const EditExpenditureScreen = ({route}) => {
         setCompany(exp.company)
         setDescription(exp.desc)
         setAmount(exp.amount)
+        setDescriptionOpitional(exp.descOpitional)
         setIsEvent(exp.isEvent)
-        if(isEvent)
+        if(exp.isEvent)
             updateEventDateText(exp.eventDate)
+        if("notifications" in exp && exp.notifications.length != 0){
+            setIsWithNotification(true)
+            setNotifications(exp.notifications)
+            setDateTextNotification(exp.notifications[0].dateText)
+        }
       }, [])
+
+      useEffect(() => {
+        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+          setNotification(notification);
+        });
+    
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+          console.log(response);
+        });
+    
+        return () => {
+          Notifications.removeNotificationSubscription(notificationListener.current);
+          Notifications.removeNotificationSubscription(responseListener.current);
+        };
+      }, []);
+
+      useEffect(() => {
+        if(mode == 'date' && !firstEventDateUpdate) {showMode('time'); setFirstEventDateUpdate(false)}; 
+      }, [eventDate])
+
+      useEffect(() => {
+        if(modeNotification == 'date' && !firstEventDateUpdate) showModeNotification('time')
+      }, [notificationDate])
 
     const addImage = async (from,index) => {
         let _image = await cloudinary.addDocImage()
@@ -109,12 +161,44 @@ const EditExpenditureScreen = ({route}) => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date:("date" in exp)?exp.date.toDate():new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate}).then(()=>{
-            if(!("date" in exp)) 
-                firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
-            })
+            removeNotficationHandling()
+            if(isWithNotification) { 
+                notficationHandling().then((tempNotifications) => {
+                    firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: ("date" in exp)?exp.date.toDate():new Date(),partner:user.email,company, desc, amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent, eventDate, descOpitional, notifications: tempNotifications}).then(()=>{
+                        if(!("date" in exp)) 
+                            firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
+                        })
+                })
+            }else
+                firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: ("date" in exp)?exp.date.toDate():new Date(),partner:user.email,company, desc, amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent, eventDate, descOpitional, notifications: []}).then(()=>{
+                    if(!("date" in exp)) 
+                        firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
+                    })
             navigation.replace("HouseProfile",{hKeyP:hKey})
         }else alert("Sorry, you must fill in all the fields!")
+    }
+
+    const notficationHandling = async() => {
+        let tempNotifications = []
+        for(let i in notifications) {
+            if(!("identifier" in notification[i]))
+                tempNotifications.push({
+                    identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional,notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
+                    dateTextNotification: notifications[i].dateTextNotification, 
+                    notificationDate: notifications[i].notificationDate
+                })
+        }
+        return tempNotifications
+    }
+
+    const removeNotficationHandling = async() => {
+        console.log("xxxx")
+        console.log(notificationsToRemove)
+        let tempNotifications = []
+        for(let i in notificationsToRemove) {
+            await Notifications.cancelScheduledNotificationAsync(notificationsToRemove[i].identifier);
+        }
+        return tempNotifications
     }
 
     const handleDeleteExpenditure = () => {
@@ -157,7 +241,6 @@ const EditExpenditureScreen = ({route}) => {
             hours = "0" + hours
         let fTime =  hours + ":" + minutes
         setDateText(fDate + '  |  ' + fTime)
-        if(mode == 'date') showMode('time')
     }
 
     const updateEventDateText = (selectedDate) => {
@@ -180,6 +263,28 @@ const EditExpenditureScreen = ({route}) => {
         setMode(currentMode)
       }
 
+      const onDateChangeNotification = (event, selectedDate) => {
+        const currentDate = selectedDate || notificationDate;
+        setShowNotification(Platform.OS === 'ios')
+        setNotificationDate(currentDate)
+        let tempDate = new Date(currentDate)
+        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let minutes = tempDate.getMinutes()
+        if(parseInt(minutes) < 10)
+            minutes = "0" + minutes
+        let hours = tempDate.getHours()
+        if(parseInt(hours) < 10)
+            hours = "0" + hours
+        let fTime =  hours + ":" + minutes
+        setDateTextNotification(fTime + '  |  ' + fDate)
+
+        setNotifications([...notifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: notificationDate.setSeconds(0)}])
+    }
+
+      const showModeNotification = (currentMode) => {
+        setShowNotification(true)
+        setModeNotification(currentMode)
+      }
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
@@ -198,6 +303,7 @@ const EditExpenditureScreen = ({route}) => {
                 : <Text style={[styles.textTitle, {marginBottom:20}]}>Add Shopping List As Expenditure</Text> }
                 <Input name="Company" icon="building" value={company?company:""} onChangeText={text => setCompany(text)} />
                 <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
+                <Input name="Description" icon="file-text" value={descOpitional?descOpitional:""} onChangeText={text => {setDescriptionOpitional(text); }} />
                 
                 <TouchableOpacity
                     title="Home"
@@ -230,31 +336,98 @@ const EditExpenditureScreen = ({route}) => {
                         <Picker.Item label="Biennial" value="Biennial" />
                     </Picker>
                 </View>
+                <View style={isEvent?{ width: "95%",alignItems:'center',borderRadius:10,borderColor:'lightgrey', borderWidth:2}:{}}>
+                    <ListItem.CheckBox
+                                            center
+                                            title="Set as event"
+                                            checkedIcon="dot-circle-o"
+                                            uncheckedIcon="circle-o"
+                                            checked={isEvent}
+                                            onPress={() => setIsEvent(!isEvent)}
+                                            containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
+                                            wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
+                                        />
+                    { isEvent &&
+                    <>
+                        <View style={styles.dateInputButton}>
+                            <Icon name={'calendar'} size={22}
+                                        color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                            <TouchableOpacity
+                                    title="Birth Date"
+                                    onPress={ () => showMode('date')}
+                                    style={{ textAlign:'left', flex:1}}
+                                    >
+                                <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
+                            </TouchableOpacity>
+                        </View>
+                        { dateText != 'Empty' &&
+                        <ListItem.CheckBox
+                                            center
+                                            title="Set notification"
+                                            checkedIcon="dot-circle-o"
+                                            uncheckedIcon="circle-o"
+                                            checked={isWithNotification}
+                                            onPress={() => setIsWithNotification(!isWithNotification) }
+                                            containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
+                                            wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
+                                        />}
+                        { isWithNotification && 
+                        <>
+                            <View style={styles.dateInputButton}>
+                                <Icon name={'calendar'} size={22}
+                                            color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                                <TouchableOpacity
+                                        title="Notification Date"
+                                        onPress={ () => {showModeNotification('date'); }}
+                                        style={{ textAlign:'left', flex:1}}
+                                        >
+                                    <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:notificationDate?'black':'grey' }}>{notificationDate? (eventDate && notificationDate<eventDate? dateTextNotification:dateText): (eventDate? dateText : "Notification Date")}</Text> 
+                                </TouchableOpacity>
+                            </View>
+                            {
+                                notifications.map((val, index) => ( 
+                                    <>
+                                    {val && "dateTextNotification" in val && <ListItem key={index} bottomDivider topDivider Component={TouchableScale}
+                                    friction={90} //
+                                    tension={100} // These props are passed to the parent component (here TouchableScale)
+                                    activeScale={1}
+                                    onPress={() => {  }}
+                                    >
+                                        <TouchableOpacity  style={docImageUploaderStyles.removeBtn} onPress={() => {
+                                                    let temp = [...notifications]; 
+                                                    setNotificationsToRemove([...notificationsToRemove, notifications[index]]); 
+                                                    delete temp[index]; 
+                                                    setNotifications(temp);
+                                                }
+                                            } >
+                                            <AntDesign name="close" size={15} color="black" />
+                                    </TouchableOpacity> 
+                                        <Text>{val.dateTextNotification}</Text>
+                                        <ListItem.Content>
+                                            <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{}</Text>
+                                        </ListItem.Content>
+                                        <AntDesign name="clockcircleo" size={17} color="black" />
 
-                <ListItem.CheckBox
-                                        center
-                                        title="Set as event"
-                                        checkedIcon="dot-circle-o"
-                                        uncheckedIcon="circle-o"
-                                        checked={isEvent}
-                                        onPress={() => setIsEvent(!isEvent)}
-                                        containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
-                                        wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
-                                    />
-                { isEvent &&
-                <>
-                     <View style={styles.dateInputButton}>
-                        <Icon name={'calendar'} size={22}
-                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
-                        <TouchableOpacity
-                                title="Birth Date"
-                                onPress={ () => showMode('date')}
-                                style={{ textAlign:'left', flex:1}}
-                                >
-                            <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
-                        </TouchableOpacity>
-                    </View>
-                </>
+                                    </ListItem>}
+                                    </>
+                                ))
+                            }
+                        </>
+                        }
+                    </>
+                    }
+                </View>
+                {showNotification &&
+                    (<DateTimePicker 
+                    testID='dateTimePickeerNotification'
+                    value = {notificationDate? (eventDate && notificationDate<eventDate? notificationDate: (eventDate?eventDate: new Date())) : (eventDate? eventDate: new Date())}
+                    mode = {modeNotification}
+                    is24Hour = {true}
+                    display='default'
+                    onChange={ onDateChangeNotification }
+                    maximumDate={eventDate? eventDate:new Date()}
+                    minimumDate={new Date()}
+                    />)
                 }
                 {show &&
                     (<DateTimePicker 
@@ -455,5 +628,50 @@ const EditExpenditureScreen = ({route}) => {
         </ScrollView>
     )
 }
+
+
+async function schedulePushNotification(title,body,data,trigger) {
+    return await Notifications.scheduleNotificationAsync({
+      content: {
+        title: title,
+        body: body,
+        data: { data: 'goes here' },
+      },
+    trigger
+    //   trigger: { seconds: 2 },
+    });
+  }
+  
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    return token;
+  }
+
 
 export default EditExpenditureScreen

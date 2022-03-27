@@ -81,7 +81,8 @@ const RecentActivity = ({map,slice,hKey}) => {
                                                     {isExpendedConst && isExpendedConst[l.date.toDate()] &&
                                                         <View style={[houseProfileStyles.textWithTopAndButDividers, { flexDirection:'row', width:'95%'}]}>
                                                         <Text style = {{width:'88%'}}>
-                                                           <Text style={{ fontWeight: "400" }}>{"Description: " + l.desc}</Text>
+                                                           <Text style={{ fontWeight: "400" }}>{"Type: " + l.desc}</Text>
+                                                           {"descOpitional" in l && l.descOpitional != '' &&<> {"\n"}<Text style={{ fontWeight: "400" }}>{"Description: " + l.descOpitional}</Text> </>}
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Billing type:" + l.billingType}</Text>
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Creator: " + l.partner}</Text>
                                                            {"\n"}

@@ -70,6 +70,9 @@ const AddNewExpenditureScreen = ({route}) => {
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
+
+    const [notifications, setNotifications] = useState([]);
+
   
     useEffect(() => {
       registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -180,12 +183,28 @@ const AddNewExpenditureScreen = ({route}) => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional})
+            if(isWithNotification) { 
+                notficationHandling().then((tempNotifications) => {
+                    firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications})
+                })
+            }else
+                firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: []})
             navigation.replace("HouseProfile",{hKeyP: firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
-            if(isWithNotification) { await schedulePushNotification("The event is approaching! 🕞",dateText,"data",new Date(notificationDate.setSeconds(0)))}; 
         }else alert("Sorry, you must fill in all the fields!")
     }
 
+    const notficationHandling = async() => {
+        let tempNotifications = []
+        for(let i in notifications) {
+            tempNotifications.push({
+                identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional,notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
+                dateTextNotification: notifications[i].dateTextNotification, 
+                notificationDate: notifications[i].notificationDate
+            })
+        }
+        return tempNotifications
+    }
+    
     const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || eventDate;
         setShow(Platform.OS === 'ios')
@@ -221,6 +240,8 @@ const AddNewExpenditureScreen = ({route}) => {
             hours = "0" + hours
         let fTime =  hours + ":" + minutes
         setDateTextNotification(fTime + '  |  ' + fDate)
+
+        setNotifications([...notifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: notificationDate.setSeconds(0)}])
     }
 
     const showModeNotification = (currentMode) => {
@@ -319,6 +340,28 @@ const AddNewExpenditureScreen = ({route}) => {
                             <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:notificationDate?'black':'grey' }}>{notificationDate? (eventDate && notificationDate<eventDate? dateTextNotification:dateText): (eventDate? dateText : "Notification Date")}</Text> 
                         </TouchableOpacity>
                     </View>
+                    {
+                        notifications.map((val, index) => ( 
+                            <>
+                            {val && "dateTextNotification" in val && <ListItem key={index} bottomDivider topDivider Component={TouchableScale}
+                            friction={90} //
+                            tension={100} // These props are passed to the parent component (here TouchableScale)
+                            activeScale={1}
+                            onPress={() => {  }}
+                            >
+                                <TouchableOpacity  style={docImageUploaderStyles.removeBtn} onPress={() => {let temp = [...notifications]; delete temp[index]; setNotifications(temp);}} >
+                                    <AntDesign name="close" size={15} color="black" />
+                            </TouchableOpacity> 
+                                <Text>{val.dateTextNotification}</Text>
+                                <ListItem.Content>
+                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{}</Text>
+                                </ListItem.Content>
+                                <AntDesign name="clockcircleo" size={17} color="black" />
+
+                            </ListItem>}
+                            </>
+                         ))
+                    }
                     </>
                     }
                 </>
@@ -333,6 +376,7 @@ const AddNewExpenditureScreen = ({route}) => {
                     display='default'
                     onChange={ onDateChangeNotification }
                     maximumDate={eventDate? eventDate:new Date()}
+                    minimumDate={new Date()}
                     />)
                 }
                 {show &&
@@ -523,7 +567,7 @@ const AddNewExpenditureScreen = ({route}) => {
 
 
 async function schedulePushNotification(title,body,data,trigger) {
-    await Notifications.scheduleNotificationAsync({
+    return await Notifications.scheduleNotificationAsync({
       content: {
         title: title,
         body: body,

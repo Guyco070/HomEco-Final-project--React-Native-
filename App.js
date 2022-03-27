@@ -23,6 +23,7 @@ import { I18nManager } from 'react-native'
 import UserProfileScreen from './screens/UserProfileScreen';
 import EditExpenditureScreen from './screens/EditExpenditureScreen';
 import EditSelfIncomeScreen from './screens/EditSelfIncomeScreen';
+import * as Notifications from 'expo-notifications';
 
 console.disableYellowBox = true;
 
@@ -32,6 +33,18 @@ const Stack = createNativeStackNavigator();
 // I18nManager.swapLeftAndRightInRTL(false);
 
 export default function App() {
+  const lastNotificationResponse = Notifications.useLastNotificationResponse();
+  
+  React.useEffect(() => {
+    if (
+      lastNotificationResponse &&
+      lastNotificationResponse.notification.request.content.data['someDataToCheck'] &&
+      lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
+    ) {
+      // navigate to your desired screen
+    }
+  }, [lastNotificationResponse]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>

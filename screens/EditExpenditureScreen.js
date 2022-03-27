@@ -45,7 +45,7 @@ const EditExpenditureScreen = ({route}) => {
     const [isWithNotification, setIsWithNotification] = useState(false);
 
 
-    const [mode, setMode] = useState('date');
+    const [mode, setMode] = useState('');
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = useState('Empty');
 
@@ -55,7 +55,6 @@ const EditExpenditureScreen = ({route}) => {
     const [dateTextNotification, setDateTextNotification] = useState('Empty');
     
     const [eventDate, setEventDate] = useState('');
-    const [firstEventDateUpdate, setFirstEventDateUpdate] = useState(true);
     const [notificationDate, setNotificationDate] = useState('');
 
     const [expoPushToken, setExpoPushToken] = useState('');
@@ -143,11 +142,11 @@ const EditExpenditureScreen = ({route}) => {
       }, [company])
 
       useEffect(() => {
-        if(mode == 'date' && !firstEventDateUpdate) {showMode('time'); setFirstEventDateUpdate(false)}; 
+        if(mode == 'date') showMode('time')
       }, [eventDate])
 
       useEffect(() => {
-        if(modeNotification == 'date' && !firstEventDateUpdate) showModeNotification('time')
+        if(modeNotification == 'date') showModeNotification('time')
       }, [notificationDate])
 
     const addImage = async (from,index) => {
@@ -197,7 +196,13 @@ const EditExpenditureScreen = ({route}) => {
         else if(company && desc && amount){
             removeNotficationHandling()
             if(isWithNotification) { 
+                console.log(notificationsToRemove)
+                    console.log("xxxx")
+                    console.log(notifications)
                 notficationHandling().then((tempNotifications) => {
+                    console.log(tempNotifications)
+                    console.log("xxxx")
+                    
                     firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: ("date" in exp)?exp.date.toDate():new Date(),partner:user.email,company, desc, amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent, eventDate, descOpitional, notifications: tempNotifications}).then(()=>{
                         if(!("date" in exp)) 
                             firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
@@ -215,24 +220,21 @@ const EditExpenditureScreen = ({route}) => {
     const notficationHandling = async() => {
         let tempNotifications = []
         for(let i in notifications) {
-            if(!("identifier" in notification[i]))
+            if(!("identifier" in notifications[i]))
                 tempNotifications.push({
                     identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional,notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
                     dateTextNotification: notifications[i].dateTextNotification, 
                     notificationDate: notifications[i].notificationDate
                 })
+            else tempNotifications.push(notifications[i])
         }
         return tempNotifications
     }
 
     const removeNotficationHandling = async() => {
-        console.log("xxxx")
-        console.log(notificationsToRemove)
-        let tempNotifications = []
         for(let i in notificationsToRemove) {
             await Notifications.cancelScheduledNotificationAsync(notificationsToRemove[i].identifier);
         }
-        return tempNotifications
     }
 
     const handleDeleteExpenditure = () => {
@@ -430,9 +432,9 @@ const EditExpenditureScreen = ({route}) => {
                                     onPress={() => {  }}
                                     >
                                         <TouchableOpacity  style={docImageUploaderStyles.removeBtn} onPress={() => {
-                                                    let temp = [...notifications]; 
                                                     setNotificationsToRemove([...notificationsToRemove, notifications[index]]); 
-                                                    delete temp[index]; 
+                                                    let temp = []; 
+                                                    for(const i in notifications) if(i!=index) temp.push(notifications[i])
                                                     setNotifications(temp);
                                                 }
                                             } >

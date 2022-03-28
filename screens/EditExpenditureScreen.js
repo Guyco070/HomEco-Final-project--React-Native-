@@ -580,11 +580,11 @@ const EditExpenditureScreen = ({route}) => {
                                                 color={'#0782F9'}  
                                                 style={{top:10}}
                                                 />
-                                        <Text style={{top:37,margin:1,fontSize:12}}>Education</Text>
+                                        <Text style={{top:37,margin:1,fontSize:12}}>Education</Text>8/
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Other"
-                                        onPress={() => {handleAddDescription("Other"); setDescriptionIcon("question")}}
+                                        onPress={() => {handleAddDescription("Other"); setDescriptionIcon("help-outline")}}
                                         style={modelContent.button}
                                         >
                                             <AntDesign 

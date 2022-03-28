@@ -357,9 +357,7 @@ const houseProfileStyles = StyleSheet.create({
         shadowOpacity: 1
     },
     recent: {
-        marginTop: 32,
-        marginBottom: 6,
-        fontSize: 10,
+        fontSize: 12,
         marginLeft: 40
     },
     recentItem: {
@@ -387,6 +385,11 @@ const houseProfileStyles = StyleSheet.create({
         right:0,
         backgroundColor:'#fff',
         borderRadius:50,
+    },
+    subTextIcon: {
+        fontSize: 11,
+        color: "#AEB5BC",
+        fontWeight: "500",
     },
 });
 const TodoSheet = StyleSheet.create({

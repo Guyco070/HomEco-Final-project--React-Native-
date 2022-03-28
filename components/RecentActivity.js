@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox, TouchableOpacity ,Picker} from "react-native";
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import Loading from '../components/Loading';
@@ -9,6 +9,9 @@ import UploadDocumentImage from '../components/UploadDocumentImage';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
+import ModalSelector from 'react-native-modal-selector'
+import { sortDispatch, filterDispatch } from '../SortAndFilter';
+
 
 const typeIcones ={
     Home: 'home',
@@ -18,7 +21,7 @@ const typeIcones ={
     Shopping: "pricetags-outline",
     Bills: "card-outline",
     Education: "glasses-outline",
-    Other: "question"
+    Other: "help-outline"
 }
 
 const RecentActivity = ({map,slice,hKey}) => {
@@ -30,7 +33,27 @@ const RecentActivity = ({map,slice,hKey}) => {
     const [isExpendedConst, setIsExpendedConst] = useState(true);
     const [newSlice,setNewSlice] = useState(1)
     const [cEmail,setHouseCreator] = useState(1)
-
+    const [sortVal,setSortVal] = useState('')
+    const [filterVal,setFiltertVal] = useState('')
+    
+    let sortIndex = 0;
+    const sortData = [
+        { key: sortIndex++, section: true, label: 'Select a value to sort by' },
+        { key: sortIndex++, label: 'Date: old to new' },
+        { key: sortIndex++, label: 'Date: new to old'  },
+        { key: sortIndex++, label: 'Amount: high to low' },
+        { key: sortIndex++, label: 'Amount: low to high'  },
+    ];
+    let filterIndex = 0;
+    const filterData = [
+        { key: filterIndex++, section: true, label: 'Fruits' },
+        { key: filterIndex++, label: 'Red Apples' },
+        { key: filterIndex++, label: 'Cherries' },
+        { key: filterIndex++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
+        // etc...
+        // Can also add additional custom keys which are passed to the onChange callback
+        { key: filterIndex++, label: 'Vegetable', customKey: 'Not a fruit' }
+    ];
     
 
     useEffect(() => {
@@ -56,13 +79,50 @@ const RecentActivity = ({map,slice,hKey}) => {
       const handleEdit = (exp) => {
         navigation.navigate('EditExpenditureScreen',{hKey, exp})
       }
+
+      const handleSort = (key) => {
+        console.log(sortDispatch[key](sorteList))
+        setSorteList(sortDispatch[key](sorteList) )
+      }
+
+      const handleFilter = (val) => {
+
+      }
+
     return (
         <View>
         {loading?(<Loading/>) :
         (<ScrollView 
         style={{width:'100%',}}
         >  
-        <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{width: '100%'}]}>Recent Activity</Text>
+            <View flexDirection='row' flex={1}  style={{marginTop: 32, marginBottom: 6,}}>
+                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
+                <View flexDirection='row-reverse' style={{ width:'55%',alignItems:'flex-end',marginBottom:7}}>
+                        <ModalSelector
+                        data={sortData}
+                        onChange={(option)=>{ setSortVal(option.label); handleSort(option.key) }}
+                        style={{ marginLeft: 10 }}
+                        >
+                            <View flexDirection='row'>
+                                <Icon name="funnel-outline" size={15} type='ionicon'/>
+                                <Text style={[houseProfileStyles.subTextIcon,]} > Sort</Text>
+                            </View>
+                            <Text style={[houseProfileStyles.subTextIcon,{fontSize:10}]} > {sortVal}</Text>
+                        </ModalSelector>
+                    
+                        <ModalSelector
+                            data={filterData}
+                            onChange={(option)=>{ setFiltertVal(option.label); handleFilter(option.label) }}
+                            >
+                            <View flexDirection='row' >
+                                <Icon name="search" size={15} type='ionicon'/>
+                                <Text style={[houseProfileStyles.subTextIcon,]} > Filter</Text>
+                            </View>
+                            <Text style={[houseProfileStyles.subTextIcon,{fontSize:10}]} > {filterVal}</Text>
+                        </ModalSelector>
+
+                </View>
+            </View>
         { sorteList.length == 0 &&
               <Text style={[houseProfileStyles.subText, {marginHorizontal:55,marginBottom:10,fontSize:10}]}>- None -</Text>
              }

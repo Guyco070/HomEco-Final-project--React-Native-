@@ -494,7 +494,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Other"
-                                        onPress={() => {handleAddDescription("Other"); setDescriptionIcon("question")}}
+                                        onPress={() => {handleAddDescription("Other"); setDescriptionIcon("help-outline")}}
                                         style={modelContent.button}
                                         >
                                             <AntDesign 

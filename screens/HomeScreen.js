@@ -23,10 +23,14 @@ const HomeScreen = () => {
 
     useEffect(() => {
         console.log(firebase.auth.currentUser?.email)
-        firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); setLoading(false); })    // before opening the page
+        firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); })    // before opening the page
 
       }, [])
 
+      useEffect(() => {
+        if(user['email'] != undefined)
+            setLoading(false); 
+      }, [user])
     const createNewHouseScreen = () => {
         navigation.navigate("CreateNewHouse",user)
     }
@@ -46,8 +50,8 @@ const HomeScreen = () => {
 
     return (
         <View style={[styles.container]}>
-            {loading ?    <Loading/>:<><Text style={styles.textBody}>{ user["fName"]+ " " + user["lName"] } </Text>
-            <Text style={styles.textBody}>Email: { user["email"] } </Text>
+            {loading ?    <Loading/>:<><Text style={styles.textBody}>{ user["fName"] == undefined? "" : user["fName"]+ " " + user["lName"] } </Text>
+            <Text style={styles.textBody}>{user["fName"] == undefined? "" : "Email: " + user["email"] } </Text>
             <UserHousesListView user={user}/>
              {/*uploade products drom excel*/ }
             {/* <SheetJSApp/> */}

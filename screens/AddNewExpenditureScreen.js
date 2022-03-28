@@ -19,7 +19,7 @@ import * as Notifications from 'expo-notifications';
 import CustomNotifications from '../CustomNotifications'
 import { async } from '@firebase/util';
 // import * as CustomNotificationsFuncs from '../CustomNotifications'
-
+LogBox.ignoreAllLogs(true)
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
@@ -197,14 +197,15 @@ const AddNewExpenditureScreen = ({route}) => {
         let tempNotifications = []
         for(let i in notifications) {
             tempNotifications.push({
-                identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional,notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
+                identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional? descOpitional:company,
+                                                                    notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
                 dateTextNotification: notifications[i].dateTextNotification, 
                 notificationDate: notifications[i].notificationDate
             })
         }
         return tempNotifications
     }
-    
+
     const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || eventDate;
         setShow(Platform.OS === 'ios')
@@ -497,7 +498,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                         style={modelContent.button}
                                         >
                                             <AntDesign 
-                                                name={"question"}
+                                                name={"help-outline"}
                                                 size={20}
                                                 color={'#0782F9'}
                                                 style={{top:10}}

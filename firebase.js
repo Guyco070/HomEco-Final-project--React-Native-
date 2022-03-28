@@ -5,7 +5,9 @@ import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
+import { LogBox } from "react-native"
 
+LogBox.ignoreAllLogs(true)
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 

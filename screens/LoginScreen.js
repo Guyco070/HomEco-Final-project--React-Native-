@@ -9,6 +9,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from '../components/Inputs';
 import { Title } from 'react-native-paper';
 // import { StyledFirebaseAuth } from 'react-firebaseui';
+import { LogBox } from "react-native"
+
+LogBox.ignoreAllLogs(true)
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');

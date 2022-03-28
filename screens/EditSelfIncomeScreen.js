@@ -15,6 +15,7 @@ import UploadProfileImage from '../components/UploadProfileImage';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { Ionicons ,Foundation,FontAwesome5,FontAwesome} from '@expo/vector-icons';
 
+LogBox.ignoreAllLogs(true)
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 LogBox.ignoreLogs([

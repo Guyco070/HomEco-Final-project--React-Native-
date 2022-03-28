@@ -24,8 +24,10 @@ import UserProfileScreen from './screens/UserProfileScreen';
 import EditExpenditureScreen from './screens/EditExpenditureScreen';
 import EditSelfIncomeScreen from './screens/EditSelfIncomeScreen';
 import * as Notifications from 'expo-notifications';
+import { LogBox } from "react-native"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-console.disableYellowBox = true;
+LogBox.ignoreAllLogs(true)
 
 const Stack = createNativeStackNavigator();
 // I18nManager.forceRTL(false);

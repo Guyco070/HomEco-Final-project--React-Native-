@@ -11,6 +11,7 @@ import TouchableScale from 'react-native-touchable-scale';
 import {LineChart,BarChart,PieChart,ProgressChart,ContributionGraph,StackedBarChart} from "react-native-chart-kit";
 import { VictoryBar, VictoryChart, VictoryGroup, VictoryLegend, VictoryTheme } from "victory-native";
 
+LogBox.ignoreAllLogs(true)
 
 
 const GraphHomeScreen = ({route}) => {
@@ -18,6 +19,7 @@ const GraphHomeScreen = ({route}) => {
     const [user, setUser] = useState([]);
     const [hKey, setHKey] = useState('');
     const [house, setHouse] = useState(''); // first get, no update from dta base
+    const [dataBar, setDataBar] = useState(''); 
 
 
     useEffect(() => {
@@ -27,7 +29,7 @@ const GraphHomeScreen = ({route}) => {
     useEffect(() => {    
         if("hKey" in route.params){ 
             setHKey(route.params)
-            firebase.getByDocIdFromFirestore("houses",route.params.hKey).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
+            firebase.getByDocIdFromFirestore("houses",route.params.hKey).then((uHouse)=>{ setHouse(uHouse); setDataBar(Graphs.getBarChartData(uHouse))}).catch((e) =>{})
         }else console.log(route.params)
     }, [route])
     const GraphColor = ['#0000FF','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0']
@@ -70,9 +72,6 @@ const GraphHomeScreen = ({route}) => {
         barPercentage: 0.5,
         useShadowColorFromDataset: false // optional
     };
-////////////////////////////////////
-const dataBar = Graphs.getBarChartData(house)
-////////////////////////////////////
 
       
     return (

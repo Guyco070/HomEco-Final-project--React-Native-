@@ -14,7 +14,9 @@ import { set } from 'react-native-reanimated';
 import Loading from '../components/Loading';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import ChangePermissions from '../components/ChangePermissions';
+import { LogBox } from "react-native"
 
+LogBox.ignoreAllLogs(true)
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 

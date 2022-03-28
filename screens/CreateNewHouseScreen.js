@@ -11,7 +11,9 @@ import { ListItem, Avatar } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
+import { LogBox } from "react-native"
 
+LogBox.ignoreAllLogs(true)
 
 
 const CreateNewHouseScreen = () => {

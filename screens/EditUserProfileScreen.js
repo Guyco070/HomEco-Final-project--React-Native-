@@ -14,7 +14,9 @@ import Loading from '../components/Loading';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginScreen from './LoginScreen';
+import { LogBox } from "react-native"
 
+LogBox.ignoreAllLogs(true)
 
 const EditUserProfileScreen = () => {
     const navigation = useNavigation()

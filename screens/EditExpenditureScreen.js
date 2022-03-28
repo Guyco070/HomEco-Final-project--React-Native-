@@ -19,6 +19,7 @@ import * as Notifications from 'expo-notifications';
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
+LogBox.ignoreAllLogs(true)
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',
    ]);
@@ -222,7 +223,8 @@ const EditExpenditureScreen = ({route}) => {
         for(let i in notifications) {
             if(!("identifier" in notifications[i]))
                 tempNotifications.push({
-                    identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional,notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
+                    identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional? descOpitional:company,
+                                                                            notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
                     dateTextNotification: notifications[i].dateTextNotification, 
                     notificationDate: notifications[i].notificationDate
                 })
@@ -586,7 +588,7 @@ const EditExpenditureScreen = ({route}) => {
                                         style={modelContent.button}
                                         >
                                             <AntDesign 
-                                                name={"question"}
+                                                name={"help-outline"}
                                                 size={20}
                                                 color={'#0782F9'}
                                                 style={{top:10}}

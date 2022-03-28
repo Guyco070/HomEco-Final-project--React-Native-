@@ -16,6 +16,7 @@ import Toast from 'react-native-toast-message';
 import TouchableScale from 'react-native-touchable-scale';
 import { Timestamp } from 'firebase/firestore';
 
+LogBox.ignoreAllLogs(true)
 
 
  

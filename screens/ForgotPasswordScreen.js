@@ -22,7 +22,7 @@ const ForgotPasswordScreen = () => {
         behavior="padding"
         >
             <Text style={styles.textTitle}>Enter Your confirmation Email ! </Text>
-            <View style={styles.inputContainer}style={styles.inputContainer}>
+            <View style={styles.inputContainer}>
                 <Input
                     placeholder="Email"
                     value={ email }

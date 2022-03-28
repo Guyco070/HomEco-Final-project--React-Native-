@@ -1,22 +1,26 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet,Dimensions } from 'react-native';
 
 const Loading = () => {
     return (
         <View style={[styles.container, styles.horizontal]}>
-            <ActivityIndicator size="large" />
+            <ActivityIndicator size="large" color="#0782F9" />
         </View>
     )
 };
+
+
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: "center"
+      justifyContent: "center",
+      height:"100%"
     },
     horizontal: {
       flexDirection: "row",
       justifyContent: "space-around",
-      padding: 10
+      alignSelf:'center',
+      alignItems:"center",
     }
   });
 

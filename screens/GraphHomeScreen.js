@@ -1,5 +1,5 @@
 import React, { useEffect,useState,Component } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions,AppRegistry,Platform } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions,AppRegistry,Platform,ActivityIndicator } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 import * as Graphs from '../Graphs'
@@ -10,6 +10,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import TouchableScale from 'react-native-touchable-scale';
 import {LineChart,BarChart,PieChart,ProgressChart,ContributionGraph,StackedBarChart} from "react-native-chart-kit";
 import { VictoryBar, VictoryChart, VictoryGroup, VictoryLegend, VictoryTheme } from "victory-native";
+import Loading from '../components/Loading';
 
 LogBox.ignoreAllLogs(true)
 
@@ -75,9 +76,9 @@ const GraphHomeScreen = ({route}) => {
 
       
     return (
-        <ScrollView style={{backgroundColor: 'white'}}>
-            <View>
-                <Text>Bezier Line Chart</Text>
+        <ScrollView style={{backgroundColor: 'white',}}>
+            <View style={{marginVertical:30}}>
+                <Text>     Bezier Line Chart</Text>
                 <PieChart
                     data={getPieChartData()}
                     width={screenWidth}
@@ -85,13 +86,12 @@ const GraphHomeScreen = ({route}) => {
                     chartConfig={chartPieConfig}
                     accessor={"population"}
                     backgroundColor={"transparent"}
-                    paddingLeft={"40"}
                     center={[10, 10]}
                     absolute={false}
                     />
             </View>
-
-            {house !='' && <View>
+            
+            {house ==''? <Loading /> : <View style={{marginVertical:30}}>
                 <VictoryChart>
                     <VictoryGroup offset={15}>
                         <VictoryBar data={dataBar["Expenditure"]} 

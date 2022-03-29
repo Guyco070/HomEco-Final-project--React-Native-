@@ -37,7 +37,7 @@ const RecentActivity = ({map,slice,hKey}) => {
     const [newSlice,setNewSlice] = useState(1)
     const [cEmail,setHouseCreator] = useState(1)
 
-    const [sortVal,setSortVal] = useState('Date: old to new')
+    const [sortVal,setSortVal] = useState('Date: new to old')
 
     const [filterVal,setFiltertVal] = useState('')
     const [filterVisable,setFilterVisable] = useState(false)
@@ -93,8 +93,11 @@ const RecentActivity = ({map,slice,hKey}) => {
       }
 
       const handleSort = (key) => {
-        setToViewList(sortDispatch[key](toViewList))
-        setSortedList(sortDispatch[key](toViewList))
+        if(filterList !== sortedList){
+            setToViewList(sortDispatch[key](toViewList))
+        }
+        else setToViewList(sortDispatch[key](sortedList))
+        setSortedList(sortDispatch[key](sortedList))
       }
 
       const handleFilterOptions = (key) => {
@@ -143,7 +146,7 @@ const RecentActivity = ({map,slice,hKey}) => {
                         {filterOptions && <ModalFilterPicker
                         placeholderText={filterVal}
                             visible={filterVisable}
-                            onSelect={(val) => {setFilterVisable(false); console.log(val); handleFilter(val.key,val.label)}}
+                            onSelect={(val) => {setFilterVisable(false); handleFilter(val.key,val.label)}}
                             onCancel={() => setFilterVisable(false)}
                             options={filterOptions}
                             /> }

@@ -3,7 +3,7 @@ const filterOptionsDispatch = {1: (arr) => getUserEmailOptions(arr), 2: (arr) =>
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
-const filterBy = {"User email": "partner", "Type": "desc", "Billing type": "billingType", "Company": "company"};
+const filterBy = {"User email": "partner", "Type": "desc", "Billing type": "billingType", "Company": "company", "Description": "descOpitional"};
 // sortDispatch - start
 const sortByDateOldToNew = (arr) => {
     console.log(arr)
@@ -11,7 +11,7 @@ const sortByDateOldToNew = (arr) => {
     return arr.sort((a,b) => {
         // Turn your strings into dates, and then subtract them
         // to get a value that is either negative, positive, or zero.
-        return b.date.toDate() - a.date.toDate()
+        return a.date.toDate() - b.date.toDate()
     }); 
 }
 
@@ -21,7 +21,7 @@ const sortByDateNewToOld = (arr) => {
     return arr.sort((a,b) => {
         // Turn your strings into dates, and then subtract them
         // to get a value that is either negative, positive, or zero.
-        return a.date.toDate() - b.date.toDate()
+        return b.date.toDate() - a.date.toDate()
     }); 
   }
 

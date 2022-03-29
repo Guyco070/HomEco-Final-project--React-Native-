@@ -288,7 +288,7 @@ const houseProfileStyles = StyleSheet.create({
     dm: {
         backgroundColor: "#41444B",
         position: "absolute",
-        top: 20,
+        top: 40,
         width: 40,
         height: 40,
         borderRadius: 20,

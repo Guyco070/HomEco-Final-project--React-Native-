@@ -15,6 +15,9 @@ import * as cloudinary from '../Cloudinary'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import ModalSelector from 'react-native-modal-selector'
+import RNPhoneCodeSelect from "react-native-phone-code-select";
+
 
 const SignUpScreen = props => {
     const navigation = useNavigation()
@@ -24,12 +27,17 @@ const SignUpScreen = props => {
     const [lName, setLName] = useState('');
     const [bDate, setBDate] = useState('');
     const [phone, setPhone] = useState('');
+    const [phoneAreaCode, setPhoneAreaCode] = useState('+972');
+    const [selectedCountry, setSelectedCountry] = useState('Israel');
+    const [phoneAreaCodeVisable, setPhoneAreaCodeVisable] = useState(false);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = useState('Empty');
+    
 
     // useEffect(() => {
     //     const unsubscribe = firebase.auth.onAuthStateChanged(user => {
@@ -52,7 +60,7 @@ const SignUpScreen = props => {
         createUserWithEmailAndPassword(firebase.auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            firebase.addUserToFirestore(email.toLowerCase(),fName, lName, phone, bDate, catchImage )
+            firebase.addUserToFirestore(email.toLowerCase(),fName, lName, phoneAreaCode +"-"+ phone, bDate, catchImage )
             signInWithEmailAndPassword(firebase.auth, email, password)
         })
         .catch(error => alert(error.message, email, password));
@@ -81,7 +89,18 @@ const SignUpScreen = props => {
                 <Text style={[styles.textBody, {margin:10}]}>Create an account</Text>
                 <Input name="First Name" icon="user" onChangeText={text => setFName(text)} />
                 <Input name="Last Name" icon="user" onChangeText={text => setLName(text)} />
-                <Input name="Phone" icon="phone" keyboardType="phone-pad" onChangeText={text => setPhone(text)} /> 
+                <View style={{width:"90%", flexDirection:'row'}}>
+                            <Input style={{width:"35%"}} name={phoneAreaCode} icon="phone" keyboardType="phone-pad" onPress={()=>{ setPhoneAreaCodeVisable(true)}} /> 
+                            <RNPhoneCodeSelect
+                                visible={phoneAreaCodeVisable}
+                                onDismiss={() => setPhoneAreaCodeVisable(false)}
+                                onCountryPress={(country) => {setSelectedCountry(country); setPhoneAreaCode(country.dial_code.replace(" ","")); setPhoneAreaCodeVisable(false);console.log(country)}}
+                                primaryColor="#f04a4a"
+                                secondaryColor="#000000"
+                                buttonText="Ok"
+                                />
+                            <Input style={{width:"65%"}} name="Phone" keyboardType="phone-pad" onChangeText={text => setPhone(text)} /> 
+                            </View>
                 <View style={styles.dateInputButton}>
                     <Icon name={'birthday-cake'} size={22}
                                 color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>

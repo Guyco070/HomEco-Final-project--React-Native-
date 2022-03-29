@@ -15,6 +15,8 @@ import TodoList from '../components/TodoList/TodoList';
 import Toast from 'react-native-toast-message';
 import TouchableScale from 'react-native-touchable-scale';
 import { Timestamp } from 'firebase/firestore';
+import ModalSelector from 'react-native-modal-selector'
+import * as Linking from 'expo-linking';
 
 LogBox.ignoreAllLogs(true)
 
@@ -32,6 +34,12 @@ const HouseProfileScreen = ({route}) => {
     const [hKey, setHKey] = useState('');
     const [hIncome, setHIncom] = useState(undefined)
     const [hExpedns, setHExpedns] = useState(undefined)
+
+    const [messageOptions,setMessageOptions] = useState([
+        {key:"ddd", label: "dddd"}
+    ])
+    const [messageToEmail,setMessageToEmail] = useState('')
+
 
 
     useEffect(() => {
@@ -51,6 +59,7 @@ const HouseProfileScreen = ({route}) => {
             setHExpedns(firebase.getHouseExpendsAmount(house.expends))
             setHIncom(firebase.getHouseIncome(house))
             setLoading(false)
+            getMessageOptions()
         }
     }, [house])
 
@@ -64,6 +73,16 @@ const HouseProfileScreen = ({route}) => {
                 isExpended[expend.date] = false 
             })
     }, [hExpedns])
+
+    const getMessageOptions = () => {
+        let temp = []
+        for(let i in house.partners)
+        {
+            temp.push({key: i, label: house.partners[i].user.fName + " " + house.partners[i].user.lName, phone: house.partners[i].user.phone})
+        }
+        setMessageOptions(temp)
+    }
+
 
     const getReminderColor = () => {
         if(hIncome < hExpedns)
@@ -84,9 +103,17 @@ const HouseProfileScreen = ({route}) => {
                     <View style={houseProfileStyles.profileHouseImage}>
                         <Image source={{uri:house.hImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
                     </View>
-                    {/* <View style={houseProfileStyles.dm}>
-                        <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
-                    </View> */}
+
+                        {messageOptions && <ModalSelector
+                            data={messageOptions}
+                            onChange={(option)=>{ Linking.openURL('whatsapp://send?text=Hi,\nI want to talk with you about our house.\n\n'+user.fName + " " +user.lName+'.&phone=' + option.phone)}}
+                            style={houseProfileStyles.dm}
+                            >
+                            <View>
+                                    <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
+                            </View>
+                        </ModalSelector> }
+
                     <View style={houseProfileStyles.active}></View>
                             <View style={houseProfileStyles.userProfileImage}>
                                 <TouchableScale

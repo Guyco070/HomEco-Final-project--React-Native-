@@ -10,7 +10,9 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 import ModalSelector from 'react-native-modal-selector'
-import { sortDispatch, filterDispatch } from '../SortAndFilter';
+import { sortDispatch, filterOptionsDispatch ,filterByFunc} from '../SortAndFilter';
+import { TextInput } from 'react-native-gesture-handler';
+import ModalFilterPicker from 'react-native-modal-filter-picker'
 
 
 const typeIcones ={
@@ -28,13 +30,19 @@ const RecentActivity = ({map,slice,hKey}) => {
     const navigation = useNavigation()
 
     const [loading, setLoading] = useState(true);
-    const [sorteList, setSorteList] = useState(true);
+    const [toViewList, setToViewList] = useState([]);
+    const [sortedList, setSortedList] = useState([]);
     let isExpended = {}
     const [isExpendedConst, setIsExpendedConst] = useState(true);
     const [newSlice,setNewSlice] = useState(1)
     const [cEmail,setHouseCreator] = useState(1)
-    const [sortVal,setSortVal] = useState('')
+
+    const [sortVal,setSortVal] = useState('Date: old to new')
+
     const [filterVal,setFiltertVal] = useState('')
+    const [filterVisable,setFilterVisable] = useState(false)
+    const [filterOptions,setFilterOptions] = useState([])
+    const [filterList,setFilterList] = useState([])
     
     let sortIndex = 0;
     const sortData = [
@@ -46,30 +54,34 @@ const RecentActivity = ({map,slice,hKey}) => {
     ];
     let filterIndex = 0;
     const filterData = [
-        { key: filterIndex++, section: true, label: 'Fruits' },
-        { key: filterIndex++, label: 'Red Apples' },
-        { key: filterIndex++, label: 'Cherries' },
-        { key: filterIndex++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
-        // etc...
-        // Can also add additional custom keys which are passed to the onChange callback
-        { key: filterIndex++, label: 'Vegetable', customKey: 'Not a fruit' }
+        { key: filterIndex++, section: true, label: 'Select a value to filter by' },
+        { key: filterIndex++, label: 'User email' },
+        { key: filterIndex++, label: 'Type' },
+        { key: filterIndex++, label: 'Billing Type'},
+        { key: filterIndex++, label: 'Company' },
+        { key: filterIndex++, label: 'Description' },
+        { key: filterIndex++, label: 'Month' },
+        { key: filterIndex++, label: 'Year' },
+        { key: filterIndex++, section: true, label: '',  },
+        { key: filterIndex++, label: 'None' },
     ];
     
 
     useEffect(() => {
-        setSorteList(getSortedArrayDateFromDict(map))
+        setToViewList(getSortedArrayDateFromDict(map))
+        setFilterList(getSortedArrayDateFromDict(map))
+        setSortedList(getSortedArrayDateFromDict(map))
         setNewSlice(slice)
         firebase.getByDocIdFromFirestore("houses",hKey).then((house)=>setHouseCreator(house.cEmail)).catch((e) =>{})
 
       },[map])
 
-      useEffect(() => {
+    useEffect(() => {
+        for(const key in toViewList)
+            isExpended[toViewList[key].date.toDate()] = false
+        setIsExpendedConst(isExpended)
         setLoading(false);
-        for(const key in sorteList)
-            isExpended[sorteList[key].date.toDate()] = false
-            setIsExpendedConst(isExpended)
-        },[sorteList])
-        
+    },[toViewList])
 
       const setIsExpended=(date) => {
             isExpended[date.toDate()] = !isExpendedConst[date.toDate()]
@@ -81,12 +93,20 @@ const RecentActivity = ({map,slice,hKey}) => {
       }
 
       const handleSort = (key) => {
-        console.log(sortDispatch[key](sorteList))
-        setSorteList(sortDispatch[key](sorteList) )
+        setToViewList(sortDispatch[key](toViewList))
+        setSortedList(sortDispatch[key](toViewList))
       }
 
-      const handleFilter = (val) => {
+      const handleFilterOptions = (key) => {
+        if(key !== 9){
+            setFilterOptions(filterOptionsDispatch[key](sortedList))
+            setFilterVisable(true)
+        }else setToViewList(sortedList)
 
+      }
+
+      const handleFilter = (key,val) => {
+        setToViewList(filterByFunc(sortedList, filterVal, val))
       }
 
     return (
@@ -112,7 +132,7 @@ const RecentActivity = ({map,slice,hKey}) => {
                     
                         <ModalSelector
                             data={filterData}
-                            onChange={(option)=>{ setFiltertVal(option.label); handleFilter(option.label) }}
+                            onChange={(option)=>{ setFiltertVal(option.label); handleFilterOptions(option.key) }}
                             >
                             <View flexDirection='row' >
                                 <Icon name="search" size={15} type='ionicon'/>
@@ -120,13 +140,20 @@ const RecentActivity = ({map,slice,hKey}) => {
                             </View>
                             <Text style={[houseProfileStyles.subTextIcon,{fontSize:10}]} > {filterVal}</Text>
                         </ModalSelector>
+                        {filterOptions && <ModalFilterPicker
+                        placeholderText={filterVal}
+                            visible={filterVisable}
+                            onSelect={(val) => {setFilterVisable(false); console.log(val); handleFilter(val.key,val.label)}}
+                            onCancel={() => setFilterVisable(false)}
+                            options={filterOptions}
+                            /> }
 
                 </View>
             </View>
-        { sorteList.length == 0 &&
+        { toViewList.length == 0 &&
               <Text style={[houseProfileStyles.subText, {marginHorizontal:55,marginBottom:10,fontSize:10}]}>- None -</Text>
              }
-            {sorteList &&  sorteList.slice(0,newSlice)
+            {toViewList &&  toViewList.slice(0,newSlice)
                         .map((l, i) => 
                         (
                             <View key={i}>
@@ -226,7 +253,7 @@ const RecentActivity = ({map,slice,hKey}) => {
             )}
         </ScrollView>)}
             <View style={{flexDirection:"row" ,alignSelf:'center'}}>
-            { newSlice < sorteList.length &&
+            { newSlice < toViewList.length &&
                 <TouchableOpacity onPress={()=>{setNewSlice(newSlice + 2)}}>
                     <View>
                         <Icon

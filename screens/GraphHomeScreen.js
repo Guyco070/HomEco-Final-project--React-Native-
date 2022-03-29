@@ -1,5 +1,5 @@
 import React, { useEffect,useState,Component } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions,AppRegistry,Platform,ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions,AppRegistry,Platform } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 import * as Graphs from '../Graphs'
@@ -10,18 +10,17 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import TouchableScale from 'react-native-touchable-scale';
 import {LineChart,BarChart,PieChart,ProgressChart,ContributionGraph,StackedBarChart} from "react-native-chart-kit";
 import { VictoryBar, VictoryChart, VictoryGroup, VictoryLegend, VictoryTheme } from "victory-native";
-import Loading from '../components/Loading';
 
-LogBox.ignoreAllLogs(true)
-
+const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
 
 const GraphHomeScreen = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
     const [hKey, setHKey] = useState('');
     const [house, setHouse] = useState(''); // first get, no update from dta base
-    const [dataBar, setDataBar] = useState(''); 
-
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); })    // before opening the page
@@ -30,9 +29,12 @@ const GraphHomeScreen = ({route}) => {
     useEffect(() => {    
         if("hKey" in route.params){ 
             setHKey(route.params)
-            firebase.getByDocIdFromFirestore("houses",route.params.hKey).then((uHouse)=>{ setHouse(uHouse); setDataBar(Graphs.getBarChartData(uHouse))}).catch((e) =>{})
+            firebase.getByDocIdFromFirestore("houses",route.params.hKey).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
+            getDataBar();
         }else console.log(route.params)
     }, [route])
+
+    
     const GraphColor = ['#0000FF','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0']
 
     const getPieChartData = () => {
@@ -73,12 +75,23 @@ const GraphHomeScreen = ({route}) => {
         barPercentage: 0.5,
         useShadowColorFromDataset: false // optional
     };
+////////////////////////////////////
+const dataBar=null
+const getDataBar = async () => {
+    await delay(5000);
+    dataBar = Graphs.getBarChartData(house)
+    
+}
+
+
+
+////////////////////////////////////
 
       
     return (
-        <ScrollView style={{backgroundColor: 'white',}}>
-            <View style={{marginVertical:30}}>
-                <Text>     Bezier Line Chart</Text>
+        <ScrollView style={{backgroundColor: 'white'}}>
+            <View>
+                <Text>Bezier Line Chart</Text>
                 <PieChart
                     data={getPieChartData()}
                     width={screenWidth}
@@ -86,12 +99,13 @@ const GraphHomeScreen = ({route}) => {
                     chartConfig={chartPieConfig}
                     accessor={"population"}
                     backgroundColor={"transparent"}
+                    paddingLeft={"40"}
                     center={[10, 10]}
                     absolute={false}
                     />
             </View>
-            
-            {house ==''? <Loading /> : <View style={{marginVertical:30}}>
+
+            {house !='' && <View>
                 <VictoryChart>
                     <VictoryGroup offset={15}>
                         <VictoryBar data={dataBar["Expenditure"]} 

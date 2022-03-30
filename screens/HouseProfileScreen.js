@@ -79,7 +79,7 @@ const HouseProfileScreen = ({route}) => {
         for(let i in house.partners)
         {
             if(house.partners[i].user.email != user.email)
-            temp.push({key: i, label: house.partners[i].user.fName + " " + house.partners[i].user.lName, phone: house.partners[i].user.phone})
+                temp.push({key: i, label: house.partners[i].user.fName + " " + house.partners[i].user.lName, phone: house.partners[i].user.phone})
         }
         setMessageOptions(temp)
     }

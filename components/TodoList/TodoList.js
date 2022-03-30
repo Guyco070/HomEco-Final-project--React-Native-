@@ -152,7 +152,7 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
 		style = {backgroundColor:'#99C365'}
 	}
 	return (
-		<View style={[TodoSheet.appbackground, {margin: 15}]}>
+		<View style={[TodoSheet.appbackground, {margin: 15,marginTop:7}]}>
 			<View style={[TodoSheet.maincontainer,style]}>
 				<View style={TodoSheet.additembox}>
 					{ (listName == 'shoppingList') && <TouchableOpacity style={{marginHorizontal:5}} onPress={() => setIsScanning(!isScanning)}>

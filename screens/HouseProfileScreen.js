@@ -78,6 +78,7 @@ const HouseProfileScreen = ({route}) => {
         let temp = []
         for(let i in house.partners)
         {
+            if(house.partners[i].user.email != user.email)
             temp.push({key: i, label: house.partners[i].user.fName + " " + house.partners[i].user.lName, phone: house.partners[i].user.phone})
         }
         setMessageOptions(temp)
@@ -172,7 +173,7 @@ const HouseProfileScreen = ({route}) => {
             {loading?(<Loading/>) :
                 (<ScrollView 
                 >  
-                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Shopping List</Text>
+                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginTop:15,}]}>Shopping List</Text>
 
                     <TodoList hKey = {hKey} listName={"shoppingList"} uEmail = {user.email} navigation={navigation}/>
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Tasks List</Text>

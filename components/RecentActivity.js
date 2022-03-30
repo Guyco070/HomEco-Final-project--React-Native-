@@ -26,7 +26,7 @@ const typeIcones ={
     Other: "help-outline"
 }
 
-const RecentActivity = ({map,slice,hKey}) => {
+const RecentActivity = ({map,slice,hKey,type}) => {
     const navigation = useNavigation()
 
     const [loading, setLoading] = useState(true);
@@ -53,18 +53,25 @@ const RecentActivity = ({map,slice,hKey}) => {
         { key: sortIndex++, label: 'Amount: low to high'  },
     ];
     let filterIndex = 0;
-    const filterData = [
+    const filterData = type == 'Expenditure' ? [
         { key: filterIndex++, section: true, label: 'Select a value to filter by' },
         { key: filterIndex++, label: 'User email' },
-        { key: filterIndex++, label: 'Type' },
         { key: filterIndex++, label: 'Billing Type'},
+        { key: filterIndex++, label: 'Type' },
         { key: filterIndex++, label: 'Company' },
         { key: filterIndex++, label: 'Description' },
         { key: filterIndex++, label: 'Month' },
         { key: filterIndex++, label: 'Year' },
         { key: filterIndex++, section: true, label: '',  },
         { key: filterIndex++, label: 'None' },
-    ];
+    ] : [
+        { key: filterIndex++, section: true, label: 'Select a value to filter by' },
+        { key: filterIndex++, label: 'User email' },
+        { key: filterIndex++, label: 'Billing Type'},
+
+        { key: filterIndex++, section: true, label: '',  },
+        { key: filterIndex++, label: 'None' },
+    ]
     
 
     useEffect(() => {
@@ -88,8 +95,11 @@ const RecentActivity = ({map,slice,hKey}) => {
             setIsExpendedConst(isExpended)
       }
 
-      const handleEdit = (exp) => {
-        navigation.navigate('EditExpenditureScreen',{hKey, exp})
+      const handleEdit = (income) => {
+        if(type === 'Expenditure')
+            navigation.navigate('EditExpenditureScreen',{hKey, income})
+        if(type === 'Income')
+            navigation.navigate('AddOrEditIncome',{hKey, income})
       }
 
       const handleSort = (key) => {
@@ -100,9 +110,9 @@ const RecentActivity = ({map,slice,hKey}) => {
         setSortedList(sortDispatch[key](sortedList))
       }
 
-      const handleFilterOptions = (key) => {
-        if(key !== 9){
-            setFilterOptions(filterOptionsDispatch[key](sortedList))
+      const handleFilterOptions = (option) => {
+        if(option.label !== 'None'){
+            setFilterOptions(filterOptionsDispatch[option.key](sortedList))
             setFilterVisable(true)
         }else setToViewList(sortedList)
 
@@ -116,10 +126,10 @@ const RecentActivity = ({map,slice,hKey}) => {
         <View>
         {loading?(<Loading/>) :
         (<ScrollView 
-        style={{width:'100%',}}
+        style={{width:'100%',borderTopColor: 'lightgrey', borderTopWidth:1,borderTopLeftRadius:35,borderTopRightRadius:35, marginTop: 12}}
         >  
-            <View flexDirection='row' flex={1}  style={{marginTop: 32, marginBottom: 6,}}>
-                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
+            <View flexDirection='row' flex={1}  style={{marginTop: 8, marginBottom: 6,}}>
+                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{textTransform: 'none',width: "25%"}]}>{type}</Text>
                 <View flexDirection='row-reverse' style={{ width:'55%',alignItems:'flex-end',marginBottom:7}}>
                         <ModalSelector
                         data={sortData}
@@ -135,7 +145,7 @@ const RecentActivity = ({map,slice,hKey}) => {
                     
                         <ModalSelector
                             data={filterData}
-                            onChange={(option)=>{ setFiltertVal(option.label); handleFilterOptions(option.key) }}
+                            onChange={(option)=>{ setFiltertVal(option.label); handleFilterOptions(option) }}
                             >
                             <View flexDirection='row' >
                                 <Icon name="search" size={15} type='ionicon'/>
@@ -170,7 +180,7 @@ const RecentActivity = ({map,slice,hKey}) => {
                                                     <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
                                                         <View style={{width:"100%", flexDirection: "row",marginTop:2}}>
                                                             <Text style={{ fontWeight: "400" ,marginRight:20}}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
-                                                            <View
+                                                            {type === 'Expenditure' && <View
                                                                 style={[houseProfileStyles.typeIcone,]}
                                                                 >
                                                                     <Ionicons 
@@ -180,11 +190,12 @@ const RecentActivity = ({map,slice,hKey}) => {
                                                                         style={{top:10}}
                                                                         />
                                                                     <Text style={{top:10,margin:1}}></Text>
-                                                            </View>    
+                                                            </View>  }  
                                                         </View>
-
-                                                        {"\n"}Company: <Text style={{ fontWeight: "400" }}>{l.company}</Text>
+                                
+                                                        {type == 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"\nCompany: " + l.company}</Text>}
                                                         {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>
+                                                        {type === 'Income' && <Text style={{ fontWeight: "400" }}>{"\nCreator: " + l.partner}</Text>}
                                                         {l.isEvent && <>{"\n"}Event Time: <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.eventDate.toDate()))}</Text></>}
                                                        
                                                     </Text>
@@ -192,12 +203,12 @@ const RecentActivity = ({map,slice,hKey}) => {
                                                     {isExpendedConst && isExpendedConst[l.date.toDate()] &&
                                                         <View style={[houseProfileStyles.textWithTopAndButDividers, { flexDirection:'row', width:'95%'}]}>
                                                         <Text style = {{width:'88%'}}>
-                                                           <Text style={{ fontWeight: "400" }}>{"Type: " + l.desc}</Text>
-                                                           {"descOpitional" in l && l.descOpitional != '' &&<> {"\n"}<Text style={{ fontWeight: "400" }}>{"Description: " + l.descOpitional}</Text> </>}
-                                                           {"\n"}<Text style={{ fontWeight: "400" }}>{"Billing type:" + l.billingType}</Text>
-                                                           {"\n"}<Text style={{ fontWeight: "400" }}>{"Creator: " + l.partner}</Text>
-                                                           {"\n"}
-                                                           <View>
+                                                            {type === 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"Type: " + l.desc}</Text>}
+                                                           {"descOpitional" in l && l.descOpitional != '' &&<>{type && type == 'Expenditure' && "\n"}<Text style={{ fontWeight: "400" }}>{"Description: " + l.descOpitional}</Text> </>}
+                                                           {"\n"}<Text style={{ fontWeight: "400" }}>{"Billing type: " + l.billingType}</Text>
+                                                           {type === 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"\nCreator: " + l.partner}</Text>}
+                                                           {type === 'Expenditure' && "\n"}
+                                                           {type === 'Expenditure' && <View>
                                                                 {("invoices" in l) && (l.invoices.length != 0) && <Text style = {houseProfileStyles.textWithButDivider}>
                                                                     {"\n"}
                                                                    <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
@@ -226,7 +237,7 @@ const RecentActivity = ({map,slice,hKey}) => {
                                                                         ))
                                                                     }                 
                                                                 </ScrollView>
-                                                            </View> 
+                                                            </View> }
                                                         </Text>
                                                         { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
                                                                 <View style={{alignSelf: 'center', alignItems: 'flex-end', }}>     

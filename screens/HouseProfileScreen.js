@@ -180,7 +180,9 @@ const HouseProfileScreen = ({route}) => {
                     <TodoList hKey = {hKey} listName={"tasksList"}/>
                 </ScrollView>)
             }
-                <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey}/>
+                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
+                <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'}/>
+                <RecentActivity map = {house.expends?house.incomes:[]} slice={3} hKey={hKey} type={'Income'}/>
 
                 <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
                         <TouchableOpacity
@@ -189,6 +191,14 @@ const HouseProfileScreen = ({route}) => {
                             style={styles.button}
                             >
                             <Text style={styles.buttonText}>Add Expenditure</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            title="Add Income"
+                            onPress={() => {navigation.navigate('AddOrEditIncome',house)}}
+                            style={styles.button}
+                            >
+                            <Text style={styles.buttonText}>Add Income</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity

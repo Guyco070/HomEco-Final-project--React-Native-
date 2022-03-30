@@ -16,6 +16,7 @@ import HouseProfileScreen from './screens/HouseProfileScreen';
 import EditHouseProfileScreen from './screens/EditHouseProfileScreen';
 import General from './screens/General';
 import AddNewExpenditureScreen from './screens/AddNewExpenditureScreen';
+import AddOrEditIncomeScreen from './screens/AddOrEditIncomeScreen';
 import AddNewSelfIncomeScreen from './screens/AddNewSelfIncomeScreen';
 import BarcodeScanner from './components/BarcodeScanner';
 import ImageViewer from './components/ImageViewer';
@@ -59,6 +60,7 @@ export default function App() {
         <Stack.Screen name="EditHouseProfile" component={EditHouseProfileScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="AddNewExpenditure" component={AddNewExpenditureScreen} />
+        <Stack.Screen name="AddOrEditIncome" component={AddOrEditIncomeScreen} />
         <Stack.Screen name="AddNewSelfIncome" component={AddNewSelfIncomeScreen} />
         <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} />
         <Stack.Screen name="Sidebar" component={General} />

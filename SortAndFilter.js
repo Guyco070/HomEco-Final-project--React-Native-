@@ -1,12 +1,11 @@
 const sortDispatch = {1: (arr) => sortByDateOldToNew(arr), 2: (arr) => sortByDateNewToOld(arr), 3: (arr) => sortByAmountHighToLow(arr),4: (arr) => sortByAmountLowToHigh(arr)}
-const filterOptionsDispatch = {1: (arr) => getUserEmailOptions(arr), 2: (arr) => getTypeOptions(arr), 3: (arr) => getBillingTypeOptions(arr),4: (arr) => getCompanyOptions(arr),5: (arr) => getDescriptionOptions(arr),6: (arr) => getMonthOptions(arr),7: (arr) => getYearOptions(arr)}
+const filterOptionsDispatch = {1: (arr) => getUserEmailOptions(arr), 2: (arr) => getBillingTypeOptions(arr), 3: (arr) => getTypeOptions(arr),4: (arr) => getCompanyOptions(arr),5: (arr) => getDescriptionOptions(arr),6: (arr) => getMonthOptions(arr),7: (arr) => getYearOptions(arr)}
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
-const filterBy = {"User email": "partner", "Type": "desc", "Billing type": "billingType", "Company": "company", "Description": "descOpitional"};
+const filterBy = {"User email": "partner", "Type": "desc", "Billing Type": "billingType", "Company": "company", "Description": "descOpitional"};
 // sortDispatch - start
 const sortByDateOldToNew = (arr) => {
-    console.log(arr)
     if(arr.length == 1) return [arr[0]]
     return arr.sort((a,b) => {
         // Turn your strings into dates, and then subtract them
@@ -16,7 +15,6 @@ const sortByDateOldToNew = (arr) => {
 }
 
 const sortByDateNewToOld = (arr) => {
-    console.log(arr)
     if(arr.length == 1) return [arr[0]]
     return arr.sort((a,b) => {
         // Turn your strings into dates, and then subtract them
@@ -86,7 +84,7 @@ const getUserEmailOptions = (arr) => {
 const filterByFunc = (arr,by,val) => {
     if(by == 'Month') return arr.filter((exp) => { return monthNames[parseInt(exp.date.toDate().getMonth())] === val }); 
     if(by == 'Year') return arr.filter((exp) => { return "" + exp.date.toDate().getFullYear() === val }); 
-    return arr.filter((exp) => { return exp[filterBy[by]] === val }); 
+    return arr.filter((exp) => { console.log(by,exp[filterBy[by]], val); return exp[filterBy[by]] === val }); 
   }
 
 // filterDispatch - end

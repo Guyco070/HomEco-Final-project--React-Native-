@@ -492,6 +492,20 @@ const getUserIncomeToHouse = (house,uEmail) => {
       }
     }
 
+const getUserIncomeToHouseByMonth = (incomes,uEmail) => {
+    let incomesAmount = 0
+    const arr = getSortedArrayDateFromDict(incomes)
+    console.log("incomesAmount")
+    console.log(incomesAmount)
+    const curMonth = (new Date()).getMonth()
+    console.log("curMonth")
+    console.log(curMonth)
+    Array.from(new Set(arr.map((income) => { (income.date.toDate().getMonth() === curMonth && income.partner == uEmail) && (incomesAmount += parseInt(income.amount))}))); 
+    console.log("incomesAmount")
+    console.log(incomesAmount)
+    return incomesAmount
+  }
+
 const addProductToFirestore = async(barcode, name, brand) => {
   await setDoc(doc(collection(db, 'products'), barcode), {
       barcode: barcode,
@@ -500,8 +514,11 @@ const addProductToFirestore = async(barcode, name, brand) => {
      });
 }
 
-export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
-        setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
-        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse,shoppingListToString, getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse,
+export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, 
+        getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
+        setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, 
+        getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
+        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse,shoppingListToString, 
+        getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeToHouseByMonth,
         addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany} 
 

@@ -62,6 +62,7 @@ const AddOrEditIncomeScreen = ({route}) => {
     const [eventDate, setEventDate] = useState('');
     const [notificationDate, setNotificationDate] = useState('');
     const [customDate, setCustomDate] = useState('');
+    
     const income = route.params?.income;
     const hKey = route.params?.hKey;
     const [house, setHouse] = useState('');
@@ -140,10 +141,12 @@ const AddOrEditIncomeScreen = ({route}) => {
         else if(amount){
             if(isWithNotification) { 
                 notficationHandling().then((tempNotifications) => {
-                    firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes , {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email,amount: amount, billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText})
+                    firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes , {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email,amount: amount,
+                       billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText})
                 })
             }else
-                firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes , {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email, amount: amount, billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText})
+                firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes , {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email, amount: amount,
+                   billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText})
             navigation.replace("HouseProfile",{hKeyP: income? hKey : firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
         }else alert("Sorry, you must fill in all the fields!")
     }

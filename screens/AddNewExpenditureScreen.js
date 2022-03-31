@@ -196,10 +196,14 @@ const AddNewExpenditureScreen = ({route}) => {
         else if(company && desc && amount){
             if(isWithNotification) { 
                 notficationHandling().then((tempNotifications) => {
-                    firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText})
+                    firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : new Date(),partner:user.email,company: company, 
+                                                desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent,
+                                                 eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText})
                 })
             }else
-                firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText})
+                firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : new Date(),partner:user.email,company: company, 
+                                            desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent,
+                                             eventDate: eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText})
             navigation.replace("HouseProfile",{hKeyP: firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
         }else alert("Sorry, you must fill in all the fields!")
     }

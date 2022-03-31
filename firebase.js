@@ -304,12 +304,15 @@ const getHouseIncomeFromFirestore = async(hKey) => {
  }).catch((e) => alert(e.massege))
 }
 
-const getHouseIncome = (house) => {
-    let hIncome = 0
-   if(house.partners){
-      for(const key in house.partners) { hIncome += parseInt(house.partners[key].incomeToCurHouse); }
-    }
-     return hIncome
+const getHouseIncome = (incomes) => {
+  let incomesAmount = 0
+  for(const key in incomes) incomesAmount+=parseInt(incomes[key].amount)
+  return incomesAmount
+  //   let hIncome = 0
+  //  if(house.partners){
+  //     for(const key in house.partners) { hIncome += parseInt(house.partners[key].incomeToCurHouse); }
+  //   }
+  //    return hIncome
 }
 
 const getHouseExpendsAmount = (expends) => {

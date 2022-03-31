@@ -52,6 +52,7 @@ const AddNewExpenditureScreen = ({route}) => {
     const [billingType, setBillingType] = useState("Billing type");
     const [isEvent, setIsEvent] = useState(false);
     const [isWithNotification, setIsWithNotification] = useState(false);
+    const [isWithCustomDate, setIsWithCustomDate] = useState(false);
 
     const [mode, setMode] = useState('');
     const [show, setShow] = useState(false);
@@ -61,9 +62,13 @@ const AddNewExpenditureScreen = ({route}) => {
     const [showNotification, setShowNotification] = useState(false);
     const [dateTextNotification, setDateTextNotification] = useState('Empty');
     
+    const [modeCustomDate, setModeCustomDate] = useState('');
+    const [showCustomDate, setShowCustomDate] = useState(false);
+    const [customDateText, setCustomDateText] = useState('Empty');
+    
     const [eventDate, setEventDate] = useState('');
     const [notificationDate, setNotificationDate] = useState('');
-
+    const [customDate, setCustomDate] = useState('');
 
     const house = route.params;
     const [expoPushToken, setExpoPushToken] = useState('');
@@ -132,9 +137,15 @@ const AddNewExpenditureScreen = ({route}) => {
     useEffect(() => {
         if(mode == 'date') showMode('time')
       }, [eventDate])
+
       useEffect(() => {
         if(modeNotification == 'date') showModeNotification('time')
       }, [notificationDate])
+
+      useEffect(() => {
+        if(modeCustomDate == 'date') showModeCustomDate('time')
+      }, [customDate])
+
     const addImage = async (from,index) => {
         let _image = await cloudinary.addDocImage()
           if (!_image.cancelled) {
@@ -185,10 +196,10 @@ const AddNewExpenditureScreen = ({route}) => {
         else if(company && desc && amount){
             if(isWithNotification) { 
                 notficationHandling().then((tempNotifications) => {
-                    firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications})
+                    firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText})
                 })
             }else
-                firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: []})
+                firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : new Date(),partner:user.email,company: company, desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText})
             navigation.replace("HouseProfile",{hKeyP: firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
         }else alert("Sorry, you must fill in all the fields!")
     }
@@ -249,6 +260,27 @@ const AddNewExpenditureScreen = ({route}) => {
         setShowNotification(true)
         setModeNotification(currentMode)
       }
+
+      const onDateChangeCustomDate = (event, selectedDate) => {
+        const currentDate = selectedDate || customDate;
+        setShowCustomDate(Platform.OS === 'ios')
+        setCustomDate(currentDate)
+        let tempDate = new Date(currentDate)
+        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let minutes = tempDate.getMinutes()
+        if(parseInt(minutes) < 10)
+            minutes = "0" + minutes
+        let hours = tempDate.getHours()
+        if(parseInt(hours) < 10)
+            hours = "0" + hours
+        let fTime =  hours + ":" + minutes
+        setCustomDateText(fTime + '  |  ' + fDate)
+    }
+
+    const showModeCustomDate= (currentMode) => {
+      setShowCustomDate(true)
+      setModeCustomDate(currentMode)
+    }
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
@@ -368,6 +400,30 @@ const AddNewExpenditureScreen = ({route}) => {
                 </>
                 }
                 </View>
+                <ListItem.CheckBox
+                                        center
+                                        title="Set retroactive income"
+                                        checkedIcon="dot-circle-o"
+                                        uncheckedIcon="circle-o"
+                                        checked={isWithCustomDate}
+                                        onPress={() => setIsWithCustomDate(!isWithCustomDate) }
+                                        containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
+                                        wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
+                                    />
+                {isWithCustomDate && 
+                  <View style={styles.dateInputButton}>
+                    <Icon name={'calendar'} size={22}
+                                color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                    <TouchableOpacity
+                            title="Custom Date"
+                            onPress={ () => {showModeCustomDate('date'); }}
+                            style={{ textAlign:'left', flex:1}}
+                            >
+                        <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:customDate?'black':'grey' }}>
+                          {customDate? customDateText : "Custom Date"}</Text> 
+                    </TouchableOpacity>
+                  </View>
+                  }
                 {showNotification &&
                     (<DateTimePicker 
                     testID='dateTimePickeerNotification'
@@ -388,6 +444,17 @@ const AddNewExpenditureScreen = ({route}) => {
                     is24Hour = {true}
                     display='default'
                     onChange={ onDateChange }
+                    />)
+                }
+                {showCustomDate &&
+                    (<DateTimePicker 
+                    testID='dateTimePickeerCustomDate'
+                    value = {customDate? customDate: new Date()}
+                    mode = {modeCustomDate}
+                    is24Hour = {true}
+                    display='default'
+                    onChange={ onDateChangeCustomDate }
+                    maximumDate={new Date()}
                     />)
                 }
                 <View style = {modelContent.centeredView}> 

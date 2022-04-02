@@ -66,7 +66,7 @@ const UserIncomeToHosesList = (props) => {
         style={{width:'80%',}}
         >
             <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0}]}>Payments to houses</Text>
-            <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0,marginTop:5, fontSize:11,textTransform:'none'}]}>Total for this month</Text>
+            <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0,marginTop:5, fontSize:11,textTransform:'none'}]}>Total for current month</Text>
 
             {housesList && 
                     housesList 

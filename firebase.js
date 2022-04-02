@@ -493,14 +493,12 @@ const getUserIncomeToHouse = (house,uEmail) => {
     }
 
 const getUserIncomeToHouseByMonth = (incomes,uEmail) => {
-    let incomesAmount = 0
     const arr = getSortedArrayDateFromDict(incomes)
-    console.log("incomesAmount")
-    console.log(incomesAmount)
     const curMonth = (new Date()).getMonth()
     console.log("curMonth")
     console.log(curMonth)
-    Array.from(new Set(arr.map((income) => { (income.date.toDate().getMonth() === curMonth && income.partner == uEmail) && (incomesAmount += parseInt(income.amount))}))); 
+    let incomesAmount = 0
+    arr.map((income) => { if(income.date.toDate().getMonth() === curMonth && income.partner == uEmail) (incomesAmount += parseInt(income.amount)); console.log(parseInt(income.amount))}); 
     console.log("incomesAmount")
     console.log(incomesAmount)
     return incomesAmount

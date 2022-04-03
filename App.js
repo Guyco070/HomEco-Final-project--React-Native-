@@ -29,11 +29,12 @@ import { LogBox } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 LogBox.ignoreAllLogs(true)
-
-const Stack = createNativeStackNavigator();
 // I18nManager.forceRTL(false);
 // I18nManager.allowRTL(false);
 // I18nManager.swapLeftAndRightInRTL(false);
+
+const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator()
 
 export default function App() {
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
@@ -48,30 +49,44 @@ export default function App() {
     }
   }, [lastNotificationResponse]);
 
+  const HomeStackScreen = ({navigation}) => {
+    return <Stack.Navigator screenOptions={{headerShown:false,}}>
+      <Stack.Screen name="Login" component={LoginScreen}  />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="EditUserProfile" component={EditUserProfileScreen} options={{ title: 'Edit User Profile'}}/>
+      <Stack.Screen name="CreateNewHouse" component={CreateNewHouseScreen} options={{ title: 'Create New House Screen'}}/>
+      <Stack.Screen name="HouseProfile" component={HouseProfileScreen} options={{ title: 'House Profile Screen'}}/>
+      <Stack.Screen name="EditHouseProfile" component={EditHouseProfileScreen} options={{ title: 'Edit House Profile Screen'}}/>
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: 'Forgot Password Screen'}}/>
+      <Stack.Screen name="AddNewExpenditure" component={AddNewExpenditureScreen} options={{ title: 'Add New Expenditure Screen'}}/>
+      <Stack.Screen name="AddOrEditIncome" component={AddOrEditIncomeScreen} options={{ title: 'Add Or Edit Income Screen'}}/>
+      <Stack.Screen name="AddNewSelfIncome" component={AddNewSelfIncomeScreen} options={{ title: 'Add New Self Income Screen'}}/>
+      <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} options={{ title:'Barcode Scanner'}}/>
+      <Stack.Screen name="Sidebar" component={General} />
+      <Stack.Screen name="ImageViewer" component={ImageViewer} options={{headerShown: false}} />
+      <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} options={{ title: 'User Profile Screen'}}/>
+      <Stack.Screen name="EditExpenditureScreen" component={EditExpenditureScreen} options={{ title: 'Edit Expenditure Screen'}}/>
+      <Stack.Screen name="EditSelfIncome" component={EditSelfIncomeScreen} options={{ title: 'Edit SelfIncome Screen'}}/>
+      <Stack.Screen name="GraphScreen" component={GraphHomeScreen} options={{ title: 'Graph Home Screen'}}/>
+    </Stack.Navigator>
+  }
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-      <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="EditUserProfile" component={EditUserProfileScreen} />
-        <Stack.Screen name="CreateNewHouse" component={CreateNewHouseScreen} />
-        <Stack.Screen name="HouseProfile" component={HouseProfileScreen} />
-        <Stack.Screen name="EditHouseProfile" component={EditHouseProfileScreen} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-        <Stack.Screen name="AddNewExpenditure" component={AddNewExpenditureScreen} />
-        <Stack.Screen name="AddOrEditIncome" component={AddOrEditIncomeScreen} />
-        <Stack.Screen name="AddNewSelfIncome" component={AddNewSelfIncomeScreen} />
-        <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} />
-        <Stack.Screen name="Sidebar" component={General} />
-        <Stack.Screen name="ImageViewer" component={ImageViewer} options={{headerShown: false}}/>
-        <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
-        <Stack.Screen name="EditExpenditureScreen" component={EditExpenditureScreen} />
-        <Stack.Screen name="EditSelfIncome" component={EditSelfIncomeScreen} />
-        <Stack.Screen name="GraphScreen" component={GraphHomeScreen} />
-        
-        
-      </Stack.Navigator>
+      <Drawer.Navigator screenOptions={{
+      headerStyle:{
+        backgroundColor: '#0779ef',
+      },
+      headerTitleAlign: 'center',    
+      headerTintColor:'#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      }
+    }}>
+        <Drawer.Screen name="Home" component={HomeStackScreen} />
+      </Drawer.Navigator>
+
+      
     </NavigationContainer>
 
   );

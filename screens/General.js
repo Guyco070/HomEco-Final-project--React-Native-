@@ -12,6 +12,17 @@ import menu from '../assets/menu.png';
 import close from '../assets/close.png';
 // Photo
 import * as firebase from '../firebase'
+import { styles } from '../styleSheet'
+import { signOut,auth } from '@firebase/auth'
+import UserHousesListView from '../components/UserHousesListView'
+import readProductsFromEXCL, * as s from "../barcodeScripts/productsFileScript.js"
+import SheetJSApp from '../barcodeScripts/productsFileScript.js';
+import TodoList from '../components/TodoList/TodoList';
+import Loading from '../components/Loading';
+import ShoppingApi from '../barcodeScripts/ShoppingApi';
+import * as shufersal from '../barcodeScripts/ShufersalScraping';
+
+
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState("Home");
@@ -19,6 +30,8 @@ export default function App() {
   const [showMenu, setShowMenu] = useState(false);
   const [user, setUser] = useState([]);
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+
 
   
 
@@ -28,23 +41,37 @@ export default function App() {
   // Scale Intially must be One...
   const scaleValue = useRef(new Animated.Value(1)).current;
   const closeButtonOffset = useRef(new Animated.Value(0)).current;
-  const handleSignOut = () => {
-    signOut(firebase.auth)
-    .then(() => {
-        console.log("Logout")
-        navigation.replace("Login")
-    })
-    .catch(error => alert(error.message)
-    );
-}
 
   
-  useEffect(() => {
-    firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
-  }, []);
+useEffect(() => {
+  console.log(firebase.auth.currentUser?.email)
+  firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); })    // before opening the page
+
+}, [])
+
+useEffect(() => {
+  if(user['email'] != undefined)
+      setLoading(false); 
+}, [user])
+const createNewHouseScreen = () => {
+  navigation.navigate("CreateNewHouse",user)
+}
+const SideBar = () => {
+  navigation.navigate("Sidebar",user)
+}
+
+const handleSignOut = () => {
+  signOut(firebase.auth)
+  .then(() => {
+      console.log("Logout")
+      navigation.replace("Login")
+  })
+  .catch(error => alert(error.message)
+  );
+}
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styless.container}>
 
       <View style={{ justifyContent: 'flex-start', padding: 15 }}>
         <Image source={user.uImage} style={{
@@ -162,7 +189,36 @@ export default function App() {
             paddingTop: 20
           }}>{currentTab}</Text>
           {
-              // כאן נכניס את העמוד הראשי!!!!!
+            <View style={[styles.container]}>
+              {loading ?    <Loading/>:<><Text style={styles.textBody}>{ user["fName"] == undefined? "" : user["fName"]+ " " + user["lName"] } </Text>
+              <Text style={styles.textBody}>{user["fName"] == undefined? "" : "Email: " + user["email"] } </Text>
+              <UserHousesListView user={user}/>
+               {/*uploade products drom excel*/ }
+              {/* <SheetJSApp/> */}
+              {/* <ShoppingApi/> */}
+              <TouchableOpacity
+                      onPress={() => shufersal.getDescriptionByUPC("7290010066582") }
+                      style={styles.button}
+                      email = {user["email"]}
+                      >
+                      <Text style={styles.buttonText}>Shufersal</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                      onPress={createNewHouseScreen}
+                      style={styles.button}
+                      email = {user["email"]}
+                      >
+                      <Text style={styles.buttonText}>Createddddddddddddddddddddddddd New House</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonText} onPress={SideBar} >Go To Side Bar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonText} onPress={handleSignOut} >Sign out</Text>
+              </TouchableOpacity></>}
+  
+  
+            </View>
           }
             
         </Animated.View>
@@ -222,7 +278,7 @@ const TabButton = (currentTab, setCurrentTab, title, image,navigation) => {
   );
 }
 
-const styles = StyleSheet.create({
+const styless = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0782F9',

@@ -5,21 +5,10 @@ import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
+import { firebaseConfig } from "./PrivateVariables"
 import { LogBox } from "react-native"
 
 LogBox.ignoreAllLogs(true)
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAHNz6VjJd7RhCWqz-QJWYgqWwtPlCQt6s",
-  authDomain: "homeco-8262b.firebaseapp.com",
-  projectId: "homeco-8262b",
-  storageBucket: "homeco-8262b.appspot.com",
-  messagingSenderId: "61370725143",
-  appId: "1:61370725143:web:35df7ae9c1ef2b3872fd52"
-};
 
 const uiConfig = {
   // Popup signin flow rather than redirect flow.

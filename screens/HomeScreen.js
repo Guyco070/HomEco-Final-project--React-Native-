@@ -55,13 +55,13 @@ const HomeScreen = () => {
              {/*uploade products drom excel*/ }
             {/* <SheetJSApp/> */}
             {/* <ShoppingApi/> */}
-            <TouchableOpacity
+            {/* <TouchableOpacity
                     onPress={() => shufersal.getDescriptionByUPC("7290010066582") }
                     style={styles.button}
                     email = {user["email"]}
                     >
                     <Text style={styles.buttonText}>Shufersal</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
                     onPress={createNewHouseScreen}
                     style={styles.button}
@@ -69,9 +69,9 @@ const HomeScreen = () => {
                     >
                     <Text style={styles.buttonText}>Create New House</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            {/* <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText} onPress={SideBar} >Go To Side Bar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText} onPress={handleSignOut} >Sign out</Text>
             </TouchableOpacity></>}

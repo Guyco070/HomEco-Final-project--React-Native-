@@ -27,6 +27,7 @@ import EditSelfIncomeScreen from './screens/EditSelfIncomeScreen';
 import * as Notifications from 'expo-notifications';
 import { LogBox } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 LogBox.ignoreAllLogs(true)
 // I18nManager.forceRTL(false);
@@ -50,7 +51,7 @@ export default function App() {
   }, [lastNotificationResponse]);
 
   const HomeStackScreen = ({navigation}) => {
-    return <Stack.Navigator screenOptions={{headerShown:false,}}>
+    return <Stack.Navigator  screenOptions={{headerShown:false,}}>
       <Stack.Screen name="Login" component={LoginScreen}  />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
@@ -74,6 +75,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Drawer.Navigator screenOptions={{
+      // headerLeft: ()=>{
+      //   <Icon.Button name="menu" size={25} backgroundColor="#0779ef" onPress={() => navigation.OpenDrawer()} />
+      // },
       headerStyle:{
         backgroundColor: '#0779ef',
       },
@@ -83,7 +87,7 @@ export default function App() {
         fontWeight: 'bold',
       }
     }}>
-        <Drawer.Screen name="Home" component={HomeStackScreen} />
+        <Drawer.Screen name={"Home"} component={HomeStackScreen} />
       </Drawer.Navigator>
 
       

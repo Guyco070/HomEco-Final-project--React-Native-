@@ -15,6 +15,7 @@ import TodoList from '../components/TodoList/TodoList';
 import Toast from 'react-native-toast-message';
 import UserHousesListView from '../components/UserHousesListView';
 import UserIncomeToHousesList from '../components/UserIncomeToHousesList';
+import { Icon } from 'react-native-elements';
 
 
  
@@ -36,7 +37,16 @@ const UserProfileScreen = ({route}) => {
         <SafeAreaView style={houseProfileStyles.container}>
             {loading? <Loading/> : 
             <ScrollView showsVerticalScrollIndicator={false}>
-
+                <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
+                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.navigate('EditUserProfile')}} >
+                        <Icon  name="edit"  type="icon" color={"grey"} />
+                        <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.navigate('AddNewSelfIncome')}} >
+                        <Icon  name="add"  type="icon" color={"grey"} />
+                        <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Add</Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={{ alignSelf: "center" }}>
                     <View style={[houseProfileStyles.profileHouseImage,{elevation:8}]}>
                         <Image source={{uri:user.uImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
@@ -63,14 +73,14 @@ const UserProfileScreen = ({route}) => {
                 <View style={[styles.container,{marginVertical:15}]}>
                     <UserIncomeToHousesList user={user} viewImage={false}/>
                 </View>
-                 <View style={[styles.container,{alignSelf:'center', width:'150%'}]}>
-                 <      TouchableOpacity
+                 {/* <View style={[styles.container,{alignSelf:'center', width:'150%'}]}> */}
+                 {/* <      TouchableOpacity
                             title="Add New Self Income"
                             onPress={() => {navigation.navigate('AddNewSelfIncome')}}
                             style={styles.button}
                             >
                             <Text style={styles.buttonText}>Add New Self Income</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                   {/*  <TouchableOpacity
                         title="Change Income"
                         onPress={() => {setChangeIncom(!changeIncom)}}
@@ -87,15 +97,15 @@ const UserProfileScreen = ({route}) => {
                     </View>
                     )} */}
 
-                     <TouchableOpacity
+                     {/* <TouchableOpacity
                         title="Edit"
                         onPress={() => {navigation.navigate('EditUserProfile')}}
                         style={styles.button}
                         >
                         <Text style={styles.buttonText}>Edit</Text>
-                    </TouchableOpacity>
-
-                </View> 
+                    </TouchableOpacity> */}
+                    
+                {/* </View>  */}
                 
             </ScrollView>}
         </SafeAreaView>

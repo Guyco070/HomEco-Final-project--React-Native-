@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 100,
         alignItems: 'center',
-        marginTop: 30
+        marginVertical: 25
     },
     buttonOutline: {
         backgroundColor: 'white',
@@ -512,7 +512,8 @@ const TodoSheet = StyleSheet.create({
         alignItems: "center",
         fontSize: 12,
         justifyContent: "space-between",
-        flexDirection:"row"
+        flexDirection:"row",
+        marginTop:15
       },
       button: {
         backgroundColor: "transparent",

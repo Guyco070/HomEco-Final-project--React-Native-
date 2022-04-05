@@ -17,6 +17,7 @@ import TouchableScale from 'react-native-touchable-scale';
 import { Timestamp } from 'firebase/firestore';
 import ModalSelector from 'react-native-modal-selector'
 import * as Linking from 'expo-linking';
+import { Icon } from 'react-native-elements';
 
 LogBox.ignoreAllLogs(true)
 
@@ -40,7 +41,12 @@ const HouseProfileScreen = ({route}) => {
     ])
     const [messageToEmail,setMessageToEmail] = useState('')
 
-
+    let addIndex = 0
+    const addData = [
+        { key: addIndex++, section: true, label: 'What would you like to add' },
+        { key: addIndex++, label: 'Add new expenditure' },
+        { key: addIndex++, label: 'Add new income'  },
+    ];
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
@@ -99,7 +105,20 @@ const HouseProfileScreen = ({route}) => {
                 <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
                 <Ionicons name="ios-ellipsis-vertical" size={24} color="#52575D"></Ionicons>
             </View> */}
-            
+            <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
+                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.navigate('EditHouseProfile',house)}} >
+                        <Icon  name="edit"  type="icon" color={"grey"} />
+                        <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>
+                    </TouchableOpacity>
+                    <ModalSelector
+                        data={addData}
+                        onChange={(option)=>{ option.key == 1 ? navigation.navigate('AddNewExpenditure',house):navigation.navigate('AddOrEditIncome',house) }}
+                        style={{margin:25,marginBottom:0}}
+                        >
+                                <Icon  name="add"  type="icon" color={"grey"} />
+                                <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Add</Text>
+                        </ModalSelector>
+                </View>
                 <View style={{ alignSelf: "center" }}>
                     <View style={houseProfileStyles.profileHouseImage}>
                         <Image source={{uri:house.hImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
@@ -185,29 +204,6 @@ const HouseProfileScreen = ({route}) => {
                 <RecentActivity map = {house.expends?house.incomes:[]} slice={3} hKey={hKey} type={'Income'}/>
 
                 <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
-                        <TouchableOpacity
-                            title="Add Expenditure"
-                            onPress={() => {navigation.navigate('AddNewExpenditure',house)}}
-                            style={styles.button}
-                            >
-                            <Text style={styles.buttonText}>Add Expenditure</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            title="Add Income"
-                            onPress={() => {navigation.navigate('AddOrEditIncome',house)}}
-                            style={styles.button}
-                            >
-                            <Text style={styles.buttonText}>Add Income</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            title="Edit"
-                            onPress={() => {navigation.navigate('EditHouseProfile',house)}}
-                            style={styles.button}
-                            >
-                            <Text style={styles.buttonText}>Edit</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity
                             title="Edit"
                             onPress={() => {navigation.navigate('GraphScreen',{hKey:hKey})}}

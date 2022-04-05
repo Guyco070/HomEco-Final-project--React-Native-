@@ -53,7 +53,7 @@ const SelfIncomeListViewer = ({map,slice}) => {
         <View>
         {loading?(<Loading/>) :
         (<ScrollView 
-        style={{width:'80%',}}
+        style={{width:'80%', marginTop:20}}
         >  
         <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Self Income</Text>
 

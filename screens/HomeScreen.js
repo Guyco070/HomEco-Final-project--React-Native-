@@ -21,18 +21,18 @@ const HomeScreen = () => {
 
 
     useEffect(() => {
-        console.log(firebase.auth.currentUser?.email)
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); })    // before opening the page
-
       }, [])
 
-      useEffect(() => {
-        if(user['email'] != undefined)
-            setLoading(false); 
-      }, [user])
+    useEffect(() => {
+    if(user['email'] != undefined)
+        setLoading(false); 
+    }, [user])
+
     const createNewHouseScreen = () => {
         navigation.navigate("CreateNewHouse",user)
     }
+
     const SideBar = () => {
         navigation.navigate("Sidebar",user)
     }
@@ -40,7 +40,6 @@ const HomeScreen = () => {
     const handleSignOut = () => {
         signOut(firebase.auth)
         .then(() => {
-            console.log("Logout")
             navigation.replace("Login")
         })
         .catch(error => alert(error.message)
@@ -72,9 +71,10 @@ const HomeScreen = () => {
             {/* <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText} onPress={SideBar} >Go To Side Bar</Text>
             </TouchableOpacity> */}
-            <TouchableOpacity style={styles.button}>
+            {/* <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText} onPress={handleSignOut} >Sign out</Text>
-            </TouchableOpacity></>}
+            </TouchableOpacity> */}
+            </>}
 
 
         </View>

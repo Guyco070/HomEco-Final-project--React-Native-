@@ -29,6 +29,7 @@ import { LogBox } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import DrawerContent from './components/DrawerContent'
 LogBox.ignoreAllLogs(true)
 // I18nManager.forceRTL(false);
 // I18nManager.allowRTL(false);
@@ -74,7 +75,7 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Drawer.Navigator screenOptions={{
+      <Drawer.Navigator drawerContent={props => <DrawerContent {...props}/>} screenOptions={{
       // headerLeft: ()=>{
       //   <Icon.Button name="menu" size={25} backgroundColor="#0779ef" onPress={() => navigation.OpenDrawer()} />
       // },

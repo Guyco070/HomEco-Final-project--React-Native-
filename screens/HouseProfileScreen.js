@@ -18,6 +18,9 @@ import { Timestamp } from 'firebase/firestore';
 import ModalSelector from 'react-native-modal-selector'
 import * as Linking from 'expo-linking';
 import { Icon } from 'react-native-elements';
+import BarMenu from '../components/BarMenu';
+import GraphHomeScreen from './GraphHomeScreen';
+import { ref } from 'firebase/storage';
 
 LogBox.ignoreAllLogs(true)
 
@@ -36,9 +39,12 @@ const HouseProfileScreen = ({route}) => {
     const [hIncome, setHIncom] = useState(undefined)
     const [hExpedns, setHExpedns] = useState(undefined)
 
-    const [messageOptions,setMessageOptions] = useState([
-        {key:"ddd", label: "dddd"}
-    ])
+    const [checked, setChecked] = useState(0);
+    const [ref, setRef] = useState(null);
+    const [dataSourceCords, setDataSourceCords] = useState([]);
+    const [showMenuBar, setShowMenuBar] = useState(-1);
+
+    const [messageOptions,setMessageOptions] = useState([])
     const [messageToEmail,setMessageToEmail] = useState('')
 
     let addIndex = 0
@@ -90,6 +96,18 @@ const HouseProfileScreen = ({route}) => {
         setMessageOptions(temp)
     }
 
+    const scrollHandler = () => {
+
+        if(dataSourceCords != [])
+        {
+            console.log(dataSourceCords)
+            ref.scrollTo({
+                x: 0,
+                y: dataSourceCords,
+                animated: true 
+            })
+        }
+    }
 
     const getReminderColor = () => {
         if(hIncome < hExpedns)
@@ -100,7 +118,11 @@ const HouseProfileScreen = ({route}) => {
     return (
         <SafeAreaView style={houseProfileStyles.container}>
             {loading? <Loading/> : 
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false}
+            ref={(ref) => {
+                setRef(ref)
+            }}
+            >
             {/* <View style={houseProfileStyles.titleBar}>
                 <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
                 <Ionicons name="ios-ellipsis-vertical" size={24} color="#52575D"></Ionicons>
@@ -190,30 +212,39 @@ const HouseProfileScreen = ({route}) => {
                             <Text style={styles.buttonText}>Scann barcode</Text>
                         </TouchableOpacity> */}
             {loading?(<Loading/>) :
-                (<ScrollView 
+                (<ScrollView style={{marginTop:35, marginBottom:35}}
+                    
+                    onLayout={(event) => {
+                        setDataSourceCords(event.nativeEvent.layout.y)
+                    }}
                 >  
-                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginTop:15,}]}>Shopping List</Text>
-
-                    <TodoList hKey = {hKey} listName={"shoppingList"} uEmail = {user.email} navigation={navigation}/>
-                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Tasks List</Text>
-                    <TodoList hKey = {hKey} listName={"tasksList"}/>
+                { (checked === 0 || checked === 1) &&
+                    <>
+                        <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
+                    
+                        {checked === 0 && <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'} /> }
+                        {checked === 1 && <RecentActivity map = {house.expends?house.incomes:[]} slice={3} hKey={hKey} type={'Income'}/> }
+                    </>
+                }
+                { checked === 2 && 
+                    <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
+                        <GraphHomeScreen route={{params: {hKey:hKey}}}  scrollHandler={scrollHandler} />
+                    </View>
+                }
+                { checked === 3 && <>
+                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]} >Shopping List</Text>
+                    <TodoList hKey = {hKey} listName={"shoppingList"} uEmail = {user.email} navigation={navigation} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
+                    </>
+                }
+                { checked === 4 && <>
+                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]} >Tasks List</Text>
+                    <TodoList hKey = {hKey} listName={"tasksList"} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
+                    </>
+                }
                 </ScrollView>)
             }
-                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
-                <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'}/>
-                <RecentActivity map = {house.expends?house.incomes:[]} slice={3} hKey={hKey} type={'Income'}/>
-
-                <View style={[styles.container,{alignSelf:'center', width:'100%'}]}>
-                        <TouchableOpacity
-                            title="Edit"
-                            onPress={() => {navigation.navigate('GraphScreen',{hKey:hKey})}}
-                            style={styles.button}
-                            >
-                            <Text style={styles.buttonText}>Graph</Text>
-                        </TouchableOpacity>
-                </View>
-                
             </ScrollView>}
+            {showMenuBar && <BarMenu onPress={setChecked} scrollHandler={scrollHandler} index ={showMenuBar}/>}
         </SafeAreaView>
     );
 }

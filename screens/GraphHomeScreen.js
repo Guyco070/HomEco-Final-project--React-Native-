@@ -15,7 +15,7 @@ import Loading from '../components/Loading';
 LogBox.ignoreAllLogs(true)
 
 
-const GraphHomeScreen = ({route}) => {
+const GraphHomeScreen = ({route, scrollHandler}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
     const [hKey, setHKey] = useState('');
@@ -25,14 +25,19 @@ const GraphHomeScreen = ({route}) => {
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); })    // before opening the page
-
     }, [])
+
     useEffect(() => {    
         if("hKey" in route.params){ 
             setHKey(route.params)
             firebase.getByDocIdFromFirestore("houses",route.params.hKey).then((uHouse)=>{ setHouse(uHouse); setDataBar(Graphs.getBarChartData(uHouse))}).catch((e) =>{})
         }else console.log(route.params)
     }, [route])
+
+    useEffect(() => {
+        if(scrollHandler) scrollHandler();
+    },[scrollHandler,house])
+
     const GraphColor = ['#0000FF','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0','#FF0000','#008000','#A52A2A','#8A2BE2','#FF7F50','#FFD700','#ADD8E6','#FF4500','#40E0D0']
 
     const getPieChartData = () => {
@@ -77,8 +82,7 @@ const GraphHomeScreen = ({route}) => {
       
     return (
         <ScrollView style={{backgroundColor: 'white',}}>
-            <View style={{marginVertical:30}}>
-                <Text>     Bezier Line Chart</Text>
+            <View>
                 <PieChart
                     data={getPieChartData()}
                     width={screenWidth}

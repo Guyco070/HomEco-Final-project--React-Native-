@@ -26,7 +26,7 @@ const typeIcones ={
     Other: "help-outline"
 }
 
-const RecentActivity = ({map,slice,hKey,type}) => {
+const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
     const navigation = useNavigation()
 
     const [loading, setLoading] = useState(true);
@@ -80,7 +80,7 @@ const RecentActivity = ({map,slice,hKey,type}) => {
         setSortedList(getSortedArrayDateFromDict(map))
         setNewSlice(slice)
         firebase.getByDocIdFromFirestore("houses",hKey).then((house)=>setHouseCreator(house.cEmail)).catch((e) =>{})
-
+        
       },[map])
 
     useEffect(() => {
@@ -88,7 +88,12 @@ const RecentActivity = ({map,slice,hKey,type}) => {
             isExpended[toViewList[key].date.toDate()] = false
         setIsExpendedConst(isExpended)
         setLoading(false);
+        if(scrollHandler) scrollHandler()
     },[toViewList])
+
+    useEffect(() => {
+        if(scrollHandler) scrollHandler()
+    },[scrollHandler])
 
       const setIsExpended=(date) => {
             isExpended[date.toDate()] = !isExpendedConst[date.toDate()]

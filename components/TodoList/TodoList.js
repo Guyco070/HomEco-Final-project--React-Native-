@@ -12,7 +12,7 @@ import * as firebase from '../../firebase'
 import Toast from 'react-native-toast-message';
 
 
-const TodoList = ({hKey,listName,uEmail, navigation}) => {
+const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar}) => {
 	// HINT: each "item" in our list names a name,
 	// a boolean to tell if its been completed, and a quantity
 	const [items, setItems] = useState();
@@ -48,6 +48,10 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
 					.then(firebase.getByDocIdFromFirestore('houses', hKey)
 								.then((house) => {if(listName in house) setItems(house[listName])}))
       },[isChanged])
+
+	useEffect(() => {
+        if(scrollHandler) scrollHandler();
+    },[scrollHandler,items])
 
 	const handleAddButtonClick = () => {
 		handleAddButtonClickGetVal(inputValue)
@@ -161,7 +165,8 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
 					<TouchableOpacity onPress={() => handleAddButtonClick()}>
 						<Icon name="add-outline"  type="ionicon" color={"grey"} />
 					</TouchableOpacity>
-					<TextInput style={TodoSheet.additeminput} value={inputValue} onChangeText={(text) => setinputValue(text)} placeholder='Add an item...' />
+					<TextInput style={TodoSheet.additeminput} value={inputValue} onChangeText={(text) => setinputValue(text)} placeholder='Add an item...' 
+						onBlur={setShowMenuBar ? ()=> {listName == 'shoppingList' ? setShowMenuBar(3) : setShowMenuBar(4)}:()=>{}} onFocus={setShowMenuBar ? ()=> setShowMenuBar(false):()=>{}}/>
 				</View>
 				<View style={TodoSheet.itemlist}>
 					{ items && items.slice(0,slice).map((item, index) => (
@@ -215,7 +220,7 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
 				{/* <Text>Total: {totalItemCount}</Text> */}
 				</View>
 				<View style={{flexDirection:"row" ,alignSelf:'center'}}>
-					{ !isExpended ? ( items.length >3 &&
+					{ !isExpended ? ( items?.length >3 &&
 						<TouchableOpacity onPress={()=>{if(items) setSlice(items.length); setIsExpended(true)}}>
 							<>
 								<Icon

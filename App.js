@@ -30,6 +30,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import DrawerContent from './components/DrawerContent'
+import BarMenu from './components/BarMenu';
 LogBox.ignoreAllLogs(true)
 // I18nManager.forceRTL(false);
 // I18nManager.allowRTL(false);
@@ -90,8 +91,6 @@ export default function App() {
     }}>
         <Drawer.Screen name={"Home"} component={HomeStackScreen} />
       </Drawer.Navigator>
-
-      
     </NavigationContainer>
 
   );

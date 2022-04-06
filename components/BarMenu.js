@@ -18,10 +18,7 @@ const BarMenu = ({onPress, scrollHandler, index}) => {
                 <Text style={{fontSize:10, color: "white", borderBottomColor: "white",borderBottomWidth:0.8, width:"25%", height:3, marginBottom:2}}/>
         </TouchableOpacity>
         :
-        <View style={{marginBottom:13,shadowColor: '#171717',
-        shadowOffset: {width: -2, height: 4},
-        shadowOpacity: 0.2,
-        shadowRadius: 3,}}>
+        <View style={{marginBottom:13,backgroundColor:" rgba(52, 52, 52, 0.0)",}}>
         <View style={ styles.container }>
             <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(0); scrollHandler(); setChecked(0)}} activeOpacity={0.4}  pressMagnification={10}
                 rippleColor= "rgba(0, 0, 0, .32)"

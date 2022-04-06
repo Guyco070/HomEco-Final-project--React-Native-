@@ -8,72 +8,86 @@ const size = 20
 
 const BarMenu = ({onPress, scrollHandler, index}) => {
     const [checked, setChecked] = useState(index ? index : 0);
+    const [isShow, setIsShow] = useState(true);
+
   return (
-    <View style={ styles.container }>
-        <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(0); scrollHandler(); setChecked(0)}} activeOpacity={0.4}  pressMagnification={10}
-            rippleColor= "rgba(0, 0, 0, .32)"
-        >
-            <View style={[styles.IconBehave,{backgroundColor:checked === 0 ? "white" :"#0779ef"}]} >
-                <Icon 
-                    name='home-export-outline'
-                    color={checked === 0? "#0779ef" : "white"}
-                    size={size}
-                />
-            </View>
-            <Text style={{fontSize:10, color: "white" }}>Expenditures</Text>
+     <>
+      { !isShow ?
+        <TouchableOpacity style={{alignItems:'center', backgroundColor:'#0779ef',width:"30%",height:10, alignSelf:'center', borderTopEndRadius:10, borderTopLeftRadius:10,}} onPress={() => {setIsShow(true)}} activeOpacity={0.4}  pressMagnification={10}>
+            <Text style={{fontSize:10, color: "white", borderBottomColor: "white",borderBottomWidth:0.8,borderTopColor: "white",borderTopWidth:0.8, width:"20%", height:3, marginVertical:2}}/>
         </TouchableOpacity>
+        :
+        <View style={{bottom:15}}>
+        <View style={ styles.container }>
+            <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(0); scrollHandler(); setChecked(0)}} activeOpacity={0.4}  pressMagnification={10}
+                rippleColor= "rgba(0, 0, 0, .32)"
+            >
+                <View style={[styles.IconBehave,{backgroundColor:checked === 0 ? "white" :"#0779ef"}]} >
+                    <Icon 
+                        name='home-export-outline'
+                        color={checked === 0? "#0779ef" : "white"}
+                        size={size}
+                    />
+                </View>
+                <Text style={{fontSize:10, color: "white" }}>Expenditures</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(1); scrollHandler(); setChecked(1)}} activeOpacity={0.4}  pressMagnification={10}
-            rippleColor= "rgba(0, 0, 0, .32)"
-        >
-            <View style={[styles.IconBehave,{backgroundColor:checked === 1 ? "white" :"#0779ef"}]} >
-                <Icon 
-                    name='home-import-outline'
-                    color={checked === 1? "#0779ef" : "white"}
-                    size={size}
-                />
-            </View>
-            <Text style={{fontSize:10, color: "white" }}>Incomes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(2); scrollHandler(); setChecked(2)}}  activeOpacity={0.4}  pressMagnification={10}
-            rippleColor= "rgba(0, 0, 0, .32)"
-        >
-            <View style={[styles.IconBehave,{backgroundColor:checked === 2 ? "white" :"#0779ef"}]} >
-                <Icon 
-                    name='chart-bar'
-                    color={checked === 2? "#0779ef" : "white"}
-                    size={size}
-                />
-            </View>
-            <Text style={{fontSize:10, color: "white" }}>Graphs</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(1); scrollHandler(); setChecked(1)}} activeOpacity={0.4}  pressMagnification={10}
+                rippleColor= "rgba(0, 0, 0, .32)"
+            >
+                <View style={[styles.IconBehave,{backgroundColor:checked === 1 ? "white" :"#0779ef"}]} >
+                    <Icon 
+                        name='home-import-outline'
+                        color={checked === 1? "#0779ef" : "white"}
+                        size={size}
+                    />
+                </View>
+                <Text style={{fontSize:10, color: "white" }}>Incomes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(2); scrollHandler(); setChecked(2)}}  activeOpacity={0.4}  pressMagnification={10}
+                rippleColor= "rgba(0, 0, 0, .32)"
+            >
+                <View style={[styles.IconBehave,{backgroundColor:checked === 2 ? "white" :"#0779ef"}]} >
+                    <Icon 
+                        name='chart-bar'
+                        color={checked === 2? "#0779ef" : "white"}
+                        size={size}
+                    />
+                </View>
+                <Text style={{fontSize:10, color: "white" }}>Graphs</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity  style={{alignItems:'center'}} onPress={() => {onPress(3); scrollHandler(); setChecked(3)}} activeOpacity={0.4}  pressMagnification={10}
-            rippleColor= "rgba(0, 0, 0, .32)"
-        >
-            <View style={[styles.IconBehave,{backgroundColor:checked === 3 ? "white" :"#0779ef"}]} >
-                <Icon 
-                    name='cart-outline'
-                    color={checked === 3? "#0779ef" : "white"}
-                    size={size}
-                />
-            </View>
-            <Text style={{fontSize:10, color: "white" }}>Shopping List</Text>
-        </TouchableOpacity>
+            <TouchableOpacity  style={{alignItems:'center'}} onPress={() => {onPress(3); scrollHandler(); setChecked(3)}} activeOpacity={0.4}  pressMagnification={10}
+                rippleColor= "rgba(0, 0, 0, .32)"
+            >
+                <View style={[styles.IconBehave,{backgroundColor:checked === 3 ? "white" :"#0779ef"}]} >
+                    <Icon 
+                        name='cart-outline'
+                        color={checked === 3? "#0779ef" : "white"}
+                        size={size}
+                    />
+                </View>
+                <Text style={{fontSize:10, color: "white" }}>Shopping List</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(4); scrollHandler(); setChecked(4)}} activeOpacity={0.4}  pressMagnification={10}
-            rippleColor= "rgba(0, 0, 0, .32)"
-        >
-            <View style={[styles.IconBehave,{backgroundColor:checked === 4 ? "white" :"#0779ef"}]} >
-                <Icon 
-                    name='format-list-checks'
-                    color={checked === 4? "#0779ef" : "white"}
-                    size={size}
-                />
-            </View>
-            <Text style={{fontSize:10, color: "white" }}>Todo List</Text>
-        </TouchableOpacity>
-    </View>
+            <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(4); scrollHandler(); setChecked(4)}} activeOpacity={0.4}  pressMagnification={10}
+                rippleColor= "rgba(0, 0, 0, .32)"
+            >
+                <View style={[styles.IconBehave,{backgroundColor:checked === 4 ? "white" :"#0779ef"}]} >
+                    <Icon 
+                        name='format-list-checks'
+                        color={checked === 4? "#0779ef" : "white"}
+                        size={size}
+                    />
+                </View>
+                <Text style={{fontSize:10, color: "white" }}>Todo List</Text>
+            </TouchableOpacity>
+        </View>
+            <TouchableOpacity style={{alignItems:'center', backgroundColor:'#0779ef',width:"30%",height:8, alignSelf:'center', borderBottomEndRadius:10, borderBottomLeftRadius:10,}} onPress={() => {setIsShow(false)}} activeOpacity={0.4}  pressMagnification={10}>
+                <Text style={{fontSize:10, color: "white", borderBottomColor: "white",borderBottomWidth:0.8,borderTopColor: "white",borderTopWidth:0.8, width:"20%", height:3, marginVertical:2}}/>
+            </TouchableOpacity>
+    </View>}
+    </>
   )
 }
 
@@ -85,7 +99,6 @@ const styles = StyleSheet.create({
         width:"90%",
         alignSelf:'center',
         alignItems:'center',
-        bottom:20,
         justifyContent:'space-evenly',
         flexDirection:'row',
         borderRadius:10,

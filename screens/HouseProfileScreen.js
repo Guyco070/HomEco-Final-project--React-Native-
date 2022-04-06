@@ -42,7 +42,7 @@ const HouseProfileScreen = ({route}) => {
     const [checked, setChecked] = useState(0);
     const [ref, setRef] = useState(null);
     const [dataSourceCords, setDataSourceCords] = useState([]);
-    const [showMenuBar, setShowMenuBar] = useState(-1);
+    const [showMenuBar, setShowMenuBar] = useState(0);
 
     const [messageOptions,setMessageOptions] = useState([])
     const [messageToEmail,setMessageToEmail] = useState('')
@@ -244,7 +244,7 @@ const HouseProfileScreen = ({route}) => {
                 </ScrollView>)
             }
             </ScrollView>}
-            {showMenuBar && <BarMenu onPress={setChecked} scrollHandler={scrollHandler} index ={showMenuBar}/>}
+            {(showMenuBar != -1 && !loading) && <BarMenu onPress={setChecked} scrollHandler={scrollHandler} index ={showMenuBar}/>}
         </SafeAreaView>
     );
 }

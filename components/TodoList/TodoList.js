@@ -166,7 +166,7 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 						<Icon name="add-outline"  type="ionicon" color={"grey"} />
 					</TouchableOpacity>
 					<TextInput style={TodoSheet.additeminput} value={inputValue} onChangeText={(text) => setinputValue(text)} placeholder='Add an item...' 
-						onBlur={setShowMenuBar ? ()=> {listName == 'shoppingList' ? setShowMenuBar(3) : setShowMenuBar(4)}:()=>{}} onFocus={setShowMenuBar ? ()=> setShowMenuBar(false):()=>{}}/>
+						onBlur={setShowMenuBar ? ()=> {listName == 'shoppingList' ? setShowMenuBar(3) : setShowMenuBar(4) }:()=>{}} onFocus={setShowMenuBar ? ()=> {setShowMenuBar(-1); }:()=>{}}/>
 				</View>
 				<View style={TodoSheet.itemlist}>
 					{ items && items.slice(0,slice).map((item, index) => (

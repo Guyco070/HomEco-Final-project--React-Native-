@@ -8,16 +8,20 @@ const size = 20
 
 const BarMenu = ({onPress, scrollHandler, index}) => {
     const [checked, setChecked] = useState(index ? index : 0);
-    const [isShow, setIsShow] = useState(true);
+    const [isShow, setIsShow] = useState(false);
 
   return (
      <>
       { !isShow ?
-        <TouchableOpacity style={{alignItems:'center', backgroundColor:'#0779ef',width:"30%",height:10, alignSelf:'center', borderTopEndRadius:10, borderTopLeftRadius:10,}} onPress={() => {setIsShow(true)}} activeOpacity={0.4}  pressMagnification={10}>
-            <Text style={{fontSize:10, color: "white", borderBottomColor: "white",borderBottomWidth:0.8,borderTopColor: "white",borderTopWidth:0.8, width:"20%", height:3, marginVertical:2}}/>
+        <TouchableOpacity style={{alignItems:'center', backgroundColor:'#0779ef',width:"30%",height:10, alignSelf:'center', borderTopEndRadius:10, borderTopLeftRadius:10,...styles.shadow}} onPress={() => {setIsShow(true)}} activeOpacity={0.4}  pressMagnification={10}>
+                <Text style={{fontSize:10, color: "white", borderBottomColor: "white",borderBottomWidth:0.6, width:"20%", height:3, marginTop:1}}/>
+                <Text style={{fontSize:10, color: "white", borderBottomColor: "white",borderBottomWidth:0.8, width:"25%", height:3, marginBottom:2}}/>
         </TouchableOpacity>
         :
-        <View style={{bottom:15}}>
+        <View style={{marginBottom:13,shadowColor: '#171717',
+        shadowOffset: {width: -2, height: 4},
+        shadowOpacity: 0.2,
+        shadowRadius: 3,}}>
         <View style={ styles.container }>
             <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(0); scrollHandler(); setChecked(0)}} activeOpacity={0.4}  pressMagnification={10}
                 rippleColor= "rgba(0, 0, 0, .32)"
@@ -83,8 +87,9 @@ const BarMenu = ({onPress, scrollHandler, index}) => {
                 <Text style={{fontSize:10, color: "white" }}>Todo List</Text>
             </TouchableOpacity>
         </View>
-            <TouchableOpacity style={{alignItems:'center', backgroundColor:'#0779ef',width:"30%",height:8, alignSelf:'center', borderBottomEndRadius:10, borderBottomLeftRadius:10,}} onPress={() => {setIsShow(false)}} activeOpacity={0.4}  pressMagnification={10}>
-                <Text style={{fontSize:10, color: "white", borderBottomColor: "white",borderBottomWidth:0.8,borderTopColor: "white",borderTopWidth:0.8, width:"20%", height:3, marginVertical:2}}/>
+            <TouchableOpacity style={{alignItems:'center', backgroundColor:'#0779ef',width:"30%",height:10, alignSelf:'center', borderBottomEndRadius:10, borderBottomLeftRadius:10,...styles.shadow}} onPress={() => {setIsShow(false)}} activeOpacity={0.4}  pressMagnification={10}>
+                <Text style={{ borderBottomColor: "white",borderBottomWidth:0.8, width:"25%", height:3, marginTop:1}}/>
+                <Text style={{ borderBottomColor: "white",borderBottomWidth:0.6, width:"20%", height:3, marginBottom:2}}/>
             </TouchableOpacity>
     </View>}
     </>
@@ -102,7 +107,8 @@ const styles = StyleSheet.create({
         justifyContent:'space-evenly',
         flexDirection:'row',
         borderRadius:10,
-        height:70
+        height:70,
+        elevation:0
     },
     IconBehave:{
         padding:12,
@@ -110,5 +116,15 @@ const styles = StyleSheet.create({
     },
     IconWrpper:{
         alignItems:'center',
+    },
+    shadow:{
+        elevation:5,
+        shadowColor:"#7F5Df0",
+        shadowOffset:{
+            width:0,
+            height:10
+        },
+        shadowOpacity: 0.25,
+        shadowRadius:3.5
     }
 })

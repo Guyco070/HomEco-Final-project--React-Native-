@@ -215,13 +215,13 @@ const TodoList = ({hKey,listName,uEmail, navigation}) => {
 				{/* <Text>Total: {totalItemCount}</Text> */}
 				</View>
 				<View style={{flexDirection:"row" ,alignSelf:'center'}}>
-					{ !isExpended ?
+					{ !isExpended ? ( items.length >3 &&
 						<TouchableOpacity onPress={()=>{if(items) setSlice(items.length); setIsExpended(true)}}>
 							<>
 								<Icon
 									name='chevron-down' size={22}  type='ionicon' />
 							</>
-						</TouchableOpacity>
+						</TouchableOpacity>)
 						:
 							<TouchableOpacity onPress={()=>{setSlice(3); setIsExpended(false)}}>
 								<>

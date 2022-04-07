@@ -263,9 +263,9 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 			{!isAllMarked && <TouchableOpacity
 					title="Check all"
 					onPress={() => {  for(let i in items) if(!items[i].isSelected) toggleComplete(i)}}
-					style={[{alignSelf:'center',backgroundColor:'#ffd966', width: 85, borderRadius:10, alignItems:'center',top:-12}]}
+					style={[{alignSelf:'center',backgroundColor:'#ffd966', width: 85, borderRadius:10, alignItems:'center',top:-12},style]}
 					>
-					<Text>Check all</Text>
+					<Text style={{color:'grey'}}>Check all</Text>
 				</TouchableOpacity>}
 			{listName=="shoppingList" && isAllMarked &&
 			<TouchableOpacity

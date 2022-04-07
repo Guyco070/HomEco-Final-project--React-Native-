@@ -42,7 +42,7 @@ const HouseProfileScreen = ({route}) => {
     const [checked, setChecked] = useState(0);
     const [ref, setRef] = useState(null);
     const [dataSourceCords, setDataSourceCords] = useState([]);
-    const [showMenuBar, setShowMenuBar] = useState(0);
+    const [showMenuBar, setShowMenuBar] = useState(route.params?.menuBarIndex ? route.params?.menuBarIndex : 0);
 
     const [messageOptions,setMessageOptions] = useState([])
     const [messageToEmail,setMessageToEmail] = useState('')
@@ -134,7 +134,7 @@ const HouseProfileScreen = ({route}) => {
                     </TouchableOpacity>
                     <ModalSelector
                         data={addData}
-                        onChange={(option)=>{ option.key == 1 ? navigation.navigate('AddNewExpenditure',house):navigation.navigate('AddOrEditIncome',house) }}
+                        onChange={(option)=>{ option.key == 1 ? navigation.navigate('AddOrEditExpenditure',{hKey}):navigation.navigate('AddOrEditIncome',{hKey}) }}
                         style={{margin:25,marginBottom:0}}
                         >
                                 <Icon  name="add"  type="icon" color={"grey"} />

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native'
-import React ,{useState} from 'react'
+import React ,{useEffect, useState} from 'react'
 import HomeScreen from '../screens/HomeScreen'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -8,8 +8,12 @@ const size = 20
 
 const BarMenu = ({onPress, scrollHandler, index}) => {
     const [checked, setChecked] = useState(index ? index : 0);
-    const [isShow, setIsShow] = useState(false);
+    const [isShow, setIsShow] = useState(true);
 
+    useEffect(() => {
+        onPress(checked)
+      }, [])
+      
   return (
      <>
       { !isShow ?

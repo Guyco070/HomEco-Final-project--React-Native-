@@ -32,11 +32,11 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 	useEffect(() => {
         firebase.getByDocIdFromFirestore('houses', hKey).then((house) => {setItems(house[listName])
 			let tempIsAllMarked = true
-			if(items.length == 0)
+			if(house[listName].length == 0)
 				tempIsAllMarked = false
 			else
-				for(let item in items)
-					if(!items[item].isSelected) {tempIsAllMarked = false; break;}
+				for(let item in house[listName])
+					if(!house[listName][item].isSelected) {tempIsAllMarked = false; break;}
 			setIsAllMarked(tempIsAllMarked)
 		})
 		
@@ -260,10 +260,17 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 				</View>
 				</ScrollView>
 			</Modal>}
+			{!isAllMarked && <TouchableOpacity
+					title="Check all"
+					onPress={() => {  for(let i in items) if(!items[i].isSelected) toggleComplete(i)}}
+					style={[{alignSelf:'center',backgroundColor:'#ffd966', width: 85, borderRadius:10, alignItems:'center',top:-12}]}
+					>
+					<Text>Check all</Text>
+				</TouchableOpacity>}
 			{listName=="shoppingList" && isAllMarked &&
 			<TouchableOpacity
 					title="Add  As Expenditure"
-					onPress={() => { firebase.shoppingListToString(items).then((SL) => navigation.navigate('EditExpenditureScreen',{hKey, exp:{ partner:uEmail,company: "", desc: SL , amount: '', billingType: "One-time", invoices: [], contracts: []}}))}}
+					onPress={() => { firebase.shoppingListToString(items).then((SL) => navigation.navigate('EditExpenditureScreen',{hKey, exp:{ partner:uEmail,company: "", descOpitional: SL , amount: '', billingType: "One-time", invoices: [], contracts: [], desc: "Supermarket", descIcon:"cart-minus"}}))}}
 					style={[styles.button,{alignSelf:'center',backgroundColor:'#ffa000', width: 200}]}
 					>
 					<Text style={[styles.buttonText,]}>Add  As Expenditure</Text>

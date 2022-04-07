@@ -351,6 +351,7 @@ const getCurentPartnerOfHouse = async(hName,cEmail,curUEmail) => {
 
 const addExpendToHouse = async(hName, cEmail,expends, expend) => 
 {
+  console.log(expend)
   expends[expend.date] = expend
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
 
@@ -432,6 +433,12 @@ const removeExpendFromHouse = async(hName, cEmail,expends, expend) =>
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
 }
 
+const removeIncomeFromHouse = async(hName, cEmail,incomes, income) => 
+{
+  delete incomes[income.date.toDate()]
+  updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "incomes", incomes)
+}
+
 const shoppingListToString = async(shoppingList) => 
 {
   let str = ''
@@ -505,7 +512,7 @@ export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRe
         getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, 
         getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
-        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse,shoppingListToString, 
+        getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse, removeIncomeFromHouse, shoppingListToString, 
         getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeToHouseByMonth,
         addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany} 
 

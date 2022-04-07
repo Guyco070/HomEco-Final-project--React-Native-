@@ -91,20 +91,16 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
         if(scrollHandler) scrollHandler()
     },[toViewList])
 
-    useEffect(() => {
-        if(scrollHandler) scrollHandler()
-    },[scrollHandler])
-
       const setIsExpended=(date) => {
             isExpended[date.toDate()] = !isExpendedConst[date.toDate()]
             setIsExpendedConst(isExpended)
       }
 
-      const handleEdit = (income) => {
+      const handleEdit = (valToEdit) => {
         if(type === 'Expenditure')
-            navigation.navigate('EditExpenditureScreen',{hKey, income})
+            navigation.navigate('AddOrEditExpenditure',{hKey, exp: valToEdit})
         if(type === 'Income')
-            navigation.navigate('AddOrEditIncome',{hKey, income})
+            navigation.navigate('AddOrEditIncome',{hKey, income: valToEdit})
       }
 
       const handleSort = (key) => {

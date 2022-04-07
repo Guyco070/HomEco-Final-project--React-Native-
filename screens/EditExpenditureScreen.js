@@ -24,7 +24,7 @@ LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',
    ]);
 
-const EditExpenditureScreen = ({route}) => {
+const AddOrEditExpenditure = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
 
@@ -714,4 +714,4 @@ async function schedulePushNotification(title,body,data,trigger) {
   }
 
 
-export default EditExpenditureScreen
+export default AddOrEditExpenditure

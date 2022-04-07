@@ -15,7 +15,7 @@ import CreateNewHouseScreen from './screens/CreateNewHouseScreen';
 import HouseProfileScreen from './screens/HouseProfileScreen';
 import EditHouseProfileScreen from './screens/EditHouseProfileScreen';
 import General from './screens/General';
-import AddNewExpenditureScreen from './screens/AddNewExpenditureScreen';
+import AddOrEditExpenditureScreen from './screens/AddOrEditExpenditureScreen';
 import AddOrEditIncomeScreen from './screens/AddOrEditIncomeScreen';
 import AddNewSelfIncomeScreen from './screens/AddNewSelfIncomeScreen';
 import BarcodeScanner from './components/BarcodeScanner';
@@ -62,7 +62,7 @@ export default function App() {
       <Stack.Screen name="HouseProfile" component={HouseProfileScreen} options={{ title: 'House Profile Screen'}}/>
       <Stack.Screen name="EditHouseProfile" component={EditHouseProfileScreen} options={{ title: 'Edit House Profile Screen'}}/>
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: 'Forgot Password Screen'}}/>
-      <Stack.Screen name="AddNewExpenditure" component={AddNewExpenditureScreen} options={{ title: 'Add New Expenditure Screen'}}/>
+      <Stack.Screen name="AddOrEditExpenditure" component={AddOrEditExpenditureScreen} options={{ title: 'Add New Expenditure Screen'}}/>
       <Stack.Screen name="AddOrEditIncome" component={AddOrEditIncomeScreen} options={{ title: 'Add Or Edit Income Screen'}}/>
       <Stack.Screen name="AddNewSelfIncome" component={AddNewSelfIncomeScreen} options={{ title: 'Add New Self Income Screen'}}/>
       <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} options={{ title:'Barcode Scanner'}}/>

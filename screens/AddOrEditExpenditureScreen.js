@@ -4,7 +4,7 @@ import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal} f
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
-import { styles, houseProfileStyles, docImageUploaderStyles,modelContent } from '../styleSheet'
+import { styles, houseProfileStyles, docImageUploaderStyles,modelContent, TodoSheet } from '../styleSheet'
 import * as ImagePicker from 'expo-image-picker';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -13,11 +13,12 @@ import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5} from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
 import CustomNotifications from '../CustomNotifications'
 import { async } from '@firebase/util';
+
 // import * as CustomNotificationsFuncs from '../CustomNotifications'
 LogBox.ignoreAllLogs(true)
 
@@ -36,7 +37,7 @@ LogBox.ignoreLogs([
     }),
   });
 
-const AddNewExpenditureScreen = ({route}) => {
+const AddOrAddOrEditExpenditure = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
     const [modalOpen, setModalOpen] = useState(false)
@@ -45,9 +46,9 @@ const AddNewExpenditureScreen = ({route}) => {
     const [hImage, setImage] = useState('');
 
     const [company, setCompany] = useState('');
-    const [desc, setDescription] = useState('');
+    const [desc, setDescription] = useState('Type');
     const [descOpitional, setDescriptionOpitional] = useState('');
-    const [descIcon, setDescriptionIcon] = useState('');
+    const [descIcon, setDescriptionIcon] = useState('timer-sand-empty');
     const [amount, setAmount] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
     const [isEvent, setIsEvent] = useState(false);
@@ -70,15 +71,19 @@ const AddNewExpenditureScreen = ({route}) => {
     const [notificationDate, setNotificationDate] = useState('');
     const [customDate, setCustomDate] = useState('');
 
-    const house = route.params;
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
 
     const [notifications, setNotifications] = useState([]);
+    const [notificationsToRemove, setNotificationsToRemove] = useState([]);
 
-  
+
+    const [house, setHouse] = useState('');
+    const exp = route.params?.exp;
+    const hKey = route.params?.hKey;
+
     useEffect(() => {
       registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
   
@@ -98,6 +103,27 @@ const AddNewExpenditureScreen = ({route}) => {
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
+        if(hKey)
+            firebase.getByDocIdFromFirestore("houses",hKey).then((house)=> {setHouse(house); }).catch((e) =>{})
+        if(exp){
+            setInvoCatchImage(exp.invoices)
+            setContractCatchImage(exp.contracts)
+            setBillingType(exp.billingType)
+            setCompany(exp.company)
+            setDescription(exp.desc)
+            setDescriptionIcon(exp.descIcon)
+            setAmount(exp.amount)
+            setDescriptionOpitional(exp.descOpitional)
+            setIsEvent(exp.isEvent)
+            if(exp.isEvent)
+                updateEventDateText(exp.eventDate)
+            if("notifications" in exp && exp.notifications.length != 0){
+                setIsWithNotification(true)
+                setNotifications(exp.notifications)
+                setDateTextNotification(exp.notifications[0].dateText)
+            }
+            if("isWithCustomDate" in exp) {setIsWithCustomDate(exp.isWithCustomDate); setCustomDate(exp.date.toDate()); setCustomDateText(exp.customDateText)}
+        }
       }, [])
 
     useEffect(() => {
@@ -193,30 +219,40 @@ const AddNewExpenditureScreen = ({route}) => {
     const handleCreateExpend = async() => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
-        else if(company && desc && amount){
+        else if(company && desc != "Type" && amount){
+            removeNotficationHandling()
             if(isWithNotification) { 
                 notficationHandling().then((tempNotifications) => {
-                    firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : new Date(),partner:user.email,company: company, 
-                                                desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent,
-                                                 eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText})
-                })
+                    firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : ((exp && "date" in exp) ? exp.date.toDate() : new Date()),partner:user.email,company, 
+                                                desc, amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
+                                                 eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText}).then(()=>{
+                                                    if(!("date" in exp)) 
+                                                        firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
+                                                    })
+                                            })
             }else
-                firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : new Date(),partner:user.email,company: company, 
-                                            desc: desc, amount: amount, billingType: billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent: isEvent,
-                                             eventDate: eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText})
-            navigation.replace("HouseProfile",{hKeyP: firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
+                firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : ((exp && "date" in exp) ? exp.date.toDate() : new Date()),partner:user.email,company, 
+                                            desc, amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
+                                             eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText}).then(()=>{
+                                                if(!("date" in exp)) 
+                                                    firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
+                                                })
+                
+            navigation.replace("HouseProfile",{hKeyP: hKey, menuBarIndex: 0})
         }else alert("Sorry, you must fill in all the fields!")
     }
 
     const notficationHandling = async() => {
         let tempNotifications = []
         for(let i in notifications) {
-            tempNotifications.push({
-                identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional? descOpitional:company,
-                                                                    notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
-                dateTextNotification: notifications[i].dateTextNotification, 
-                notificationDate: notifications[i].notificationDate
-            })
+            if(!("identifier" in notifications[i]))
+                tempNotifications.push({
+                    identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional? descOpitional:company,
+                                                                            notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
+                    dateTextNotification: notifications[i].dateTextNotification, 
+                    notificationDate: notifications[i].notificationDate
+                })
+            else tempNotifications.push(notifications[i])
         }
         return tempNotifications
     }
@@ -235,6 +271,48 @@ const AddNewExpenditureScreen = ({route}) => {
             hours = "0" + hours
         let fTime =  hours + ":" + minutes
         setDateText(fTime + '  |  ' + fDate)
+    }
+
+    const removeNotficationHandling = async() => {
+        for(let i in notificationsToRemove) {
+            await Notifications.cancelScheduledNotificationAsync(notificationsToRemove[i].identifier);
+        }
+    }
+
+    const handleDeleteExpenditure = () => {
+        Alert.alert(
+            "Are your sure?",
+            "Are you sure you want to remove this beautiful box?",
+            [
+              // The "Yes" button
+              {
+                text: "Yes",
+                onPress: () => {
+                    firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                },
+              },
+              // The "No" button
+              // Does nothing but dismiss the dialog when tapped
+              {
+                text: "No",
+              },
+            ]
+          );
+    }
+
+    const updateEventDateText = (selectedDate) => {
+        const currentDate = selectedDate || eventDate;
+        setEventDate(currentDate.toDate())
+        let tempDate = new Date(currentDate.toDate())
+        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let minutes = tempDate.getMinutes()
+        if(parseInt(minutes) < 10)
+            minutes = "0" + minutes
+        let hours = tempDate.getHours()
+        if(parseInt(hours) < 10)
+            hours = "0" + hours
+        let fTime =  hours + ":" + minutes
+        setDateText(fDate + '  |  ' + fTime)
     }
 
     const showMode = (currentMode) => {
@@ -290,12 +368,24 @@ const AddNewExpenditureScreen = ({route}) => {
         <ScrollView style={{backgroundColor: 'white'}}>
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
 
+            {(exp && "date" in exp) &&
+            <View style={TodoSheet.trash}>
+                <TouchableOpacity style={{margin:25} } onPress={handleDeleteExpenditure} >
+                    <Icon name="trash"  type="ionicon" size={22}/>
+                </TouchableOpacity>
+            </View>}
+
             <View style={[styles.container,{backgroundColor: modalOpen?'rgba(52, 52, 52, 0.8)':'white'}]}>
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
-                <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Expenditure</Text> 
-                <Input name="Company" icon="building" onChangeText={text => setCompany(text)} />
-                <Input name="Amount" icon="money" onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
-                <Input name="Description" icon="file-text" onChangeText={text => {setDescriptionOpitional(text); }} />
+                { !exp ? <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Expenditure</Text> 
+                :
+                ("date" in exp) ? 
+                <Text style={[styles.textTitle, {marginBottom:20}]}>Edit Expenditure</Text> 
+                : <Text style={[styles.textTitle, {marginBottom:20}]}>Add Shopping List As Expenditure</Text> 
+                } 
+                <Input name="Company" icon="building" value={company?company:""} onChangeText={text => setCompany(text)} />
+                <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
+                <Input name="Description" icon="file-text" value={descOpitional?descOpitional:""} onChangeText={text => {setDescriptionOpitional(text); }} />
            
                 <TouchableOpacity
                     title="Home"
@@ -303,9 +393,9 @@ const AddNewExpenditureScreen = ({route}) => {
                     onPress={() => setModalOpen(true)}
                     style={[modelContent.button,{marginBottom:0}]}
                     >
-                        <Ionicons 
+                        <Icon 
                             name={descIcon}
-                            size={22}
+                            size={25}
                             color={'#0782F9'}
                             style={{top:10}}
                             />
@@ -386,7 +476,13 @@ const AddNewExpenditureScreen = ({route}) => {
                             activeScale={1}
                             onPress={() => {  }}
                             >
-                                <TouchableOpacity  style={docImageUploaderStyles.removeBtn} onPress={() => {let temp = [...notifications]; delete temp[index]; setNotifications(temp);}} >
+                                <TouchableOpacity  style={docImageUploaderStyles.removeBtn} onPress={() => {
+                                                    setNotificationsToRemove([...notificationsToRemove, notifications[index]]); 
+                                                    let temp = []; 
+                                                    for(const i in notifications) if(i!=index) temp.push(notifications[i])
+                                                    setNotifications(temp);
+                                                }
+                                            } >
                                     <AntDesign name="close" size={15} color="black" />
                             </TouchableOpacity> 
                                 <Text>{val.dateTextNotification}</Text>
@@ -484,7 +580,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Food"
-                                        onPress={() => {handleAddDescription("Food"); setDescriptionIcon("md-fast-food")}}
+                                        onPress={() => {handleAddDescription("Food"); setDescriptionIcon("food")}}
                                         style={modelContent.button}
                                         >
                                             <Ionicons 
@@ -526,7 +622,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                 <View style={[modelContent.modalRowView,{margin:0, height:0}]}>
                                     <TouchableOpacity
                                         title="Shopping"
-                                        onPress={() => {handleAddDescription("Shopping"); setDescriptionIcon("pricetags-outline")}}
+                                        onPress={() => {handleAddDescription("Shopping"); setDescriptionIcon("basket")}}
                                         style={modelContent.button}
                                         >
                                             <FontAwesome 
@@ -539,7 +635,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Bills"
-                                        onPress={() => {handleAddDescription("Bills"); setDescriptionIcon("card-outline")}}
+                                        onPress={() => {handleAddDescription("Bills"); setDescriptionIcon("credit-card-settings-outline")}}
                                         style={modelContent.button}
                                         >
                                             <FontAwesome5
@@ -552,7 +648,7 @@ const AddNewExpenditureScreen = ({route}) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         title="Education"
-                                        onPress={() => {handleAddDescription("Education"); setDescriptionIcon("glasses-outline")}}
+                                        onPress={() => {handleAddDescription("Education"); setDescriptionIcon("school")}}
                                         style={modelContent.button}
                                         >
                                             <FontAwesome
@@ -625,11 +721,11 @@ const AddNewExpenditureScreen = ({route}) => {
             <View style={[styles.container,{marginTop: 5}]}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                        title="Create"
+                        title={exp ? "Update":"Create"}
                         onPress={handleCreateExpend}
                         style={styles.button}
                         >
-                        <Text style={styles.buttonText}>Create</Text>
+                        <Text style={styles.buttonText}>{exp ? "Update":"Create"}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -683,4 +779,4 @@ async function schedulePushNotification(title,body,data,trigger) {
 
 
 
-export default AddNewExpenditureScreen
+export default AddOrAddOrEditExpenditure

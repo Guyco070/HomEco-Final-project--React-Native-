@@ -96,11 +96,9 @@ const AddOrEditIncomeScreen = ({route}) => {
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
-        if(!("income" in route.params)){
-            setHouse(route.params)
-        }else{
-            firebase.getByDocIdFromFirestore("houses",hKey).then((house)=> {setHouse(house); }).catch((e) =>{})
-        }
+
+        firebase.getByDocIdFromFirestore("houses",hKey).then((house)=> {setHouse(house); }).catch((e) =>{})
+  
         if("income" in route.params){
             setBillingType(income.billingType)
             setAmount(income.amount)
@@ -147,7 +145,7 @@ const AddOrEditIncomeScreen = ({route}) => {
             }else
                 firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes , {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email, amount: amount,
                    billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText})
-            navigation.replace("HouseProfile",{hKeyP: income? hKey : firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})
+            navigation.replace("HouseProfile",{hKeyP: hKey, menuBarIndex: 1})
         }else alert("Sorry, you must fill in all the fields!")
     }
 
@@ -229,7 +227,7 @@ const AddOrEditIncomeScreen = ({route}) => {
       setModeCustomDate(currentMode)
     }
 
-      const handleDeleteExpenditure = () => {
+      const handleDeleteIncome = () => {
         Alert.alert(
             "Are your sure?",
             "Are you sure you want to remove this income?",
@@ -238,7 +236,7 @@ const AddOrEditIncomeScreen = ({route}) => {
               {
                 text: "Yes",
                 onPress: () => {
-                    firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                    firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
                 },
               },
               // The "No" button
@@ -253,7 +251,7 @@ const AddOrEditIncomeScreen = ({route}) => {
         <ScrollView style={{backgroundColor: 'white'}}>
             {income &&
             <View style={TodoSheet.trash}>
-                <TouchableOpacity style={{margin:25} } onPress={handleDeleteExpenditure} >
+                <TouchableOpacity style={{margin:25} } onPress={handleDeleteIncome} >
                     <Icon name="trash"  type="ionicon" size={22}/>
                 </TouchableOpacity>
             </View>}

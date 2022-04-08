@@ -22,8 +22,12 @@ const HouseGalleryViewer = (props) => {
           firebase.getByDocIdFromFirestore("houses",hKey).then((house)=> {setHouse(house); setHouseCatchImages(house.gallery); }).catch((e) =>{})
     }, [])
 
+    useEffect(() => {
+      
+    }, [])
+
   useEffect(() => {
-      if(props?.scrollHandler) props.scrollHandler();
+    firebase.updateCollectAtFirestore("houses", hKey, "gallery", catchHouseImages)
   },[props,catchHouseImages])
 
     const addImage = async () => {
@@ -33,7 +37,6 @@ const HouseGalleryViewer = (props) => {
           cloudinary.uploadImageToCloudinary("Gallery",_image).then((url)=>{
               const image = { url, creator: user.email, date: new Date()}
              setHouseCatchImages([image, ...catchHouseImages]);
-             firebase.updateCollectAtFirestore("houses", hKey, "gallery", [image, ...catchHouseImages])
             }).catch((e) => alert(e.message))
       }
   }
@@ -48,7 +51,6 @@ const HouseGalleryViewer = (props) => {
         }
     }
     setHouseCatchImages([...tempCatchImages])
-    firebase.updateCollectAtFirestore("houses", hKey, "gallery", tempCatchImages)
 } 
 
   return (
@@ -59,13 +61,13 @@ const HouseGalleryViewer = (props) => {
         numColumns={3}
         keyExtractor={(item, index) => index}
         renderItem={({ item,index }) => (
-            <View style={{ flex: 1, flexDirection: 'column', margin: 3 }}>
+            <View style={{ flex: 1, flexDirection: 'column', margin: 3, }}>
               
               <TouchableOpacity onPress={() => {props.navigation.navigate('ImageViewer',{ uri: item.url , navigation: props.navigation});}} disabled={item.url ? false : true }>
               <Image style={styles.imageThumbnail} source={{ uri: item.url }} />
               </TouchableOpacity>
 
-              {  house?.partners[user?.email].permissions.changeGallery && <View style={docImageUploaderStyles.removeBtnContainer}>
+              {  (user?.email == item.creator || house?.partners[user?.email].permissions.changeGallery) && <View style={docImageUploaderStyles.removeBtnContainer}>
                 <TouchableOpacity  style={[docImageUploaderStyles.removeBtn,]} onPress={() => onRemove(index)} >
                   <AntDesign name="close" size={17} color="black" />
                 </TouchableOpacity>
@@ -87,6 +89,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: 'white',
+    marginTop:10,
+    marginHorizontal:3
   },
   imageThumbnail: {
     justifyContent: 'center',

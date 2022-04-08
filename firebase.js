@@ -146,7 +146,7 @@ const updateDocAllColsAtFirestore = async(collect,key,newValuesDict) => {
 
 const setDefaultHousePartners = (partners) => {
   let partnersDict = {}
-  let permissions = {"seeIncome": false, "seeMonthlyBills": false}
+  let permissions = {"seeIncome": false, "seeMonthlyBills": false, "changeGallery": false}
 
 
   for(let i in partners){

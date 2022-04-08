@@ -87,6 +87,18 @@ const BarMenu = ({onPress, scrollHandler, index}) => {
                 </View>
                 <Text style={{fontSize:10, color: "white" }}>Todo List</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(5); scrollHandler(); setChecked(5)}} activeOpacity={0.4}  pressMagnification={10}
+                rippleColor= "rgba(0, 0, 0, .32)"
+            >
+                <View style={[styles.IconBehave,{backgroundColor:checked === 5 ? "white" :"#0779ef"}]} >
+                    <Icon 
+                        name='image-multiple'
+                        color={checked === 5? "#0779ef" : "white"}
+                        size={size}
+                    />
+                </View>
+                <Text style={{fontSize:10, color: "white" }}>Gallery</Text>
+            </TouchableOpacity>
         </View>
             <TouchableOpacity style={{alignItems:'center', backgroundColor:'#0779ef',width:"30%",height:10, alignSelf:'center', borderBottomEndRadius:10, borderBottomLeftRadius:10,...styles.shadow}} onPress={() => {setIsShow(false)}} activeOpacity={0.4}  pressMagnification={10}>
                 <Text style={{ borderBottomColor: "white",borderBottomWidth:0.8, width:"25%", height:3, marginTop:1}}/>
@@ -102,7 +114,7 @@ export default BarMenu
 const styles = StyleSheet.create({
     container:{
         backgroundColor:"#0779ef",
-        width:"90%",
+        width:"95%",
         alignSelf:'center',
         alignItems:'center',
         justifyContent:'space-evenly',

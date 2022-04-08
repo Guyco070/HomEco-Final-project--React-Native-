@@ -84,6 +84,7 @@ const ChangePermissions =(props) => {
         else{ 
             temp[email].permissions["seeMonthlyBills"] = !isAll
             temp[email].permissions["seeIncome"] = !isAll
+            temp[email].permissions["changeGallery"] = !isAll
          }
         setOldHFullPartners(temp)
         props.onPress(oldHFullPartners)
@@ -148,6 +149,20 @@ const ChangePermissions =(props) => {
                                         disabled={isAll}
                                         checked={getPermission(l.email,"seeMonthlyBills")}
                                         onPress={() => handlePermissionCheck(l.email,"seeMonthlyBills")}
+                                        containerStyle={isAll?{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10,backgroundColor:"#ddd",}
+                                        :{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
+                                        textStyle={isAll?{color:"#7B7177"} : {}}
+                                        wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
+                                    />
+
+                                    <ListItem.CheckBox 
+                                        center
+                                        title="Change gallery"
+                                        checkedIcon="dot-circle-o"
+                                        uncheckedIcon="circle-o"
+                                        disabled={isAll}
+                                        checked={getPermission(l.email,"changeGallery")}
+                                        onPress={() => handlePermissionCheck(l.email,"changeGallery")}
                                         containerStyle={isAll?{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10,backgroundColor:"#ddd",}
                                         :{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
                                         textStyle={isAll?{color:"#7B7177"} : {}}

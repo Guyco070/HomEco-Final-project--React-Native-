@@ -15,20 +15,21 @@ const HouseGalleryViewer = (props) => {
     const [house, setHouse] = useState('');
 
     const hKey = props?.hKey;
+    let changed = 0
 
     useEffect(() => {
       firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
       if(hKey)
-          firebase.getByDocIdFromFirestore("houses",hKey).then((house)=> {setHouse(house); setHouseCatchImages(house.gallery); }).catch((e) =>{})
+          firebase.getByDocIdFromFirestore("houses",hKey).then((house)=> {setHouse(house); setHouseCatchImages(house.gallery); changed++}).catch((e) =>{})
     }, [])
 
     useEffect(() => {
-      
-    }, [])
+      firebase.updateCollectAtFirestore("houses", hKey, "gallery", catchHouseImages)
+    }, [catchHouseImages])
 
   useEffect(() => {
-    firebase.updateCollectAtFirestore("houses", hKey, "gallery", catchHouseImages)
-  },[props,catchHouseImages])
+      if(props?.scrollHandler) props.scrollHandler();
+  },[props,changed])
 
     const addImage = async () => {
       let _image = await cloudinary.addDocImage()
@@ -37,6 +38,7 @@ const HouseGalleryViewer = (props) => {
           cloudinary.uploadImageToCloudinary("Gallery",_image).then((url)=>{
               const image = { url, creator: user.email, date: new Date()}
              setHouseCatchImages([image, ...catchHouseImages]);
+              changed++
             }).catch((e) => alert(e.message))
       }
   }
@@ -51,6 +53,7 @@ const HouseGalleryViewer = (props) => {
         }
     }
     setHouseCatchImages([...tempCatchImages])
+    changed++
 } 
 
   return (

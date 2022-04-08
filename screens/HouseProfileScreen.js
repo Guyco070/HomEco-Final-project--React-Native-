@@ -21,6 +21,7 @@ import { Icon } from 'react-native-elements';
 import BarMenu from '../components/BarMenu';
 import GraphHomeScreen from './GraphHomeScreen';
 import { ref } from 'firebase/storage';
+import HousePhotosViewer from '../components/HousePhotosViewer';
 
 LogBox.ignoreAllLogs(true)
 
@@ -239,6 +240,11 @@ const HouseProfileScreen = ({route}) => {
                 { checked === 4 && <>
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]} >Tasks List</Text>
                     <TodoList hKey = {hKey} listName={"tasksList"} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
+                    </>
+                }
+                { checked === 5 && <>
+                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]} >Photos</Text>
+                    <HousePhotosViewer hKey = {hKey} listName={"tasksList"} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
                     </>
                 }
                 </ScrollView>)

@@ -179,7 +179,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
                                             <View style={{ width: "75%" }}>
                                                 <TouchableOpacity onPress={()=> {setIsExpended(l.date)}}>
                                                     <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                                        <View style={{width:"100%", flexDirection: "row",marginTop:2}}>
+                                                        <View style={{width:"100%", flexDirection: "column",marginTop:2}}>
                                                             <Text style={{ fontWeight: "400" ,marginRight:20}}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
                                                             {type === 'Expenditure' && <View
                                                                 style={[houseProfileStyles.typeIcone,]}
@@ -200,29 +200,32 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
                                                         {l.isEvent && <>{"\n"}Event Time: <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.eventDate.toDate()))}</Text></>}
                                                        
                                                     </Text>
-                                                    
-                                                    {isExpendedConst && isExpendedConst[l.date.toDate()] &&
-                                                        <View style={[houseProfileStyles.textWithTopAndButDividers, { flexDirection:'row', width:'95%'}]}>
+                                                    </TouchableOpacity>
+                                                    {
+                                                    isExpendedConst && isExpendedConst[l.date.toDate()] &&
+                                                    <>
+                                                        <View style={[houseProfileStyles.textWithTopAndButDividers, { width:'95%'}]}>
                                                         <Text style = {{width:'88%'}}>
                                                             {type === 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"Type: " + l.desc}</Text>}
                                                            {"descOpitional" in l && l.descOpitional != '' &&<>{type && type == 'Expenditure' && "\n"}<Text style={{ fontWeight: "400" }}>{"Description: " + l.descOpitional}</Text> </>}
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Billing type: " + l.billingType}</Text>
                                                            {type === 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"\nCreator: " + l.partner}</Text>}
                                                            {type === 'Expenditure' && "\n"}
-                                                           {type === 'Expenditure' && <View>
+                                                           
+                                                        </Text>
+                                                        {type === 'Expenditure' && <View>
                                                                 {("invoices" in l) && (l.invoices.length != 0) && <Text style = {houseProfileStyles.textWithButDivider}>
                                                                     {"\n"}
                                                                    <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
                                                                 </Text>}
-                                                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
-                                                            
+                                                                
+                                                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                                                                     {("invoices" in l) && (l.invoices.length != 0) && l.invoices.map((val, index) => ( 
                                                                         <View style={docImageUploaderStyles.mediaImageContainer}>
                                                                             <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} changeable={false} navigation={navigation}/>
                                                                         </View>
                                                                         ))
                                                                     }
-                                                                
                                                                 </ScrollView>
                                                                 {("contracts" in l) && (l.contracts.length != 0) &&
                                                                 <Text style = {houseProfileStyles.textWithButDivider}>
@@ -239,17 +242,14 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
                                                                     }                 
                                                                 </ScrollView>
                                                             </View> }
-                                                        </Text>
-                                                        { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
-                                                                <View style={{alignSelf: 'center', alignItems: 'flex-end', }}>     
-                                                                    <TouchableOpacity  onPress={ () => handleEdit(l) }>
-                                                                        <Icon  name="edit"  type="icon" color={"grey"} size={18}/>
-                                                                    </TouchableOpacity>
-                                                                </View>
-                                                                }
                                                         </View>
+                                                        { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
+                                                                <TouchableOpacity  onPress={ () => handleEdit(l) } style={{alignSelf: 'center', alignItems: 'flex-end', margin:7 }}>
+                                                                    <Icon  name="edit"  type="icon" color={"grey"} size={20}/>
+                                                                </TouchableOpacity>
+                                                            }
+                                                        </>
                                                         }
-                                                </TouchableOpacity>
                                             </View>
                                     </View>
 

@@ -18,6 +18,7 @@ import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5} from '@expo/vecto
 import * as Notifications from 'expo-notifications';
 import CustomNotifications from '../CustomNotifications'
 import { async } from '@firebase/util';
+import Loading from '../components/Loading';
 
 // import * as CustomNotificationsFuncs from '../CustomNotifications'
 LogBox.ignoreAllLogs(true)
@@ -37,12 +38,12 @@ LogBox.ignoreLogs([
     }),
   });
 
-const AddOrAddOrEditExpenditure = ({route}) => {
+const AddOrEditExpenditureScreen = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
     const [modalOpen, setModalOpen] = useState(false)
-    let [catchInvoImages, setInvoCatchImage] = useState([]);
-    let [catchContractImages, setContractCatchImage] = useState([]);
+    const [catchInvoImages, setInvoCatchImage] = useState([]);
+    const [catchContractImages, setContractCatchImage] = useState([]);
     const [hImage, setImage] = useState('');
 
     const [company, setCompany] = useState('');
@@ -73,6 +74,9 @@ const AddOrAddOrEditExpenditure = ({route}) => {
 
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
+    const [invoiceImageLoading, setInvoiceImageLoading] = useState(false);
+    const [contractImageLoading, setContractImageLoading] = useState(false);
+
     const notificationListener = useRef();
     const responseListener = useRef();
 
@@ -172,6 +176,14 @@ const AddOrAddOrEditExpenditure = ({route}) => {
         if(modeCustomDate == 'date') showModeCustomDate('time')
       }, [customDate])
 
+      useEffect(() => {
+        setInvoiceImageLoading(false)
+      }, [catchInvoImages])
+
+      useEffect(() => {
+        setContractImageLoading(false)
+      }, [catchContractImages])
+
     const addImage = async (from,index) => {
         let _image = await cloudinary.addDocImage()
           if (!_image.cancelled) {
@@ -179,9 +191,15 @@ const AddOrAddOrEditExpenditure = ({route}) => {
 
             if(index==-1){
                 if(from == 'invoice')
+                {
+                    setInvoiceImageLoading(true)
                     cloudinary.uploadImageToCloudinary("invoice",_image).then((url)=>{ setInvoCatchImage([...catchInvoImages, url]); }).catch((e) => alert(e.message))
+                }
                 else if(from == 'contract')
+                {
+                    setContractImageLoading(true)
                     cloudinary.uploadImageToCloudinary("contract",_image).then((url)=>{ setContractCatchImage([...catchContractImages, url]); }).catch((e) => alert(e.message))
+                }
             }
             else{
                 if(from == 'invoice')
@@ -681,18 +699,19 @@ const AddOrAddOrEditExpenditure = ({route}) => {
                         <Text style={{ fontWeight: "400" }}>{"Invoices: "}</Text>
                     </Text>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{height: 70}} >
-                    {
-                        catchInvoImages.map((val, index) => ( 
+                    { invoiceImageLoading ? <Loading/> :<>
+                    
+                        {catchInvoImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
                                 <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('invoice',index)} onRemove={() => onRemove('invoice',index)} changeable={true} navigation={navigation}/>
                                 {console.log(index)}
                             </View>
-                            ))
-                        }
+                            ))}</>}
+                            
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
                             <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('invoice',-1)} onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
-                
+                        
                     </ScrollView>
                    
                     <Text style = {houseProfileStyles.textWithButDivider}>
@@ -700,12 +719,13 @@ const AddOrAddOrEditExpenditure = ({route}) => {
                     </Text>
                     
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{height: 30}}>
+                        { contractImageLoading ? <Loading/> : <>
                         {catchContractImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
                                 <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} onPress={() => addImage('contract',index)} onRemove={() => onRemove('contract',index)} changeable={true} navigation={navigation}/>
                             </View>
                             ))
-                        }
+                        }</>}
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
                             <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} onPress={() => addImage('contract',-1)}  onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
@@ -779,4 +799,4 @@ async function schedulePushNotification(title,body,data,trigger) {
 
 
 
-export default AddOrAddOrEditExpenditure
+export default AddOrEditExpenditureScreen

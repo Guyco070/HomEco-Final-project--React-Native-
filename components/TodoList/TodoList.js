@@ -32,11 +32,12 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 	useEffect(() => {
         firebase.getByDocIdFromFirestore('houses', hKey).then((house) => {setItems(house[listName])
 			let tempIsAllMarked = true
-			if(house[listName].length == 0)
+			let tempItems = house[listName]
+			if(tempItems.length == 0)
 				tempIsAllMarked = false
 			else
-				for(let item in house[listName])
-					if(!house[listName][item].isSelected) {tempIsAllMarked = false; break;}
+				for(let item in tempItems)
+					if(!tempItems[item].isSelected) {tempIsAllMarked = false; break;}
 			setIsAllMarked(tempIsAllMarked)
 		})
 		

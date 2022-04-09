@@ -15,32 +15,30 @@ const HouseGalleryViewer = (props) => {
     const [house, setHouse] = useState('');
 
     const hKey = props?.hKey;
-    let changed = 0
 
     useEffect(() => {
       firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
       if(hKey)
-          firebase.getByDocIdFromFirestore("houses",hKey).then((house)=> {setHouse(house); setHouseCatchImages(house.gallery); changed++}).catch((e) =>{})
+          firebase.getByDocIdFromFirestore("houses",hKey).then((house)=> {setHouse(house); setHouseCatchImages(house.gallery); }).catch((e) =>{})
     }, [])
 
     useEffect(() => {
-      firebase.updateCollectAtFirestore("houses", hKey, "gallery", catchHouseImages)
+      if(house != ''){
+        firebase.updateCollectAtFirestore("houses", hKey, "gallery", catchHouseImages)
+        setCatchHouseImageLoading(false)
+        props.scrollHandler();
+      }
     }, [catchHouseImages])
-
-  useEffect(() => {
-      if(props?.scrollHandler) props.scrollHandler();
-  },[props,changed])
 
     const addImage = async () => {
       let _image = await cloudinary.addDocImage()
-      
+      setCatchHouseImageLoading(true)
       if (!_image.cancelled) {
           cloudinary.uploadImageToCloudinary("Gallery",_image).then((url)=>{
               const image = { url, creator: user.email, date: new Date()}
              setHouseCatchImages([image, ...catchHouseImages]);
-              changed++
             }).catch((e) => alert(e.message))
-      }
+      }else setCatchHouseImageLoading(false)
   }
 
   const onRemove = async (index) => {
@@ -50,16 +48,15 @@ const HouseGalleryViewer = (props) => {
     for(let key in catchHouseImages) {
         if(index != key) {
           tempCatchImages[i] = catchHouseImages[key]
-        }
+        }else i++
     }
-    setHouseCatchImages([...tempCatchImages])
-    changed++
+    setHouseCatchImages(tempCatchImages)
 } 
 
   return (
     <SafeAreaView style={styles.container}>
       {catchHouseImageLoading ? <Loading/> : 
-      <FlatList 
+      catchHouseImages && <FlatList 
         data={ catchHouseImages } 
         numColumns={3}
         keyExtractor={(item, index) => index}
@@ -70,7 +67,7 @@ const HouseGalleryViewer = (props) => {
               <Image style={styles.imageThumbnail} source={{ uri: item.url }} />
               </TouchableOpacity>
 
-              {  (user?.email == item.creator || house?.partners[user?.email].permissions.changeGallery) && <View style={docImageUploaderStyles.removeBtnContainer}>
+              {  (house != '' && user != null && (user?.email == item.creator || house?.partners[user?.email].permissions.changeGallery)) && <View style={docImageUploaderStyles.removeBtnContainer}>
                 <TouchableOpacity  style={[docImageUploaderStyles.removeBtn,]} onPress={() => onRemove(index)} >
                   <AntDesign name="close" size={17} color="black" />
                 </TouchableOpacity>

@@ -49,7 +49,7 @@ const SignUpScreen = props => {
     // }, [])
 
     const addImage = async () => {
-        let _image = await cloudinary.addImage()
+        let _image = await cloudinary.addImageFromLibrary()
           if (!_image.cancelled) {
             setUImage(_image.uri);
             cloudinary.uploadImageToCloudinary("users",_image).then((url)=>{ setCatchImage(url); }).catch((e) => alert(e.message))

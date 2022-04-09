@@ -74,7 +74,7 @@ const EditUserProfileScreen = () => {
       }
 
     const addImage = async () => {
-        let _image = await cloudinary.addImage()
+        let _image = await cloudinary.addImageFromLibrary()
           if (!_image.cancelled) {
             setImage(_image.uri);
             cloudinary.uploadImageToCloudinary("houses",_image).then((url)=>{ setCatchImage(url); }).catch((e) => alert(e.message))

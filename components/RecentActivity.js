@@ -179,7 +179,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
                                             <View style={{ width: "75%" }}>
                                                 <TouchableOpacity onPress={()=> {setIsExpended(l.date)}}>
                                                     <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                                        <View style={{width:"100%", flexDirection: "column",marginTop:2}}>
+                                                        <View style={{width:"100%", flexDirection: "row",marginTop:2}}>
                                                             <Text style={{ fontWeight: "400" ,marginRight:20}}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
                                                             {type === 'Expenditure' && <View
                                                                 style={[houseProfileStyles.typeIcone,]}

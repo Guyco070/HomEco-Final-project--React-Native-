@@ -52,7 +52,7 @@ const deleteImageFromCloudinary = (image) => {
     
   }
 
-  const addImage = async () => {
+  const addImageFromLibrary = async () => {
     return await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -61,14 +61,25 @@ const deleteImageFromCloudinary = (image) => {
         base64: true,
       })
     }
-
-    const addDocImage = async () => {
-      return await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          allowsEditing: true,
+  
+      const takePhotoFromCamera = async() => {
+        return await ImagePicker.launchCameraAsync({
+          compressImageMaxWidth: 300,
+          compressImageMaxHeight: 300,
+          cropping: true,
+          compressImageQuality: 0.7,
           quality: 1,
-          base64: true,
+          base64:true
         })
       }
+  
+      const addDocImageFromLibrary = async () => {
+        return await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 1,
+            base64: true,
+          })
+        }
 
-  export { uploadImageToCloudinary ,deleteImageFromCloudinary , addImage , addDocImage}
+  export { uploadImageToCloudinary ,deleteImageFromCloudinary , addImageFromLibrary , addDocImageFromLibrary, takePhotoFromCamera}

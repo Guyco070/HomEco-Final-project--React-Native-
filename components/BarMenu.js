@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native'
+import { StyleSheet, Text, View,  } from 'react-native'
 import React ,{useEffect, useState} from 'react'
 import HomeScreen from '../screens/HomeScreen'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'

@@ -185,7 +185,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
       }, [catchContractImages])
 
     const addImage = async (from,index) => {
-        let _image = await cloudinary.addDocImage()
+        let _image = await cloudinary.addDocImageFromLibrary()
           if (!_image.cancelled) {
             setImage(_image.uri);
 

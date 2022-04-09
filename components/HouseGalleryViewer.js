@@ -10,7 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 const HouseGalleryViewer = (props) => {
     const [catchHouseImages, setHouseCatchImages] = useState([]);
-    const [catchHouseImageLoading, setCatchHouseImageLoading] = useState(false);
+    const [catchHouseImageLoading, setCatchHouseImageLoading] = useState(true);
     const [user, setUser] = useState([]);
     const [house, setHouse] = useState('');
 
@@ -55,6 +55,11 @@ const HouseGalleryViewer = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={{marginTop:0, marginBottom:10, flexDirection:'row', alignSelf:'center'} } onPress={()=>{addImage()}} >
+          <Icon  name="add"  type="icon" color={"grey"} size={19}/>
+          <Text style={{color:'grey', fontSize:13}}> Add new photo</Text>
+
+      </TouchableOpacity>
       {catchHouseImageLoading ? <Loading/> : 
       catchHouseImages && <FlatList 
         data={ catchHouseImages } 
@@ -63,11 +68,11 @@ const HouseGalleryViewer = (props) => {
         renderItem={({ item,index }) => (
             <View style={{ flex: 1, flexDirection: 'column', margin: 3, }}>
               
-              <TouchableOpacity onPress={() => {props.navigation.navigate('ImageViewer',{ uri: item.url , navigation: props.navigation});}} disabled={item.url ? false : true }>
+              <TouchableOpacity onPress={() => {props.navigation.navigate('ImageViewer',{ uri: item.url , navigation: props.navigation, images: catchHouseImages, index});}} disabled={item.url ? false : true }>
               <Image style={styles.imageThumbnail} source={{ uri: item.url }} />
               </TouchableOpacity>
 
-              {  (house != '' && user != null && (user?.email == item.creator || house?.partners[user?.email].permissions.changeGallery)) && <View style={docImageUploaderStyles.removeBtnContainer}>
+              {  ((catchHouseImageLoading) && (user?.email == item.creator || house.partners[user.email].permissions.changeGallery)) && <View style={docImageUploaderStyles.removeBtnContainer}>
                 <TouchableOpacity  style={[docImageUploaderStyles.removeBtn,]} onPress={() => onRemove(index)} >
                   <AntDesign name="close" size={17} color="black" />
                 </TouchableOpacity>
@@ -75,9 +80,6 @@ const HouseGalleryViewer = (props) => {
             </View>
           )}
       />}
-      <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{addImage()}} >
-          <Icon  name="add"  type="icon" color={"grey"} />
-      </TouchableOpacity>
     </SafeAreaView>
   )
 }

@@ -14,6 +14,7 @@ import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { Ionicons ,Foundation,FontAwesome5,FontAwesome} from '@expo/vector-icons';
+import { Modal } from 'react-native-paper';
 
 LogBox.ignoreAllLogs(true)
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
@@ -77,8 +78,6 @@ const EditSelfIncomeScreen = ({route}) => {
         setPayslipsCatchImage([...tempCatchPayslipsImages])
     } 
 
-    const handleAddButtonClick = () => {
-        };
     const handleAddDescription = (desc) => {
         setModalOpen(false);
         setDescription(desc);
@@ -137,20 +136,22 @@ const EditSelfIncomeScreen = ({route}) => {
                 : <Text style={[styles.textTitle, {marginBottom:20}]}>Add Shopping List As Expenditure</Text> }
                 <Input name="Company" icon="building" value={company?company:""} onChangeText={text => setCompany(text)} />
                 <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
-                <Picker
-                    selectedValue={incomeType}
-                    style={{ height: 50, width: 150}}
-                    onValueChange={(incomeType, itemIndex) => { setIncomeType(incomeType) }}
-                >
-                    <Picker.Item label="Icome type" value="Icome type"/>
-                    <Picker.Item label="One-time" value="One-time"/>
-                    <Picker.Item label="Weekly" value="Weekly"/>
-                    <Picker.Item label="Fortnightly" value="Fortnightly"/>
-                    <Picker.Item label="Monthly" value="Monthly" />
-                    <Picker.Item label="Bi-monthly" value="Bi-monthly" />
-                    <Picker.Item label="Annual" value="Annual" />
-                    <Picker.Item label="Biennial" value="Biennial" />
-                </Picker>
+                <View style={{ width: "55%",justifyContent:'center',}}>
+                    <Picker
+                        selectedValue={incomeType}
+                        style={{ height: 50, width: 150}}
+                        onValueChange={(incomeType, itemIndex) => { setIncomeType(incomeType) }}
+                    >
+                            <Picker.Item label="- Billing type -" value="Billing type"/>
+                            <Picker.Item label="One-time" value="One-time"/>
+                            <Picker.Item label="Weekly" value="Weekly"/>
+                            <Picker.Item label="Fortnightly" value="Fortnightly"/>
+                            <Picker.Item label="Monthly" value="Monthly" />
+                            <Picker.Item label="Bi-monthly" value="Bi-monthly" />
+                            <Picker.Item label="Annual" value="Annual" />
+                            <Picker.Item label="Biennial" value="Biennial" />
+                    </Picker>
+                </View>
                 <View style = {modelContent.centeredView}> 
                     <Modal visible={modalOpen}
                             animationType="slide"

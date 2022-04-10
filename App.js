@@ -17,7 +17,7 @@ import EditHouseProfileScreen from './screens/EditHouseProfileScreen';
 import General from './screens/General';
 import AddOrEditExpenditureScreen from './screens/AddOrEditExpenditureScreen';
 import AddOrEditIncomeScreen from './screens/AddOrEditIncomeScreen';
-import AddNewSelfIncomeScreen from './screens/AddNewSelfIncomeScreen';
+import AddOrEditSelfIncomeScreen from './screens/AddOrEditSelfIncomeScreen';
 import BarcodeScanner from './components/BarcodeScanner';
 import ImageViewer from './components/ImageViewer';
 import { I18nManager } from 'react-native'
@@ -64,7 +64,7 @@ export default function App() {
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: 'Forgot Password Screen'}}/>
       <Stack.Screen name="AddOrEditExpenditure" component={AddOrEditExpenditureScreen} options={{ title: 'Add New Expenditure Screen'}}/>
       <Stack.Screen name="AddOrEditIncome" component={AddOrEditIncomeScreen} options={{ title: 'Add Or Edit Income Screen'}}/>
-      <Stack.Screen name="AddNewSelfIncome" component={AddNewSelfIncomeScreen} options={{ title: 'Add New Self Income Screen'}}/>
+      <Stack.Screen name="AddOrEditSelfIncome" component={AddOrEditSelfIncomeScreen} options={{ title: 'Add New Self Income Screen'}}/>
       <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} options={{ title:'Barcode Scanner'}}/>
       <Stack.Screen name="Sidebar" component={General} />
       <Stack.Screen name="ImageViewer" component={ImageViewer} options={{headerShown: false}} />

@@ -61,7 +61,6 @@ const HouseProfileScreen = ({route}) => {
 
     useEffect(() => {    
         if("hKeyP" in route.params){
-            console.log(route.params.hKeyP)    
             setHKey(route.params.hKeyP)
             firebase.getByDocIdFromFirestore("houses",route.params.hKeyP).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
         }else if("house" in route.params) setHouse(route.params.house)

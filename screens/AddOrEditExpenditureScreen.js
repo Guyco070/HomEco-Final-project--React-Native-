@@ -137,7 +137,6 @@ const AddOrEditExpenditureScreen = ({route}) => {
       }, [])
 
       useEffect(() => {
-          console.log("indexOfImage",indexOfImage,"fromToImagePicker",fromToImagePicker)
         if(indexOfImage !== -2 && fromToImagePicker != '')
             setImageModalPickerVisable(true)
       }, [indexOfImage,fromToImagePicker])

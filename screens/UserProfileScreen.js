@@ -42,7 +42,7 @@ const UserProfileScreen = ({route}) => {
                         <Icon  name="edit"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.navigate('AddNewSelfIncome')}} >
+                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.navigate('AddOrEditSelfIncome')}} >
                         <Icon  name="add"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Add</Text>
                     </TouchableOpacity>
@@ -76,7 +76,7 @@ const UserProfileScreen = ({route}) => {
                  {/* <View style={[styles.container,{alignSelf:'center', width:'150%'}]}> */}
                  {/* <      TouchableOpacity
                             title="Add New Self Income"
-                            onPress={() => {navigation.navigate('AddNewSelfIncome')}}
+                            onPress={() => {navigation.navigate('AddOrEditSelfIncome')}}
                             style={styles.button}
                             >
                             <Text style={styles.buttonText}>Add New Self Income</Text>

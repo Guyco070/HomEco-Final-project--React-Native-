@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox,Modal } from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox,Modal, Alert } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
-import { styles, houseProfileStyles, docImageUploaderStyles,modelContent } from '../styleSheet'
+import { styles, houseProfileStyles, docImageUploaderStyles,modelContent, TodoSheet } from '../styleSheet'
 import * as ImagePicker from 'expo-image-picker';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -12,7 +12,7 @@ import TouchableScale from 'react-native-touchable-scale';
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
-import { Icon } from 'react-native-elements/dist/icons/Icon';
+import { Icon } from 'react-native-elements'
 import { Ionicons ,Foundation,FontAwesome5,FontAwesome} from '@expo/vector-icons';
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
@@ -21,11 +21,13 @@ LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',
    ]);
 
-const AddNewSelfIncomeScreen = () => {
+const AddOrEditSelfIncomeScreen = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
     const [modalOpen, setModalOpen] = useState(false)
+    
     let [catchPayslipsImages, setPayslipsCatchImage] = useState([]);
+
     const [descIcon, setDescriptionIcon] = useState('money-bill-wave');
     const [hImage, setImage] = useState('');
     const [company, setCompany] = useState('');
@@ -34,8 +36,19 @@ const AddNewSelfIncomeScreen = () => {
     const [incomeType, setIncomeType] = useState("Income type");
 
 
+    const income = route ? route?.params?.income : undefined
+
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page 
+        if(income){
+            setPayslipsCatchImage(income.payslips)
+            setIncomeType(income.incomeType)
+            setCompany(income.company)
+            setDescription(income.desc)
+            setAmount(income.amount)
+            if(!("date" in income))
+                alert(income.desc)
+        }
     }, [])
 
     const addImage = async (from,index) => {
@@ -54,60 +67,98 @@ const AddNewSelfIncomeScreen = () => {
         }
     }
 
-    const handleAddButtonClick = () => {
-        };
+    const onRemove = async (index) => {
+        const tempCatchPayslipsImages = []
+        let i = 0
+        for(let key in catchPayslipsImages) {
+            if(index != key) {
+                tempCatchPayslipsImages[i] = catchPayslipsImages[key]
+            }
+        }
+        setPayslipsCatchImage([...tempCatchPayslipsImages])
+    } 
+    
     const handleAddDescription = (desc) => {
         setModalOpen(false);
         setDescription(desc);
-        console.log(desc);
     };
 
     const handleCreateIncome = () => {
         if(incomeType == "Icome type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addUserSelfIncome(user.email,user.incomes , {date: new Date(),partner:user.email,company: company, desc: desc, amount: amount, incomeType: incomeType, payslips: catchPayslipsImages})
+            firebase.addUserSelfIncome(user.email,user.incomes , {date:("date" in income)?income.date.toDate():new Date(),partner:user.email,company: company, desc: desc, amount: amount, incomeType: incomeType, payslips: catchPayslipsImages})
             navigation.replace("UserProfileScreen")
         }else alert("Sorry, you must fill in all the fields!")
+    }
+
+    const handleDeleteExpenditure = () => {
+        Alert.alert(
+            "Are your sure?",
+            "Are you sure you want to remove this beautiful box?",
+            [
+              // The "Yes" button
+              {
+                text: "Yes",
+                onPress: () => {
+                    firebase.removeUserSelfIncome(user.email,user.incomes,income).then(navigation.replace("UserProfileScreen"))
+                },
+              },
+              // The "No" button
+              // Does nothing but dismiss the dialog when tapped
+              {
+                text: "No",
+              },
+            ]
+          );
     }
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
-
+            { (income && ("date" in income)) && 
+            <View style={TodoSheet.trash}>
+                <TouchableOpacity style={{margin:25} } onPress={handleDeleteExpenditure} >
+                    <Icon name="trash"  type="ionicon"/>
+                </TouchableOpacity>
+            </View>
+            }
             <View style={[styles.container]}>
             {/* <View style={[styles.container, {marginTop:200,marginHorizontal:15}]}> */}
-                <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Self Income</Text> 
-                <Input name="Company" icon="building" onChangeText={text => setCompany(text)} />
-                <Input name="Amount" icon="money" onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
+                { !income ? <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Self Income</Text> 
+                : <Text style={[styles.textTitle, {marginBottom:20}]}>Edit Self Income</Text> } 
+                <Input name="Company" icon="building" value={company?company:""} onChangeText={text => setCompany(text)} />
+                <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
+               
                 <TouchableOpacity
                     title="Home"
                     leftIcon="Home"
                     onPress={() => setModalOpen(true)}
-                    style={[modelContent.button,{marginBottom:0}]}
+                    style={[modelContent.button,{marginBottom:10}]}
                     >
-                        <FontAwesome5 
+                        <Icon 
                             name={descIcon}
                             size={20}
                             color={'#0782F9'}
-                            style={{top:10}}
+                            type={descIcon != "bank" ? "ionicon" : "font-awesome"}
                             />
                     <Text style={{top:37,margin:1,fontSize:12}}>{desc}</Text>
                 </TouchableOpacity>
+                <View style={{ width: "55%",justifyContent:'center',marginTop: 50}}>
                 <Picker
                     selectedValue={incomeType}
-                    style={{ height: 50, width: 150}}
                     onValueChange={(incomeType, itemIndex) => { setIncomeType(incomeType) }}
                 >
-                    <Picker.Item label="Icome type" value="Icome type"/>
-                    <Picker.Item label="One-time" value="One-time"/>
-                    <Picker.Item label="Weekly" value="Weekly"/>
-                    <Picker.Item label="Fortnightly" value="Fortnightly"/>
-                    <Picker.Item label="Monthly" value="Monthly" />
-                    <Picker.Item label="Bi-monthly" value="Bi-monthly" />
-                    <Picker.Item label="Annual" value="Annual" />
-                    <Picker.Item label="Biennial" value="Biennial" />
+                    <Picker.Item label="       - Billing type -" value="Billing type"/>
+                    <Picker.Item label="       One-time" value="One-time"/>
+                    <Picker.Item label="       Weekly" value="Weekly"/>
+                    <Picker.Item label="       Fortnightly" value="Fortnightly"/>
+                    <Picker.Item label="       Monthly" value="Monthly" />
+                    <Picker.Item label="       Bi-monthly" value="Bi-monthly" />
+                    <Picker.Item label="       Annual" value="Annual" />
+                    <Picker.Item label="       Biennial" value="Biennial" />
                 </Picker>
+                </View>
                 <View style = {modelContent.centeredView}> 
                     <Modal visible={modalOpen}
                             animationType="slide"
@@ -118,25 +169,26 @@ const AddNewSelfIncomeScreen = () => {
                                     <TouchableOpacity
                                                 title="Gift"
                                                 leftIcon="Gift"
-                                                onPress={() => {handleAddDescription("Gift"); setDescriptionIcon("gift-sharpft")}}
+                                                onPress={() => {handleAddDescription("Gift"); setDescriptionIcon("gift-outline")}}
                                                 style={modelContent.button}
                                                 >
                                                     <Ionicons 
-                                                        name={"gift-sharp"}
+                                                        name={"gift-outline"}
                                                         size={20}
                                                         color={'#0782F9'}
                                                         style={{top:10}}
                                                         />
+                                                        
                                                 <Text style={{top:37,margin:1,fontSize:12}}>Gift</Text>
                                             </TouchableOpacity>
                                         <TouchableOpacity
                                             title="Business"
                                             leftIcon="Business"
-                                            onPress={() => {handleAddDescription("Business"); setDescriptionIcon("torso-business")}}
+                                            onPress={() => {handleAddDescription("Business"); setDescriptionIcon("business-outline")}}
                                             style={modelContent.button}
                                             >
-                                                <Foundation 
-                                                    name={"torso-business"}
+                                                <Ionicons 
+                                                    name={"business-outline"}
                                                     size={20}
                                                     color={'#0782F9'}
                                                     style={{top:10}}
@@ -160,11 +212,11 @@ const AddNewSelfIncomeScreen = () => {
                                         <TouchableOpacity
                                             title="ExtraIncome"
                                             leftIcon="ExtraIncome"
-                                            onPress={() => {handleAddDescription("Salary"); setDescriptionIcon("money-bill-wave")}}
+                                            onPress={() => {handleAddDescription("Salary"); setDescriptionIcon("cash-outline")}}
                                             style={modelContent.button}
                                             >
-                                                <FontAwesome5
-                                                    name={"money-bill-wave"}
+                                                <Ionicons
+                                                    name={"cash-outline"}
                                                     size={20}
                                                     color={'#0782F9'}
                                                     style={{top:10}}
@@ -183,12 +235,12 @@ const AddNewSelfIncomeScreen = () => {
                     {
                         catchPayslipsImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
-                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('payslip',index)} changeable={true} navigation={navigation}/>
+                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('payslip',index)} onRemove={() => onRemove(index)} changeable={true} navigation={navigation}/>
                             </View>
                             ))
                         }
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
-                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('payslip',-1)} changeable={true} navigation={navigation}/>
+                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('payslip',-1)} onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
 
                     </ScrollView>
@@ -201,7 +253,7 @@ const AddNewSelfIncomeScreen = () => {
                         onPress={handleCreateIncome}
                         style={styles.button}
                         >
-                        <Text style={styles.buttonText}>Create</Text>
+                        { income ? <Text style={styles.buttonText}>Update</Text> : <Text style={styles.buttonText}>Create</Text>}
                     </TouchableOpacity>
                 </View>
             </View>
@@ -209,4 +261,4 @@ const AddNewSelfIncomeScreen = () => {
     )
 }
 
-export default AddNewSelfIncomeScreen
+export default AddOrEditSelfIncomeScreen

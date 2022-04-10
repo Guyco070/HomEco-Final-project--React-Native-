@@ -23,8 +23,6 @@ const SelfIncomeListViewer = ({map,slice}) => {
     const [newSlice,setNewSlice] = useState(1)
     const [cEmail,setHouseCreator] = useState(1)
 
-    
-
     useEffect(() => {
         setSorteList(getSortedArrayDateFromDict(map))
         setNewSlice(slice)
@@ -46,8 +44,7 @@ const SelfIncomeListViewer = ({map,slice}) => {
       }
 
       const handleEdit = (income) => {
-          console.log(income)
-        navigation.navigate('EditSelfIncome', {income:income})
+        navigation.navigate('AddOrEditSelfIncome', {income:income})
       }
     return (
         <View>
@@ -75,14 +72,13 @@ const SelfIncomeListViewer = ({map,slice}) => {
                                                         {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>
                                                        
                                                     </Text>
-                                                    
-                                                    {isExpendedConst && isExpendedConst[l.date.toDate()] &&
-                                                        <Text style = {houseProfileStyles.textWithTopAndButDividers}>
+                                                    </TouchableOpacity>
+                                                    {isExpendedConst && isExpendedConst[l.date.toDate()] &&<>
+                                                        <Text>
                                                            <Text style={{ fontWeight: "400" }}>{"Description: " + l.desc}</Text>
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Income type:" + l.incomeType}</Text>
-                                                           {"\n"}
-                                                           <View>
-                                                                {("payslips" in l) && (l.payslips.length != 0) && <Text style = {houseProfileStyles.textWithButDivider}>
+                                                        </Text>
+                                                        {("payslips" in l) && (l.payslips.length != 0) && <Text style = {houseProfileStyles.textWithButDivider}>
                                                                     {"\n"}
                                                                    <Text style={{ fontWeight: "400" }}>{"Payslips: "}</Text>
                                                                 </Text>}
@@ -96,20 +92,14 @@ const SelfIncomeListViewer = ({map,slice}) => {
                                                                     }
                                                                 
                                                                 </ScrollView>     
-                                                            </View> 
-                                                            {"\n"}
-                                                            { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
-                                                            <View style={{alignSelf: 'center', alignItems: 'center'}}>
-                                                                
-                                                            <TouchableOpacity  onPress={ () => handleEdit(l) }>
-                                                                <Icon  name="edit"  type="icon" color={"grey"} />
-                                                            </TouchableOpacity>
+                                                        { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
+                                                            <View style={{alignSelf: 'center', alignItems: 'center', marginTop: 10}}>   
+                                                                <TouchableOpacity  onPress={ () => handleEdit(l) }>
+                                                                    <Icon  name="edit"  type="icon" color={"grey"} />
+                                                                </TouchableOpacity>
                                                             </View>
-                                                                }
-                                                            {"\n"}
-                                                        </Text>
+                                                                }</>
                                                         }
-                                                </TouchableOpacity>
                                             </View>
                                     </View>
 

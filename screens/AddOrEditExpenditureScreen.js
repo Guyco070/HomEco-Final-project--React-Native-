@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal} from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal, Alert} from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
@@ -13,12 +13,13 @@ import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5} from '@expo/vector-icons';
+import { Icon } from 'react-native-elements'
+import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
 import CustomNotifications from '../CustomNotifications'
 import { async } from '@firebase/util';
 import Loading from '../components/Loading';
+import ImagePickerModal from '../components/ImagePickerModal';
 
 // import * as CustomNotificationsFuncs from '../CustomNotifications'
 LogBox.ignoreAllLogs(true)
@@ -45,6 +46,8 @@ const AddOrEditExpenditureScreen = ({route}) => {
     const [catchInvoImages, setInvoCatchImage] = useState([]);
     const [catchContractImages, setContractCatchImage] = useState([]);
     const [hImage, setImage] = useState('');
+
+    const [imageModalPickerVisable, setImageModalPickerVisable] = useState(false);
 
     const [company, setCompany] = useState('');
     const [desc, setDescription] = useState('Type');
@@ -83,10 +86,13 @@ const AddOrEditExpenditureScreen = ({route}) => {
     const [notifications, setNotifications] = useState([]);
     const [notificationsToRemove, setNotificationsToRemove] = useState([]);
 
+    const [indexOfImage, setIndexOfImage] = useState(-2);
+    const [fromToImagePicker, setFromToImagePicker] = useState("");
 
     const [house, setHouse] = useState('');
     const exp = route.params?.exp;
     const hKey = route.params?.hKey;
+
 
     useEffect(() => {
       registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -129,6 +135,16 @@ const AddOrEditExpenditureScreen = ({route}) => {
             if("isWithCustomDate" in exp) {setIsWithCustomDate(exp.isWithCustomDate); setCustomDate(exp.date.toDate()); setCustomDateText(exp.customDateText)}
         }
       }, [])
+
+      useEffect(() => {
+          console.log("indexOfImage",indexOfImage,"fromToImagePicker",fromToImagePicker)
+        if(indexOfImage !== -2 && fromToImagePicker != '')
+            setImageModalPickerVisable(true)
+      }, [indexOfImage,fromToImagePicker])
+
+      useEffect(() => {
+      if(!imageModalPickerVisable && indexOfImage !== -2){ setIndexOfImage(-2); setFromToImagePicker('')}
+    }, [imageModalPickerVisable])
 
     useEffect(() => {
         if(descOpitional!=''){
@@ -184,11 +200,11 @@ const AddOrEditExpenditureScreen = ({route}) => {
         setContractImageLoading(false)
       }, [catchContractImages])
 
-    const addImage = async (from,index) => {
-        let _image = await cloudinary.addDocImageFromLibrary()
+    const addImage = async (openWith,from,index) => {
+        let _image = openWith === "camera" ? await  cloudinary.takeDocPhotoFromCamera() : await cloudinary.addDocImageFromLibrary()
           if (!_image.cancelled) {
             setImage(_image.uri);
-
+            setImageModalPickerVisable(false)
             if(index==-1){
                 if(from == 'invoice')
                 {
@@ -385,6 +401,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
+            {imageModalPickerVisable && <ImagePickerModal imageModalPickerVisable={imageModalPickerVisable} setImageModalPickerVisable={setImageModalPickerVisable} addImage={addImage} index={indexOfImage} from={fromToImagePicker}/> }
 
             {(exp && "date" in exp) &&
             <View style={TodoSheet.trash}>
@@ -416,6 +433,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                             size={25}
                             color={'#0782F9'}
                             style={{top:10}}
+                            type={"material-community"}
                             />
                         <Text style={{top:10,margin:1}}></Text>
                 </TouchableOpacity>
@@ -703,13 +721,12 @@ const AddOrEditExpenditureScreen = ({route}) => {
                     
                         {catchInvoImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
-                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('invoice',index)} onRemove={() => onRemove('invoice',index)} changeable={true} navigation={navigation}/>
-                                {console.log(index)}
+                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => {setFromToImagePicker('invoice'); setIndexOfImage(index);}} onRemove={() => onRemove('invoice',index)} changeable={true} navigation={navigation}/>
                             </View>
                             ))}</>}
                             
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
-                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('invoice',-1)} onRemove={-1} changeable={true} navigation={navigation}/>
+                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => {setFromToImagePicker('invoice'); setIndexOfImage(-1);}} onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
                         
                     </ScrollView>
@@ -722,12 +739,12 @@ const AddOrEditExpenditureScreen = ({route}) => {
                         { contractImageLoading ? <Loading/> : <>
                         {catchContractImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
-                                <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} onPress={() => addImage('contract',index)} onRemove={() => onRemove('contract',index)} changeable={true} navigation={navigation}/>
+                                <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} onPress={() => {setFromToImagePicker('contract'); setIndexOfImage(index);}} onRemove={() => onRemove('contract',index)} changeable={true} navigation={navigation}/>
                             </View>
                             ))
                         }</>}
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
-                            <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} onPress={() => addImage('contract',-1)}  onRemove={-1} changeable={true} navigation={navigation}/>
+                            <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} onPress={() => {setFromToImagePicker('contract'); setIndexOfImage(-1);}}  onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
 
                     </ScrollView>

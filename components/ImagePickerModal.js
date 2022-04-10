@@ -8,7 +8,7 @@ import { Button } from 'react-native-elements';
 let deviceHeight = Dimensions.get('window').height
 let deviceWidth = Dimensions.get('window').width
 
-const ImagePickerModal = ({imageModalPickerVisable,setImageModalPickerVisable,addImage}) => {
+const ImagePickerModal = ({imageModalPickerVisable,setImageModalPickerVisable,addImage,from,index}) => {
     
     const renderInner = () =>{
         <View style={styles.panel}>
@@ -58,11 +58,11 @@ const ImagePickerModal = ({imageModalPickerVisable,setImageModalPickerVisable,ad
                 <Icon name={"close"} size={19}/>
             </TouchableOpacity> */}
             <Text style={styles.panelTitle}>How would you like to pick a photo:</Text>
-            <TouchableOpacity  onPress={()=>{addImage("camera")}} style={styles.buttonStyle}
+            <TouchableOpacity  onPress={()=>{from ? addImage("camera",from, index) : addImage("camera")}} style={styles.buttonStyle}
             >
                 <Text style={styles.buttontTitle}>Open camera</Text>
             </TouchableOpacity>
-            <TouchableOpacity  onPress={()=>{addImage("gallery")}} style={styles.buttonStyle}
+            <TouchableOpacity  onPress={()=>{from ? addImage("gallery", from, index) : addImage("gallery")}} style={styles.buttonStyle}
             >
                 <Text style={styles.buttontTitle}>Open phone gallery</Text>
             </TouchableOpacity>

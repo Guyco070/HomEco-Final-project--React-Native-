@@ -51,7 +51,7 @@ const HouseGalleryViewer = (props) => {
     }, [catchHouseImages])
 
     const addImage = async (openWith) => {
-      let _image = openWith === "camera" ? await  cloudinary.takePhotoFromCamera() : await cloudinary.addDocImageFromLibrary()
+      let _image = openWith === "camera" ? await  cloudinary.takeDocPhotoFromCamera() : await cloudinary.addDocImageFromLibrary()
       setCatchHouseImageLoading(true)
       if (!_image.cancelled) {
           cloudinary.uploadImageToCloudinary("Gallery",_image).then((url)=>{

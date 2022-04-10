@@ -51,10 +51,6 @@ const UserProfileScreen = ({route}) => {
                     <View style={[houseProfileStyles.profileHouseImage,{elevation:8}]}>
                         <Image source={{uri:user.uImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
                     </View>
-                    {/* <View style={houseProfileStyles.dm}>
-                        <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
-                    </View> */}
-                    {/* <View style={houseProfileStyles.active}></View> */}
                 </View>
 
                 <View style={houseProfileStyles.infoContainer}>
@@ -73,40 +69,6 @@ const UserProfileScreen = ({route}) => {
                 <View style={[styles.container,{marginVertical:15}]}>
                     <UserIncomeToHousesList user={user} viewImage={false}/>
                 </View>
-                 {/* <View style={[styles.container,{alignSelf:'center', width:'150%'}]}> */}
-                 {/* <      TouchableOpacity
-                            title="Add New Self Income"
-                            onPress={() => {navigation.navigate('AddOrEditSelfIncome')}}
-                            style={styles.button}
-                            >
-                            <Text style={styles.buttonText}>Add New Self Income</Text>
-                        </TouchableOpacity> */}
-                  {/*  <TouchableOpacity
-                        title="Change Income"
-                        onPress={() => {setChangeIncom(!changeIncom)}}
-                        style={styles.button}
-                        >
-                        <Text style={styles.buttonText}>Change Income</Text>
-                    </TouchableOpacity>
-                    {changeIncom && (
-                    <View style={[styles.buttonContainer,{marginBottom:0}]}>
-                        <View style={[styles.container, { marginHorizontal:30, width:'100%'}]}>
-                            <Input name="Change" icon="money" onChangeText={text => setHIncom(text)} />
-                        </View>
-                                <Text style={[styles.textBody , {color: 'blue',marginBottom:10}]} onPress={handleCreateExpend}>Save new income</Text>
-                    </View>
-                    )} */}
-
-                     {/* <TouchableOpacity
-                        title="Edit"
-                        onPress={() => {navigation.navigate('EditUserProfile')}}
-                        style={styles.button}
-                        >
-                        <Text style={styles.buttonText}>Edit</Text>
-                    </TouchableOpacity> */}
-                    
-                {/* </View>  */}
-                
             </ScrollView>}
         </SafeAreaView>
     );

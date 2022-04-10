@@ -15,6 +15,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginScreen from './LoginScreen';
 import { LogBox } from "react-native"
+import ImagePickerModal from '../components/ImagePickerModal';
 
 LogBox.ignoreAllLogs(true)
 
@@ -32,6 +33,8 @@ const EditUserProfileScreen = () => {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = useState('Empty');
+
+    const [imageModalPickerVisable, setImageModalPickerVisable] = useState(false);
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)})    // before opening the page
@@ -73,12 +76,12 @@ const EditUserProfileScreen = () => {
         return text[0].toUpperCase() + text.substr(1).toLowerCase()
       }
 
-    const addImage = async () => {
-        let _image = await cloudinary.addImageFromLibrary()
+    const addImage = async (openWith) => {
+        let _image = openWith === "camera" ? await cloudinary.takePhotoFromCamera() : await cloudinary.addImageFromLibrary()
           if (!_image.cancelled) {
+            setImageModalPickerVisable(false)
             setImage(_image.uri);
             cloudinary.uploadImageToCloudinary("houses",_image).then((url)=>{ setCatchImage(url); }).catch((e) => alert(e.message))
-            navigation.replace("Home")
           }
         }
 
@@ -103,8 +106,10 @@ const EditUserProfileScreen = () => {
 
     return (
         <ScrollView style = {{backgroundColor: "white"}}>
+            {imageModalPickerVisable && <ImagePickerModal imageModalPickerVisable={imageModalPickerVisable} setImageModalPickerVisable={setImageModalPickerVisable} addImage={addImage}/> }
             <View  style={styles.container}>
-            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage} changeable={true}/>
+
+            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={() => setImageModalPickerVisable(true)} changeable={true}/>
             <Text style={{textAlign: "left"}} >First Name *</Text>
             <Input name={user["fName"] ? user["fName"] : ""} icon="user" value={fName?fName : ""} onChangeText={text => setFName(text)} />
             <Text style={{textAlign: "left"}} >Last Name *</Text>

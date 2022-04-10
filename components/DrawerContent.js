@@ -14,9 +14,10 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import * as firebase from '../firebase'
 import { useNavigation } from '@react-navigation/native';
+import { signOut,auth } from '@firebase/auth'
 
 const DrawerContent = (props) => {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const navigation = useNavigation()
 
@@ -38,6 +39,7 @@ const toggleTheme = () => {
 }
   return (
     <View style={{flex:1}}>
+      { user && 
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
@@ -135,8 +137,8 @@ const toggleTheme = () => {
                 </TouchableRipple>
           </Drawer.Section>
         </View>
-      </DrawerContentScrollView>
-      <Drawer.Section style={styles.bottomDrawerSection}>
+      </DrawerContentScrollView>}
+      { user && <Drawer.Section style={styles.bottomDrawerSection}>
         <DrawerItem 
           icon={({color,size}) => (
             <Icon 
@@ -146,9 +148,9 @@ const toggleTheme = () => {
             />
           )}
           label="Sign Out"
-          onPress={() => {handleSignOut}}
+          onPress={() => {handleSignOut()}}
         />
-      </Drawer.Section>
+      </Drawer.Section>}
     </View>
   )
 }

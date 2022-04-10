@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import ModalSelector from 'react-native-modal-selector'
 import RNPhoneCodeSelect from "react-native-phone-code-select";
+import ImagePickerModal from '../components/ImagePickerModal';
 
 
 const SignUpScreen = props => {
@@ -38,6 +39,7 @@ const SignUpScreen = props => {
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = useState('Empty');
     
+    const [imageModalPickerVisable, setImageModalPickerVisable] = useState(false);
 
     // useEffect(() => {
     //     const unsubscribe = firebase.auth.onAuthStateChanged(user => {
@@ -48,9 +50,10 @@ const SignUpScreen = props => {
     //     return unsubscribe
     // }, [])
 
-    const addImage = async () => {
-        let _image = await cloudinary.addImageFromLibrary()
+    const addImage = async (openWith) => {
+        let _image = openWith === "camera" ? await cloudinary.takePhotoFromCamera() : await cloudinary.addImageFromLibrary()
           if (!_image.cancelled) {
+            setImageModalPickerVisable(false)
             setUImage(_image.uri);
             cloudinary.uploadImageToCloudinary("users",_image).then((url)=>{ setCatchImage(url); }).catch((e) => alert(e.message))
           }
@@ -83,7 +86,8 @@ const SignUpScreen = props => {
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
-            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={addImage} changeable={true}/>
+            {imageModalPickerVisable && <ImagePickerModal imageModalPickerVisable={imageModalPickerVisable} setImageModalPickerVisable={setImageModalPickerVisable} addImage={addImage}/> }
+            <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {uImage} onPress={()=>setImageModalPickerVisable(true)} changeable={true}/>
             <View style={styles.container}>
                 <Text style={styles.textTitle}>Let's Get Started</Text>
                 <Text style={[styles.textBody, {margin:10}]}>Create an account</Text>

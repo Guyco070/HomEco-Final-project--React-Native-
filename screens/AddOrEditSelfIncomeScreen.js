@@ -14,6 +14,7 @@ import { color } from 'react-native-reanimated';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { Icon } from 'react-native-elements'
 import { Ionicons ,Foundation,FontAwesome5,FontAwesome} from '@expo/vector-icons';
+import ImagePickerModal from '../components/ImagePickerModal';
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 LogBox.ignoreAllLogs(true)
@@ -28,13 +29,16 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
     
     let [catchPayslipsImages, setPayslipsCatchImage] = useState([]);
 
-    const [descIcon, setDescriptionIcon] = useState('money-bill-wave');
+    const [descIcon, setDescriptionIcon] = useState('cash-outline');
     const [hImage, setImage] = useState('');
     const [company, setCompany] = useState('');
     const [desc, setDescription] = useState('Salary');
+    const [descOptional, setDescriptionOptional] = useState('');
     const [amount, setAmount] = useState('');
     const [incomeType, setIncomeType] = useState("Income type");
 
+    const [indexOfImage, setIndexOfImage] = useState(-2);
+    const [imageModalPickerVisable, setImageModalPickerVisable] = useState(false);
 
     const income = route ? route?.params?.income : undefined
 
@@ -46,16 +50,26 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
             setCompany(income.company)
             setDescription(income.desc)
             setAmount(income.amount)
+            setDescriptionOptional(income?.descOptional)
             if(!("date" in income))
                 alert(income.desc)
         }
     }, [])
 
-    const addImage = async (from,index) => {
-        let _image = await cloudinary.addDocImageFromLibrary()
-          if (!_image.cancelled) {
-            setImage(_image.uri);
+    useEffect(() => {
+        if(indexOfImage !== -2)
+            setImageModalPickerVisable(true)
+      }, [indexOfImage])
 
+      useEffect(() => {
+        if(!imageModalPickerVisable && indexOfImage !== -2){ setIndexOfImage(-2); }
+      }, [imageModalPickerVisable])
+
+    const addImage = async (openWith,from,index) => {
+        let _image = openWith === "camera" ? await  cloudinary.takeDocPhotoFromCamera() : await cloudinary.addDocImageFromLibrary()
+          if (!_image.cancelled) {
+            setImageModalPickerVisable(false)
+            setImage(_image.uri);
             if(index==-1){
                 if(from == 'payslip')
                     cloudinary.uploadImageToCloudinary("payslip",_image).then((url)=>{ setPayslipsCatchImage([...catchPayslipsImages, url]); }).catch((e) => alert(e.message))
@@ -87,7 +101,7 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
         if(incomeType == "Icome type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addUserSelfIncome(user.email,user.incomes , {date:("date" in income)?income.date.toDate():new Date(),partner:user.email,company: company, desc: desc, amount: amount, incomeType: incomeType, payslips: catchPayslipsImages})
+            firebase.addUserSelfIncome(user.email,user.incomes , {date:("date" in income)?income.date.toDate():new Date(),partner:user.email,company: company, desc: desc, amount: amount, incomeType: incomeType, payslips: catchPayslipsImages, descOptional})
             navigation.replace("UserProfileScreen")
         }else alert("Sorry, you must fill in all the fields!")
     }
@@ -115,6 +129,7 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
+            {imageModalPickerVisable && <ImagePickerModal imageModalPickerVisable={imageModalPickerVisable} setImageModalPickerVisable={setImageModalPickerVisable} addImage={addImage} index={indexOfImage} from={'payslip'}/> }
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
             { (income && ("date" in income)) && 
             <View style={TodoSheet.trash}>
@@ -128,6 +143,7 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
                 { !income ? <Text style={[styles.textTitle, {marginBottom:20}]}>Add New Self Income</Text> 
                 : <Text style={[styles.textTitle, {marginBottom:20}]}>Edit Self Income</Text> } 
                 <Input name="Company" icon="building" value={company?company:""} onChangeText={text => setCompany(text)} />
+                <Input name="Description" icon="building" value={descOptional?descOptional:""} onChangeText={text => setDescriptionOptional(text)} />
                 <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
                
                 <TouchableOpacity
@@ -235,12 +251,12 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
                     {
                         catchPayslipsImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
-                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage('payslip',index)} onRemove={() => onRemove(index)} changeable={true} navigation={navigation}/>
+                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => { setIndexOfImage(index);}} onRemove={() => onRemove(index)} changeable={true} navigation={navigation}/>
                             </View>
                             ))
                         }
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
-                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage('payslip',-1)} onRemove={-1} changeable={true} navigation={navigation}/>
+                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => { setIndexOfImage(-1);}} onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
 
                     </ScrollView>

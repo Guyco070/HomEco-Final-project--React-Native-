@@ -74,8 +74,9 @@ const SelfIncomeListViewer = ({map,slice}) => {
                                                     </Text>
                                                     </TouchableOpacity>
                                                     {isExpendedConst && isExpendedConst[l.date.toDate()] &&<>
-                                                        <Text>
-                                                           <Text style={{ fontWeight: "400" }}>{"Description: " + l.desc}</Text>
+                                                        <Text style={houseProfileStyles.textWithTopDivider}>
+                                                           <Text style={{ fontWeight: "400" }}>{"Type: " + l.desc}</Text>
+                                                           {"descOptional" in l && <Text style={{ fontWeight: "400" }}>{"\nDescription: " + l.descOptional}</Text>}
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Income type:" + l.incomeType}</Text>
                                                         </Text>
                                                         {("payslips" in l) && (l.payslips.length != 0) && <Text style = {houseProfileStyles.textWithButDivider}>

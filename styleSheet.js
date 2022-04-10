@@ -259,6 +259,12 @@ const houseProfileStyles = StyleSheet.create({
         borderBottomColor: 'lightgrey', 
         borderBottomWidth: 1,
     },
+    textWithTopDivider:{
+        fontFamily: "HelveticaNeue",
+        color: "#52575D",
+        borderTopColor: 'lightgrey', 
+        borderTopWidth: 1,
+    },
     image: {
         flex: 1,
         height: undefined,

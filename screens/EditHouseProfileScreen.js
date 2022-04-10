@@ -15,6 +15,7 @@ import Loading from '../components/Loading';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import ChangePermissions from '../components/ChangePermissions';
 import { LogBox } from "react-native"
+import ImagePickerModal from '../components/ImagePickerModal';
 
 LogBox.ignoreAllLogs(true)
 
@@ -41,6 +42,7 @@ const EditHouseProfileScreen =({route}) => {
 
     const [loading, setLoading] = useState(true);
 
+    const [imageModalPickerVisable, setImageModalPickerVisable] = useState(false);
 
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
@@ -67,13 +69,14 @@ const EditHouseProfileScreen =({route}) => {
         setLoading(false)
     },[partnersList] )
 
-      const addImage = async () => {
-        let _image = await cloudinary.addImageFromLibrary()
-          if (!_image.cancelled) {
+    const addImage = async (openWith) => {
+        let _image = openWith === "camera" ? await cloudinary.takePhotoFromCamera() : await cloudinary.addImageFromLibrary()
+        if (!_image.cancelled) {
+            setImageModalPickerVisable(false)
             setImage(_image.uri);
             cloudinary.uploadImageToCloudinary("houses",_image).then((url)=>{ setCatchImage(url); }).catch((e) => alert(e.message))
-          }
         }
+    }
     
     const handleDeleteHouse = () => {
         Alert.alert(
@@ -151,13 +154,14 @@ const EditHouseProfileScreen =({route}) => {
 
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
+            {imageModalPickerVisable && <ImagePickerModal imageModalPickerVisable={imageModalPickerVisable} setImageModalPickerVisable={setImageModalPickerVisable} addImage={addImage}/> }
             <View style={TodoSheet.trash}>
                 <TouchableOpacity style={{marginHorizontal:25} } onPress={handleDeleteHouse} >
                     <Icon name="trash"  type="ionicon"/>
                 </TouchableOpacity>
             </View>
             {loading? <Loading/> : <View>
-            <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/>
+            <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={() => setImageModalPickerVisable(true)} changeable={true}/>
 
             <View style={[styles.container, {marginTop:30,marginHorizontal:30}]}>
                 <Text style={styles.textTitle}>Let's Get Started</Text>

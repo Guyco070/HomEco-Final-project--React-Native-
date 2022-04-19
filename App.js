@@ -24,6 +24,8 @@ import { I18nManager } from 'react-native'
 import UserProfileScreen from './screens/UserProfileScreen';
 import EditExpenditureScreen from './screens/EditExpenditureScreen';
 import EditSelfIncomeScreen from './screens/EditSelfIncomeScreen';
+import LoadUserScreen from './screens/LoadUserScreen';
+
 import * as Notifications from 'expo-notifications';
 import { LogBox } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -54,6 +56,7 @@ export default function App() {
 
   const HomeStackScreen = ({navigation}) => {
     return <Stack.Navigator  screenOptions={{headerShown:false,}}>
+      <Stack.Screen name="LoadUserScreen" component={LoadUserScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />

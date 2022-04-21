@@ -132,14 +132,7 @@ const HouseProfileScreen = ({route}) => {
                         <Icon  name="edit"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>
                     </TouchableOpacity>
-                    <ModalSelector
-                        data={addData}
-                        onChange={(option)=>{ option.key == 1 ? navigation.navigate('AddOrEditExpenditure',{hKey}):navigation.navigate('AddOrEditIncome',{hKey}) }}
-                        style={{margin:25,marginBottom:0}}
-                        >
-                                <Icon  name="add"  type="icon" color={"grey"} />
-                                <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Add</Text>
-                        </ModalSelector>
+                    
                 </View>
                 <View style={{ alignSelf: "center" }}>
                     <View style={houseProfileStyles.profileHouseImage}>
@@ -220,8 +213,19 @@ const HouseProfileScreen = ({route}) => {
                 >  
                 { (checked === 0 || checked === 1) &&
                     <>
+            <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
+
                         <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
-                    
+                        <ModalSelector
+                        data={addData}
+                        onChange={(option)=>{ option.key == 1 ? navigation.navigate('AddOrEditExpenditure',{hKey}):navigation.navigate('AddOrEditIncome',{hKey}) }}
+                        style={{marginRight:25,marginBottom:0}}
+                        >
+                                <Icon  name="add"  type="icon" color={"grey"} />
+                                {/* <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Add</Text> */}
+                        </ModalSelector>
+                    </View>
+
                         {checked === 0 && <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'} /> }
                         {checked === 1 && <RecentActivity map = {house.expends?house.incomes:[]} slice={3} hKey={hKey} type={'Income'}/> }
                     </>

@@ -178,6 +178,8 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
     cDate: date,
     expends: {},
     incomes: {},
+    futureIncomes: {},
+    futureExpendes: {},
     hImage: hImage ? hImage : tempHouseProfileImage,
     description: description ? description : tempHouseDescripton,
     shoppingList:[{ itemName: 'item 1', quantity: 1, isSelected: false },
@@ -349,11 +351,14 @@ const getCurentPartnerOfHouse = async(hName,cEmail,curUEmail) => {
 //   }).catch((e) => {console.log("getExpendsOfUserAtHouse - " + e.massege)})
 // }
 
-const addExpendToHouse = async(hName, cEmail,expends, expend) => 
+const addExpendToHouse = async(hName, cEmail,expends, futureExpendes, expend) => 
 {
   console.log(expend)
   expends[expend.date] = expend
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
+  
+  if(expend.billingType !== "One-time")
+    addFutureExpenditureOrIncome(hName,cEmail,"futureExpendes",expend, futureExpendes)
 
   // Auto Classification
    if(expend?.descOpitional != ''){
@@ -378,6 +383,24 @@ const addIncomeToHouse = async(hName, cEmail,incomes, income) =>
   incomes[income.date] = income
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "incomes", incomes)
 }
+
+const addFutureExpenditureOrIncome = (hName, cEmail, type, curCreate, futures) => { // type = "futureExpendes" or "futureIncome", curCreate = expenditure or income object
+  const futureDateActions = {
+    "Weekly": () => {curCreate.date.setDate(curCreate.date.getDate() + 7)}, 
+    "Fortnightly": () => {curCreate.date.setDate(curCreate.date.getDate() + 14)},
+    "Monthly": () => {curCreate.date.setMonth(curCreate.date.getMonth() + 1)},
+    "Bi-monthly": () => {curCreate.date.setMonth(curCreate.date.getMonth() + 2)},
+    "Annual": () => {curCreate.date.setYear(curCreate.date.getFullYear() + 1)},
+    "Biennial": () => {curCreate.date.setYear(curCreate.date.getFullYear() + 2)}
+  }
+  curCreate["date"] = (new Date(curCreate.date))
+  futureDateActions[curCreate.billingType]()
+
+  futures[curCreate.date] = curCreate
+  console.log("dddddddd",curCreate,type,futures)
+  updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), type, futures)
+}
+
 
 const getExpenditureTypeAutoByOptionalDescription = async(descOpitional) => {
   return getByDocIdFromFirestore('expenditureTypesByOptionalDescription', descOpitional).then(async(typeByOptionalDescription) => {

@@ -254,23 +254,15 @@ const AddOrEditExpenditureScreen = ({route}) => {
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc != "Type" && amount){
             removeNotficationHandling()
-            if(isWithNotification) { 
-                notficationHandling().then((tempNotifications) => {
-                    firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : ((exp && "date" in exp) ? exp.date.toDate() : new Date()),partner:user.email,company, 
-                                                desc, amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
-                                                 eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText}).then(()=>{
-                                                    if(!("date" in exp)) 
-                                                        firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
-                                                    })
+            notficationHandling().then((tempNotifications) => {
+            firebase.addExpendToHouse(house.hName, house.cEmail, house.expends, house.futureExpendes, {date: isWithCustomDate? customDate : ((exp && "date" in exp) ? exp.date.toDate() : new Date()),partner:user.email,company, 
+                                    desc, amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
+                                        eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText}).then(()=>{
+                                            if(!("date" in exp)) 
+                                                firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
                                             })
-            }else
-                firebase.addExpendToHouse(house.hName,house.cEmail,house.expends , {date: isWithCustomDate? customDate : ((exp && "date" in exp) ? exp.date.toDate() : new Date()),partner:user.email,company, 
-                                            desc, amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
-                                             eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText}).then(()=>{
-                                                if(!("date" in exp)) 
-                                                    firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
-                                                })
-                
+                                    })
+
             navigation.replace("HouseProfile",{hKeyP: hKey, menuBarIndex: 0})
         }else alert("Sorry, you must fill in all the fields!")
     }

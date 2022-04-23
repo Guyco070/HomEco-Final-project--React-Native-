@@ -226,8 +226,16 @@ const HouseProfileScreen = ({route}) => {
                         </ModalSelector>
                     </View>
 
-                        {checked === 0 && <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'} /> }
-                        {checked === 1 && <RecentActivity map = {house.expends?house.incomes:[]} slice={3} hKey={hKey} type={'Income'}/> }
+                        {checked === 0 && 
+                            <>
+                             <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Expenses"/>
+                             <RecentActivity map = {house.futureExpendes?house.futureExpendes:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Future Expenses"/>
+                            </> }
+                        {checked === 1 && 
+                            <>
+                             <RecentActivity map = {house.incomes?house.incomes:[]} slice={3} hKey={hKey} type={'Income'} title="Incomes"/>
+                             <RecentActivity map = {house.futureIncomes?house.futureIncomes:[]} slice={3} hKey={hKey} type={'Income'} title="Future Incomes"/>
+                            </> }
                     </>
                 }
                 { checked === 2 && 

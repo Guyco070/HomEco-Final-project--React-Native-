@@ -26,7 +26,7 @@ const typeIcones ={
     Other: "help-outline"
 }
 
-const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
+const RecentActivity = ({map,slice,hKey,type,scrollHandler, title}) => {
     const navigation = useNavigation()
 
     const [loading, setLoading] = useState(true);
@@ -130,7 +130,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
         style={{width:'100%',borderTopColor: 'lightgrey', borderTopWidth:1,borderTopLeftRadius:35,borderTopRightRadius:35, marginTop: 12}}
         >  
             <View flexDirection='row' flex={1}  style={{marginTop: 8, marginBottom: 6,}}>
-                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{textTransform: 'none',width: "25%"}]}>{type}</Text>
+                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{textTransform: 'none',width: "25%"}]}>{title ? title : type}</Text>
                 <View flexDirection='row-reverse' style={{ width:'55%',alignItems:'flex-end',marginBottom:7}}>
                         <ModalSelector
                         data={sortData}
@@ -195,7 +195,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
                                                         </View>
                                 
                                                         {type == 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"\nCompany: " + l.company}</Text>}
-                                                        {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>
+                                                        {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{ l.amount} $</Text>
                                                         {type === 'Income' && <Text style={{ fontWeight: "400" }}>{"\nCreator: " + l.partner}</Text>}
                                                         {l.isEvent && <>{"\n"}Event Time: <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.eventDate.toDate()))}</Text></>}
                                                        
@@ -209,8 +209,11 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler}) => {
                                                             {type === 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"Type: " + l.desc}</Text>}
                                                            {"descOpitional" in l && l.descOpitional != '' &&<>{type && type == 'Expenditure' && "\n"}<Text style={{ fontWeight: "400" }}>{"Description: " + l.descOpitional}</Text> </>}
                                                            {"\n"}<Text style={{ fontWeight: "400" }}>{"Billing type: " + l.billingType}</Text>
-                                                           {type === 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"\nCreator: " + l.partner}</Text>}
-                                                           {type === 'Expenditure' && "\n"}
+                                                           {type === 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"\nCreator: " + l.partner + "\n"}</Text>}
+                                                           {type === 'Expenditure' && l.totalPayments !== "" && 
+                                                                <Text style={{ fontWeight: "400" }}>{"\Payment: " + l.payments+ "/" + l.totalPayments 
+                                                                    + "\nPayed: " + l.amount*l.payments + "/" + l.totalAmount +" $\n"}</Text> 
+                                                            }
                                                            
                                                         </Text>
                                                         {type === 'Expenditure' && <View>

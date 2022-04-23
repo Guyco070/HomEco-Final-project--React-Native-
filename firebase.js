@@ -358,7 +358,7 @@ const addExpendToHouse = async(hName, cEmail,expends, futureExpendes, expend) =>
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
   
   if(expend.billingType !== "One-time")
-    addFutureExpenditureOrIncome(hName,cEmail,"futureExpendes",expend, futureExpendes)
+    addFutureExpenditureOrIncome(hName, cEmail, "futureExpendes", expend, futureExpendes)
 
   // Auto Classification
    if(expend?.descOpitional != ''){
@@ -378,27 +378,34 @@ const addExpendToHouse = async(hName, cEmail,expends, futureExpendes, expend) =>
   }
 
    
-const addIncomeToHouse = async(hName, cEmail,incomes, income) => 
+const addIncomeToHouse = async(hName, cEmail, incomes, futureIncomes, income) => 
 {
   incomes[income.date] = income
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "incomes", incomes)
+  if(income.billingType !== "One-time")
+    addFutureExpenditureOrIncome(hName, cEmail, "futureIncomes", income, futureIncomes)
+
 }
 
 const addFutureExpenditureOrIncome = (hName, cEmail, type, curCreate, futures) => { // type = "futureExpendes" or "futureIncome", curCreate = expenditure or income object
-  const futureDateActions = {
-    "Weekly": () => {curCreate.date.setDate(curCreate.date.getDate() + 7)}, 
-    "Fortnightly": () => {curCreate.date.setDate(curCreate.date.getDate() + 14)},
-    "Monthly": () => {curCreate.date.setMonth(curCreate.date.getMonth() + 1)},
-    "Bi-monthly": () => {curCreate.date.setMonth(curCreate.date.getMonth() + 2)},
-    "Annual": () => {curCreate.date.setYear(curCreate.date.getFullYear() + 1)},
-    "Biennial": () => {curCreate.date.setYear(curCreate.date.getFullYear() + 2)}
-  }
-  curCreate["date"] = (new Date(curCreate.date))
-  futureDateActions[curCreate.billingType]()
+  if( type === "futureIncomes" || (curCreate.payments !== "" && curCreate.payments !== curCreate.totalPayments )){
+    const futureDateActions = {
+      "Weekly": () => {curCreate.date.setDate(curCreate.date.getDate() + 7)}, 
+      "Fortnightly": () => {curCreate.date.setDate(curCreate.date.getDate() + 14)},
+      "Monthly": () => {curCreate.date.setMonth(curCreate.date.getMonth() + 1)},
+      "Bi-monthly": () => {curCreate.date.setMonth(curCreate.date.getMonth() + 2)},
+      "Annual": () => {curCreate.date.setYear(curCreate.date.getFullYear() + 1)},
+      "Biennial": () => {curCreate.date.setYear(curCreate.date.getFullYear() + 2)}
+    }
 
-  futures[curCreate.date] = curCreate
-  console.log("dddddddd",curCreate,type,futures)
-  updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), type, futures)
+    curCreate["date"] = (new Date(curCreate.date))
+    if(curCreate.payments !== "")
+      curCreate["payments"] = parseInt(curCreate.payments) + 1
+    futureDateActions[curCreate.billingType]()
+
+    futures[curCreate.date] = curCreate
+    updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), type, futures)
+  }
 }
 
 

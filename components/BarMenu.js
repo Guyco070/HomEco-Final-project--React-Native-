@@ -34,7 +34,7 @@ const BarMenu = ({onPress, scrollHandler, index}) => {
                         size={size}
                     />
                 </View>
-                <Text style={{fontSize:10, color: "white" }}>Expenditures</Text>
+                <Text style={{fontSize:10, color: "white" }}>Expenses</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(1); scrollHandler(); setChecked(1)}} activeOpacity={0.4}  pressMagnification={10}

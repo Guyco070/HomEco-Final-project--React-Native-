@@ -137,14 +137,10 @@ const AddOrEditIncomeScreen = ({route}) => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(amount){
-            if(isWithNotification) { 
                 notficationHandling().then((tempNotifications) => {
-                    firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes , {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email,amount: amount,
+                    firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes, house.futureIncomes, {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email, amount: amount,
                        billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText})
                 })
-            }else
-                firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes , {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email, amount: amount,
-                   billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: [], isWithCustomDate, customDateText})
             navigation.replace("HouseProfile",{hKeyP: hKey, menuBarIndex: 1})
         }else alert("Sorry, you must fill in all the fields!")
     }

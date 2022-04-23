@@ -55,6 +55,9 @@ const AddOrEditExpenditureScreen = ({route}) => {
     const [descIcon, setDescriptionIcon] = useState('timer-sand-empty');
     const [amount, setAmount] = useState('');
     const [billingType, setBillingType] = useState("Billing type");
+    const [payments, setPayments] = useState("");
+    const [totalPayments, setTotalPayments] = useState("");
+
     const [isEvent, setIsEvent] = useState(false);
     const [isWithNotification, setIsWithNotification] = useState(false);
     const [isWithCustomDate, setIsWithCustomDate] = useState(false);
@@ -125,6 +128,8 @@ const AddOrEditExpenditureScreen = ({route}) => {
             setAmount(exp.amount)
             setDescriptionOpitional(exp.descOpitional)
             setIsEvent(exp.isEvent)
+            setPayments(exp.payments)
+            setTotalPayments(exp.totalPayments)
             if(exp.isEvent)
                 updateEventDateText(exp.eventDate)
             if("notifications" in exp && exp.notifications.length != 0){
@@ -256,8 +261,10 @@ const AddOrEditExpenditureScreen = ({route}) => {
             removeNotficationHandling()
             notficationHandling().then((tempNotifications) => {
             firebase.addExpendToHouse(house.hName, house.cEmail, house.expends, house.futureExpendes, {date: isWithCustomDate? customDate : ((exp && "date" in exp) ? exp.date.toDate() : new Date()),partner:user.email,company, 
-                                    desc, amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
-                                        eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText}).then(()=>{
+                                    desc, amount: totalPayments !== "" ? parseInt(amount)/parseInt(totalPayments) : amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
+                                        eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText, 
+                                        payments: payments === "" && totalPayments !== "" ? 1 : payments, totalPayments: totalPayments,
+                                        totalAmount: totalPayments !== "" ? amount : ""}).then(()=>{
                                             if(!("date" in exp)) 
                                                 firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
                                             })
@@ -434,7 +441,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                     <Picker
                         selectedValue={billingType}
                         style={{width: "100%",}}
-                        onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
+                        onValueChange={(billingType, itemIndex) => { setBillingType(billingType); }}
                     >
                         <Picker.Item label="       - Billing type -" value="Billing type"/>
                         <Picker.Item label="       One-time" value="One-time"/>
@@ -445,6 +452,12 @@ const AddOrEditExpenditureScreen = ({route}) => {
                         <Picker.Item label="       Annual" value="Annual" />
                         <Picker.Item label="       Biennial" value="Biennial" />
                     </Picker>
+                    { (billingType !== "Billing type" && billingType !== "One-time") && 
+                        <>
+                            <Input name="Payments" keyboardType="phone-pad" value={totalPayments} onChangeText={(text)=>{ setTotalPayments(text.replace(/[^0-9]/g, '')) ; }} />
+                            { totalPayments == '' && <Text style={{fontSize:10}}>Payment will be taken until updated.</Text>}
+                        </>
+                    }
                 </View>
                 <View style={isEvent?{ width: "95%",alignItems:'center',borderRadius:10,borderColor:'lightgrey', borderWidth:2}:{}}>
                 <ListItem.CheckBox

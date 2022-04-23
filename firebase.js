@@ -308,7 +308,7 @@ const getHouseIncome = (incomes) => {
 
 const getHouseExpendsAmount = (expends) => {
   let expendsAmount = 0
-  for(const key in expends) expendsAmount+=parseInt(expends[key].amount)
+  for(const key in expends) expendsAmount += parseInt(expends[key].amount)
   return expendsAmount
 }
 

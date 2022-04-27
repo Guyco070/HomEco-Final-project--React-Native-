@@ -3,7 +3,7 @@ import { getAuth } from "@firebase/auth"
 import { getApps, initializeApp } from "firebase/app"
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
-import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc } from 'firebase/firestore'
+import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc, orderBy, Timestamp } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
 import { firebaseConfig } from "./PrivateVariables"
 import { LogBox } from "react-native"
@@ -353,7 +353,6 @@ const getCurentPartnerOfHouse = async(hName,cEmail,curUEmail) => {
 
 const addExpendToHouse = async(hName, cEmail,expends, futureExpendes, expend) => 
 {
-  console.log(expend)
   expends[expend.date] = expend
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
   
@@ -387,27 +386,100 @@ const addIncomeToHouse = async(hName, cEmail, incomes, futureIncomes, income) =>
 
 }
 
-const addFutureExpenditureOrIncome = (hName, cEmail, type, curCreate, futures) => { // type = "futureExpendes" or "futureIncome", curCreate = expenditure or income object
-  if( type === "futureIncomes" || (curCreate.payments !== "" && curCreate.payments !== curCreate.totalPayments )){
-    const futureDateActions = {
-      "Weekly": () => {curCreate.date.setDate(curCreate.date.getDate() + 7)}, 
-      "Fortnightly": () => {curCreate.date.setDate(curCreate.date.getDate() + 14)},
-      "Monthly": () => {curCreate.date.setMonth(curCreate.date.getMonth() + 1)},
-      "Bi-monthly": () => {curCreate.date.setMonth(curCreate.date.getMonth() + 2)},
-      "Annual": () => {curCreate.date.setYear(curCreate.date.getFullYear() + 1)},
-      "Biennial": () => {curCreate.date.setYear(curCreate.date.getFullYear() + 2)}
-    }
+const futureDateActions = {
+  "Weekly": (curCreate) => {curCreate.date.setDate(curCreate.date.getDate() + 7)}, 
+  "Fortnightly": (curCreate) => {curCreate.date.setDate(curCreate.date.getDate() + 14)},
+  "Monthly": (curCreate) => {curCreate.date.setMonth(curCreate.date.getMonth() + 1)},
+  "Bi-monthly": (curCreate) => {curCreate.date.setMonth(curCreate.date.getMonth() + 2)},
+  "Annual": (curCreate) => {curCreate.date.setYear(curCreate.date.getFullYear() + 1)},
+  "Biennial": (curCreate) => {curCreate.date.setYear(curCreate.date.getFullYear() + 2)}
+}
 
-    curCreate["date"] = (new Date(curCreate.date))
+const countNext = (curCreate) => { 
+  let i = 0;
+  const now = new Date()
+  const curDate = new Date(curCreate.date)
+  
+  for(i;;i++){ 
+    if("date" in curCreate && new Date(curCreate.date) <= now){
+      futureDateActions[curCreate.billingType](curCreate)
+    }else{ break}
+  } 
+
+  curCreate.date.setDate(curDate.getDate())
+  curCreate.date.setMonth(curDate.getMonth())
+  curCreate.date.setYear(curDate.getFullYear())
+  return i
+}
+
+const getFutureExpenditure = (curCreate) => {
+  if( curCreate.payments === "" || (curCreate.payments !== "" && parseInt(curCreate.payments) !== parseInt(curCreate.totalPayments)) ){
+    if("seconds" in curCreate.date)
+      curCreate["date"] = curCreate.date.toDate()
+
     if(curCreate.payments !== "")
       curCreate["payments"] = parseInt(curCreate.payments) + 1
-    futureDateActions[curCreate.billingType]()
 
-    futures[curCreate.date] = curCreate
-    updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), type, futures)
+    futureDateActions[curCreate.billingType](curCreate)
+
+    curCreate["date"] = curCreate.date
+
+    return curCreate
+  }else return null
+}
+
+const getAllNextExpendituresOrIncomes = (curCreate) => {
+  const neois = []
+  if("seconds" in curCreate.date)
+  curCreate["date"] = curCreate.date.toDate()
+  let i = countNext({...curCreate})
+
+  for(i; i>=0 ;i--){
+    neois.push(JSON.parse(JSON.stringify(curCreate)))
+    getFutureExpenditure(curCreate)
+  }
+  // console.log("-neois",neois,"neois-")
+
+  return neois
+}
+
+const addFutureExpenditureOrIncome = (hName, cEmail, type, curCreate, futures) => { // type = "futureExpendes" or "futureIncome", curCreate = expenditure or income object
+    const nextExpenditure = getFutureExpenditure(curCreate)
+
+    if(nextExpenditure  != null){ 
+      futures[nextExpenditure.date] = nextExpenditure
+
+      updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), type, futures)
   }
 }
 
+const updateExpendOrIncome = (house, futureType, type) => { // futureType = "futureExpendes" || "futureIncomes", type = "expends" || "incomes"
+  const now = new Date()
+
+  Object.values(house[futureType]).filter((fExp) => { return fExp.date.toDate() <= now }).map((fExp) => {
+    const x = getAllNextExpendituresOrIncomes(fExp)
+    x.map((fExp,i) =>{
+          fExp["date"] = Timestamp.fromDate(new Date (fExp.date))
+
+          if(fExp.date.toDate() <= now)  house[type][fExp.date.toDate()] = {...fExp}
+          else   house[futureType][fExp.date.toDate()] = {...fExp}; 
+
+          if(i === 0)   delete house[futureType][fExp.date.toDate()]
+        })
+    })
+}
+
+const updateExpendsAndIncomes = async(hKey) => {
+   return await getByDocIdFromFirestore("houses",hKey).then((house) => {
+    updateExpendOrIncome(house, "futureExpendes", "expends")
+    updateExpendOrIncome(house, "futureIncomes", "incomes")
+
+    const Data = doc(db, "houses", hKey);
+    updateDoc(Data ,{futureExpendes: house.futureExpendes, expends: house.expends})
+
+    return house
+  })
+}
 
 const getExpenditureTypeAutoByOptionalDescription = async(descOpitional) => {
   return getByDocIdFromFirestore('expenditureTypesByOptionalDescription', descOpitional).then(async(typeByOptionalDescription) => {
@@ -521,8 +593,6 @@ const getUserIncomeToHouse = (house,uEmail) => {
 const getUserIncomeToHouseByMonth = (incomes,uEmail) => {
     const arr = getSortedArrayDateFromDict(incomes)
     const curMonth = (new Date()).getMonth()
-    console.log("curMonth")
-    console.log(curMonth)
     let incomesAmount = 0
     arr.map((income) => { if(income.date.toDate().getMonth() === curMonth && income.partner == uEmail) (incomesAmount += parseInt(income.amount)); console.log(parseInt(income.amount))}); 
     console.log("incomesAmount")
@@ -544,5 +614,5 @@ export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRe
         getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
         getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse, removeIncomeFromHouse, shoppingListToString, 
         getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeToHouseByMonth,
-        addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany} 
+        addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany, updateExpendsAndIncomes} 
 

@@ -62,7 +62,7 @@ const HouseProfileScreen = ({route}) => {
     useEffect(() => {    
         if("hKeyP" in route.params){
             setHKey(route.params.hKeyP)
-            firebase.getByDocIdFromFirestore("houses",route.params.hKeyP).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
+            firebase.updateExpendsAndIncomes(route.params.hKeyP).then((uHouse)=> setHouse(uHouse) ).catch((e) =>{})
         }else if("house" in route.params) setHouse(route.params.house)
     }, [route])
 
@@ -75,9 +75,9 @@ const HouseProfileScreen = ({route}) => {
         }
     }, [house])
 
-    useEffect(() => {
-        firebase.getByDocIdFromFirestore("houses",hKey).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
-    }, [hIncome])
+    // useEffect(() => {
+    //     firebase.getByDocIdFromFirestore("houses",hKey).then((uHouse)=>setHouse(uHouse)).catch((e) =>{})
+    // }, [hIncome])
 
     useEffect(() => {
         if(hExpedns)
@@ -128,7 +128,10 @@ const HouseProfileScreen = ({route}) => {
                 <Ionicons name="ios-ellipsis-vertical" size={24} color="#52575D"></Ionicons>
             </View> */}
             <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
-                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.navigate('EditHouseProfile',house)}} >
+                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{
+                            // navigation.navigate('EditHouseProfile',house);
+                            firebase.updateExpendsAndIncomes(route.params.hKeyP).then((uHouse)=> setHouse(uHouse) ).catch((e) =>{})
+                        }} >
                         <Icon  name="edit"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>
                     </TouchableOpacity>
@@ -183,13 +186,13 @@ const HouseProfileScreen = ({route}) => {
                 {/* <View style={{ marginTop: 32 }}>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                         <View style={houseProfileStyles.mediaImageContainer}>
-                            <Image source={require("./assets/media1.jpg")} style={houseProfileStyles.image} resizeMode="cover"></Image>
+                            <Image source={require("../assets/bell.png")} style={houseProfileStyles.image} resizeMode="cover"></Image>
                         </View>
                         <View style={houseProfileStyles.mediaImageContainer}>
-                            <Image source={require("./assets/media2.jpg")} style={houseProfileStyles.image} resizeMode="cover"></Image>
+                            <Image source={require("../assets/bell.png")} style={houseProfileStyles.image} resizeMode="cover"></Image>
                         </View>
                         <View style={houseProfileStyles.mediaImageContainer}>
-                            <Image source={require("./assets/media3.jpg")} style={houseProfileStyles.image} resizeMode="cover"></Image>
+                            <Image source={require("../assets/bell.png")} style={houseProfileStyles.image} resizeMode="cover"></Image>
                         </View>
                     </ScrollView>
                     <View style={houseProfileStyles.mediaCount}>

@@ -289,7 +289,7 @@ const AddOrEditIncomeScreen = ({route}) => {
                 <>
                      <View style={styles.dateInputButton}>
                         <Icon name={'calendar'} size={22}
-                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}} />
                         <TouchableOpacity
                                 title="Birth Date"
                                 onPress={ () => showMode('date')}

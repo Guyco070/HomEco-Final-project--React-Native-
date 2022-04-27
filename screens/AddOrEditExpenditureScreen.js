@@ -20,6 +20,7 @@ import CustomNotifications from '../CustomNotifications'
 import { async } from '@firebase/util';
 import Loading from '../components/Loading';
 import ImagePickerModal from '../components/ImagePickerModal';
+import { Colors } from '../Colors';
 
 // import * as CustomNotificationsFuncs from '../CustomNotifications'
 LogBox.ignoreAllLogs(true)
@@ -472,13 +473,13 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                     />
                 { isEvent &&
                 <>
-                     <View style={styles.dateInputButton}>
+                    <View style={[styles.dateInputButton, { borderColor: eventDate?Colors.main:Colors.lightGrey}]}>
                         <Icon name={'calendar'} size={22}
-                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                                    color={show? Colors.main:'grey'} style={{marginLeft:10}} type='font-awesome'/>
                         <TouchableOpacity
                                 title="Birth Date"
                                 onPress={ () => showMode('date')}
-                                style={{ textAlign:'left', flex:1}}
+                                style={{ textAlign:'left', flex:1,}}
                                 >
                             <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
                         </TouchableOpacity>
@@ -496,9 +497,9 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                     />}
                     { isWithNotification && 
                     <>
-                    <View style={styles.dateInputButton}>
+                    <View style={[styles.dateInputButton, { borderColor: notificationDate? Colors.main : Colors.lightGrey}]}>
                         <Icon name={'calendar'} size={22}
-                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                                    color={show? Colors.main:'grey'} style={{marginLeft:10}} type='font-awesome'/>
                         <TouchableOpacity
                                 title="Notification Date"
                                 onPress={ () => {showModeNotification('date'); }}
@@ -553,7 +554,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                 {isWithCustomDate && 
                   <View style={styles.dateInputButton}>
                     <Icon name={'calendar'} size={22}
-                                color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                                color={show? Colors.main:'grey'} style={{marginLeft:10}} type='font-awesome'/>
                     <TouchableOpacity
                             title="Custom Date"
                             onPress={ () => {showModeCustomDate('date'); }}

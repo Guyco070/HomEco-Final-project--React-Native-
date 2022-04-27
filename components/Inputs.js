@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import { StyleSheet,View,TouchableOpacity, Alert } from 'react-native';
 import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Colors } from '../Colors';
 
 class Inputs extends Component {
     state = {isFocused: false};
@@ -24,7 +25,7 @@ class Inputs extends Component {
     render() {
         return(
             <View style={[styles.container, this.props?.style,
-                {borderColor:this.state.isFocused ? '#0779ef' : '#eee'}]}>
+                {borderColor:this.state.isFocused ? Colors.main : Colors.lightGrey}]}>
                 <Input 
                     keyboardType={this.props.keyboardType}
                     dataDetectorTypes={this.props.type}

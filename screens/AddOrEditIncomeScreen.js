@@ -18,6 +18,7 @@ import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5} from '@expo/vecto
 import * as Notifications from 'expo-notifications';
 import CustomNotifications from '../CustomNotifications'
 import { async } from '@firebase/util';
+import SeperatorSwitch from '../components/SeperatorSwitch';
 // import * as CustomNotificationsFuncs from '../CustomNotifications'
 LogBox.ignoreAllLogs(true)
 
@@ -46,6 +47,8 @@ const AddOrEditIncomeScreen = ({route}) => {
     const [isEvent, setIsEvent] = useState(false);
     const [isWithNotification, setIsWithNotification] = useState(false);
     const [isWithCustomDate, setIsWithCustomDate] = useState(false);
+
+    const [showMainDetails, setShowMainDetails] = useState(false);
 
     const [mode, setMode] = useState('');
     const [show, setShow] = useState(false);
@@ -255,124 +258,111 @@ const AddOrEditIncomeScreen = ({route}) => {
                 {income?
                 <Text style={[styles.textTitle, {marginBottom:20}]}>Edit New Income</Text> 
                 :<Text style={[styles.textTitle, {marginBottom:20}]}>Add New Income</Text> }
-                <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
-                <Input name="Description" icon="file-text" value={descOpitional?descOpitional:""} onChangeText={text => {setDescriptionOpitional(text); }} />
+                <SeperatorSwitch isExpended={showMainDetails} setIsExpended={setShowMainDetails} title="Main Details *" bottomDevider={!showMainDetails} 
+                  titleColor={ (amount && billingType != "Billing type") ? "green" : "red" }/>
 
-                <View style={{ width: "55%",marginTop:70,alignItems:'center', marginLeft:10,marginRight:10,marginBottom:25,borderRadius:10,borderColor:'lightgrey', borderWidth:2}}>
-                    <Picker
-                        selectedValue={billingType}
-                        style={{width: "100%",}}
-                        onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
-                    >
-                        <Picker.Item label="       - Billing type -" value="Billing type"/>
-                        <Picker.Item label="       One-time" value="One-time"/>
-                        <Picker.Item label="       Weekly" value="Weekly"/>
-                        <Picker.Item label="       Fortnightly" value="Fortnightly"/>
-                        <Picker.Item label="       Monthly" value="Monthly" />
-                        <Picker.Item label="       Bi-monthly" value="Bi-monthly" />
-                        <Picker.Item label="       Annual" value="Annual" />
-                        <Picker.Item label="       Biennial" value="Biennial" />
-                    </Picker>
-                </View>
-                <View style={isEvent?{ width: "95%",alignItems:'center',borderRadius:10,borderColor:'lightgrey', borderWidth:2}:{}}>
-                <ListItem.CheckBox
-                                        center
-                                        title="Set as event"
-                                        checkedIcon="dot-circle-o"
-                                        uncheckedIcon="circle-o"
-                                        checked={isEvent}
-                                        onPress={() => setIsEvent(!isEvent)}
-                                        containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
-                                        wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
-                                    />
-                { isEvent &&
+            { showMainDetails &&
                 <>
-                     <View style={styles.dateInputButton}>
-                        <Icon name={'calendar'} size={22}
-                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}} />
-                        <TouchableOpacity
-                                title="Birth Date"
-                                onPress={ () => showMode('date')}
-                                style={{ textAlign:'left', flex:1}}
-                                >
-                            <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
-                        </TouchableOpacity>
-                    </View>
-                    { dateText != 'Empty' &&
-                     <ListItem.CheckBox
-                                        center
-                                        title="Set notification"
-                                        checkedIcon="dot-circle-o"
-                                        uncheckedIcon="circle-o"
-                                        checked={isWithNotification}
-                                        onPress={() => setIsWithNotification(!isWithNotification) }
-                                        containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
-                                        wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
-                                    />}
-                    { isWithNotification && 
-                    <>
-                    <View style={styles.dateInputButton}>
-                        <Icon name={'calendar'} size={22}
-                                    color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
-                        <TouchableOpacity
-                                title="Notification Date"
-                                onPress={ () => {showModeNotification('date'); }}
-                                style={{ textAlign:'left', flex:1}}
-                                >
-                            <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:notificationDate?'black':'grey' }}>{notificationDate? (eventDate && notificationDate<eventDate? dateTextNotification:dateText): (eventDate? dateText : "Notification Date")}</Text> 
-                        </TouchableOpacity>
-                    </View>
-                    {
-                        notifications.map((val, index) => ( 
-                            <>
-                            {val && "dateTextNotification" in val && <ListItem key={index} bottomDivider topDivider Component={TouchableScale}
-                            friction={90} //
-                            tension={100} // These props are passed to the parent component (here TouchableScale)
-                            activeScale={1}
-                            onPress={() => {  }}
-                            >
-                              <TouchableOpacity  style={docImageUploaderStyles.removeBtn} onPress={() => {let temp = [...notifications]; delete temp[index]; setNotifications(temp);}} >
-                                  <AntDesign name="close" size={15} color="black" />
-                            </TouchableOpacity> 
-                                <Text>{val.dateTextNotification}</Text>
-                                <ListItem.Content>
-                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{}</Text>
-                                </ListItem.Content>
-                                <AntDesign name="clockcircleo" size={17} color="black" />
+                  <Input name="Amount" icon="money" value={amount?amount:""} onChangeText={text => setAmount(text)} keyboardType="decimal-pad" />
+                  <Input name="Description" icon="file-text" value={descOpitional?descOpitional:""} onChangeText={text => {setDescriptionOpitional(text); }} />
 
-                            </ListItem>}
-                            </>
-                         ))
-                    }
+                  <View style={{ width: "55%",marginTop:70,alignItems:'center', marginLeft:10,marginRight:10,marginBottom:25,borderRadius:10,borderColor:'lightgrey', borderWidth:2}}>
+                      <Picker
+                          selectedValue={billingType}
+                          style={{width: "100%",}}
+                          onValueChange={(billingType, itemIndex) => { setBillingType(billingType) }}
+                      >
+                          <Picker.Item label="       - Billing type -" value="Billing type"/>
+                          <Picker.Item label="       One-time" value="One-time"/>
+                          <Picker.Item label="       Weekly" value="Weekly"/>
+                          <Picker.Item label="       Fortnightly" value="Fortnightly"/>
+                          <Picker.Item label="       Monthly" value="Monthly" />
+                          <Picker.Item label="       Bi-monthly" value="Bi-monthly" />
+                          <Picker.Item label="       Annual" value="Annual" />
+                          <Picker.Item label="       Biennial" value="Biennial" />
+                      </Picker>
+                  </View>
+                </>
+                }
+                { !isWithCustomDate && <View style={isEvent?{ width: "95%",alignItems:'center',borderRadius:10,borderColor:'lightgrey', borderBottomWidth: 1 ,  borderTopWidth: isEvent && showMainDetails || showMainDetails ? 1 : 0}:{}}>
+                    <SeperatorSwitch isExpended={isEvent} setIsExpended={setIsEvent} title="Set as event" withCheckIcon={true} />
+                    { isEvent &&
+                    <>
+                        <View style={styles.dateInputButton}>
+                            <Icon name={'calendar'} size={22}
+                                        color={show? '#0779e4':'grey'} style={{marginLeft:10}} />
+                            <TouchableOpacity
+                                    title="Birth Date"
+                                    onPress={ () => showMode('date')}
+                                    style={{ textAlign:'left', flex:1}}
+                                    >
+                                <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
+                            </TouchableOpacity>
+                        </View>
+                        { dateText != 'Empty' &&
+                          <SeperatorSwitch isExpended={isWithNotification} setIsExpended={setIsWithNotification} title="Set notification" topDevider={true} width="85%" withCheckIcon={true}/>
+                        }
+                        { isWithNotification && 
+                        <>
+                        <View style={styles.dateInputButton}>
+                            <Icon name={'calendar'} size={22}
+                                        color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                            <TouchableOpacity
+                                    title="Notification Date"
+                                    onPress={ () => {showModeNotification('date'); }}
+                                    style={{ textAlign:'left', flex:1}}
+                                    >
+                                <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:notificationDate?'black':'grey' }}>{notificationDate? (eventDate && notificationDate<eventDate? dateTextNotification:dateText): (eventDate? dateText : "Notification Date")}</Text> 
+                            </TouchableOpacity>
+                        </View>
+                        {
+                            notifications.map((val, index) => ( 
+                                <>
+                                {val && "dateTextNotification" in val && <ListItem key={index} bottomDivider topDivider Component={TouchableScale}
+                                friction={90} //
+                                tension={100} // These props are passed to the parent component (here TouchableScale)
+                                activeScale={1}
+                                onPress={() => {  }}
+                                >
+                                  <TouchableOpacity  style={docImageUploaderStyles.removeBtn} onPress={() => {let temp = [...notifications]; delete temp[index]; setNotifications(temp);}} >
+                                      <AntDesign name="close" size={15} color="black" />
+                                </TouchableOpacity> 
+                                    <Text>{val.dateTextNotification}</Text>
+                                    <ListItem.Content>
+                                        <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{}</Text>
+                                    </ListItem.Content>
+                                    <AntDesign name="clockcircleo" size={17} color="black" />
+
+                                </ListItem>}
+                                </>
+                            ))
+                        }
                     </>
                     }
                 </>
                 }
                 </View>
-                <ListItem.CheckBox
-                                        center
-                                        title="Set retroactive income"
-                                        checkedIcon="dot-circle-o"
-                                        uncheckedIcon="circle-o"
-                                        checked={isWithCustomDate}
-                                        onPress={() => setIsWithCustomDate(!isWithCustomDate) }
-                                        containerStyle={{marginLeft:10,marginRight:10,marginTop:15,marginBottom:10,borderRadius:10}}
-                                        wrapperStyle = {{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,}}
-                                    />
-                {isWithCustomDate && 
-                  <View style={styles.dateInputButton}>
-                    <Icon name={'calendar'} size={22}
-                                color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
-                    <TouchableOpacity
-                            title="Custom Date"
-                            onPress={ () => {showModeCustomDate('date'); }}
-                            style={{ textAlign:'left', flex:1}}
-                            >
-                        <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:customDate?'black':'grey' }}>
-                          {customDate? customDateText : "Custom Date"}</Text> 
-                    </TouchableOpacity>
-                  </View>
-                  }
+              }
+                { !isEvent && 
+                    <View style={{ width: "95%",alignItems:'center',borderRadius:10,borderColor:'lightgrey', borderBottomWidth: 1 ,  borderTopWidth: !isWithCustomDate ? 1: 0}}>
+                      <SeperatorSwitch isExpended={isWithCustomDate} setIsExpended={setIsWithCustomDate} title="Set retroactive expenditure" withCheckIcon={true} />
+
+                      {isWithCustomDate && 
+                        <View style={styles.dateInputButton}>
+                          <Icon name={'calendar'} size={22}
+                                      color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
+                          <TouchableOpacity
+                                  title="Custom Date"
+                                  onPress={ () => {showModeCustomDate('date'); }}
+                                  style={{ textAlign:'left', flex:1}}
+                                  >
+                              <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:customDate?'black':'grey' }}>
+                                {customDate? customDateText : "Custom Date"}</Text> 
+                          </TouchableOpacity>
+                        </View>
+                        }
+                    </View>
+                }
                 {showNotification &&
                     (<DateTimePicker 
                     testID='dateTimePickeerNotification'

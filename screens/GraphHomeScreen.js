@@ -97,7 +97,6 @@ const GraphHomeScreen = ({route, scrollHandler}) => {
                         defaultValue={pieChartMonth}
                         data={getArrayOfMonthOptionsByYear(house.expends, pieChartYear)}
                         onSelect={(selectedItem, index) => {
-                            console.log(selectedItem, index)
                             setDataPie(Graphs.getPieChartData(house, Graphs.getIndexOfMonthByName(selectedItem), pieChartYear))
                             setPieChartMonth(selectedItem)
                         }}
@@ -117,10 +116,10 @@ const GraphHomeScreen = ({route, scrollHandler}) => {
                         defaultValue={pieChartYear}
                         data={getYearOptionsToGraph(house.expends)}
                         onSelect={(selectedItem, index) => {
-                            console.log(selectedItem, index)
                             let data = Graphs.getPieChartData(house, Graphs.getIndexOfMonthByName(pieChartMonth), selectedItem)
                             if(data.length === 0){
-                                const month = getArrayOfMonthOptionsByYear(house.expends, selectedItem)[0]
+                                const tempArray = getArrayOfMonthOptionsByYear(house.expends, selectedItem)
+                                const month = tempArray.length !== 0 ? tempArray[tempArray.length-1] : ''
                                 setDataPie(Graphs.getPieChartData(house, Graphs.getIndexOfMonthByName(month), selectedItem))
                                 setPieChartMonth(month)
                             }else setDataPie(data)

@@ -1,6 +1,5 @@
 import React, { useEffect,useState,Component } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions,AppRegistry,Platform,ActivityIndicator } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 import * as Graphs from '../Graphs'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
@@ -49,41 +48,6 @@ const GraphHomeScreen = ({route, scrollHandler}) => {
         if(scrollHandler) scrollHandler();
     },[scrollHandler,house])
 
-    // const getPieChartData = () => {
-    //     let Data=[]
-    //     let j=0
-    //     let tempAmount={}
-    //     let temp={}
-    //     for(let i in house.expends){
-    //         if(house.expends[i].desc in tempAmount)
-    //              tempAmount[house.expends[i].desc] += parseFloat(house.expends[i].amount)
-    //         else tempAmount[house.expends[i].desc] = parseFloat(house.expends[i].amount) 
-            
-    //     }
-    //     for(let k in tempAmount){
-    //         temp={
-    //             name:k,
-    //             population:tempAmount[k],
-    //             color:GraphColor[j],
-    //             legendFontColor: "#7F7F7F",
-    //             legendFontSize: 15
-    //         }
-    //         j+=1
-    //         Data.push(temp)
-    //     }
-    //     return Data
-    // }
-      
-    // const chartPieConfig = {
-    //     backgroundGradientFrom: "#1E2923",
-    //     backgroundGradientFromOpacity: 0,
-    //     backgroundGradientTo: "#08130D",
-    //     backgroundGradientToOpacity: 0.5,
-    //     color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    //     strokeWidth: 2, // optional, default 3
-    //     barPercentage: 0.5,
-    //     useShadowColorFromDataset: false // optional
-    // };
 
     const renderChart = () => {
         const expendsCount = Object.keys(house.expends).length

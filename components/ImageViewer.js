@@ -4,9 +4,7 @@ import ImageView from "react-native-image-viewing";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Linking from 'expo-linking';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-
-let deviceHeight = Dimensions.get('window').height
-let deviceWidth = Dimensions.get('window').width
+import { deviceHeight, deviceWidth } from '../SIZES';
 
 const ImageViewer = (props) => {
   const [visible, setIsVisible] = useState(true);

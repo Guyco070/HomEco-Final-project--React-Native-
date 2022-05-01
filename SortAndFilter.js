@@ -88,4 +88,14 @@ const filterByFunc = (arr,by,val) => {
   }
 
 // filterDispatch - end
-export {sortDispatch,filterOptionsDispatch,filterByFunc, sortByDateOldToNew, sortByDateNewToOld, sortByAmountHighToLow, sortByAmountLowToHigh}
+
+const getArrayOfMonthOptionsByYear = (map, year = new Date().getFullYear()) => {
+  return Array.from(new Set(Object.values(map).map((obj)=>{ if(obj.date.toDate().getFullYear() == year) return monthNames[obj.date.toDate().getMonth()] }).filter(obj => {return obj !==undefined})))
+            .sort((a,b) => { return monthNames.findIndex((x) => x===a) - monthNames.findIndex((x) => x===b)})
+}
+
+const getYearOptionsToGraph = (map) => {
+  return getYearOptions(Object.values(map)).map((obj) => {return obj.label})
+} 
+
+export {sortDispatch,filterOptionsDispatch,filterByFunc, sortByDateOldToNew, sortByDateNewToOld, sortByAmountHighToLow, sortByAmountLowToHigh, getArrayOfMonthOptionsByYear, getYearOptionsToGraph}

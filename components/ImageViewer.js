@@ -29,10 +29,14 @@ const ImageViewer = (props) => {
     let tempImages = []
 
     for(let i in props.route.params.images){
+      let imageDate =props.route.params.images[i].date
+      if("toDate" in imageDate)
+        imageDate = imageDate.toDate()
+      else imageDate = new Date(imageDate)
       tempImages.push({
         creator: props.route.params.images[i].creator,
-        title: props.route.params.images[i].date.toDate().getTimezoneOffset(),
-        title: "Upload date: " + props.route.params.images[i].date.toDate().toLocaleDateString() + " " + props.route.params.images[i].date.toDate().toLocaleTimeString()
+        title: imageDate.getTimezoneOffset(),
+        title: "Upload date: " + imageDate.toLocaleDateString() + " " + imageDate.toLocaleTimeString()
         ,
         uri: props.route.params.images[i].url,
       })

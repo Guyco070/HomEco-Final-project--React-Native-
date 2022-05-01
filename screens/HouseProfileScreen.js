@@ -118,7 +118,7 @@ const HouseProfileScreen = ({route}) => {
     return (
         <SafeAreaView style={houseProfileStyles.container}>
             {loading? <Loading/> : 
-            <ScrollView showsVerticalScrollIndicator={false}
+            <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 25 }}
             ref={(ref) => {
                 setRef(ref)
             }}

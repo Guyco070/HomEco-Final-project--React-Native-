@@ -12981,6 +12981,11 @@ react-native-screens@~3.8.0:
   dependencies:
     warn-once "^0.1.0"
 
+react-native-select-dropdown@^1.13.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/react-native-select-dropdown/-/react-native-select-dropdown-1.13.0.tgz#599566f8b44d979a13528319f340beb6117bbff6"
+  integrity sha512-UGXWbuEqsG6B6O+tle77yJH3+DXfmh4cpit0v8az824y0rZLUWuRzlfeLYlaeZ80mqIF6Xtvx/pBtIsG1OdaLg==
+
 react-native-size-matters@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz#24d0cfc335a2c730f6d58bd7b43ea5a41be4b49f"

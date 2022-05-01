@@ -209,11 +209,11 @@ const GraphHomeScreen = ({route, scrollHandler}) => {
                     />
             </View> */}
             { dataPie === '' ? <Loading/> : <>
-            {pieChartYear && <SeperatorSwitch isExpended={showPieChart} setIsExpended={setShowPieChart} title= {pieChartYear + " Pie Chart"} bottomDevider={!showPieChart} />}
+            {pieChartYear && <SeperatorSwitch isExpended={showPieChart} setIsExpended={setShowPieChart} title= {"Month Pie Chart"} bottomDevider={!showPieChart} />}
             {showPieChart && dataPie !=='' && renderChart()}
             {showPieChart && dataPie !=='' && renderExpensesSummary()}
 
-            <SeperatorSwitch isExpended={showBarChart} setIsExpended={setShowBarChart} title="Bar  Chart" topDevider={showPieChart} bottomDevider={!showBarChart} />
+            <SeperatorSwitch isExpended={showBarChart} setIsExpended={setShowBarChart} title="Year Bar  Chart" topDevider={showPieChart} bottomDevider={!showBarChart} />
             {(showBarChart && house !=='') && <View style={{ alignItems: "center"}}>
             <Text>Last year expenses{"\n"}</Text>
                 <ScrollView horizontal style={{ marginStart: 10 }}>

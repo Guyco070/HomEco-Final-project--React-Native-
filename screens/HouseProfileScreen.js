@@ -40,7 +40,7 @@ const HouseProfileScreen = ({route}) => {
     const [hIncome, setHIncom] = useState(undefined)
     const [hExpedns, setHExpedns] = useState(undefined)
 
-    const [checked, setChecked] = useState(0);
+    const [checked, setChecked] = useState(-1);
     const [ref, setRef] = useState(null);
     const [dataSourceCords, setDataSourceCords] = useState([]);
     const [showMenuBar, setShowMenuBar] = useState(route.params?.menuBarIndex ? route.params?.menuBarIndex : 0);
@@ -51,8 +51,8 @@ const HouseProfileScreen = ({route}) => {
     let addIndex = 0
     const addData = [
         { key: addIndex++, section: true, label: 'What would you like to add' },
-        { key: addIndex++, label: 'Add new expenditure' },
-        { key: addIndex++, label: 'Add new income'  },
+        house && house.partners[user.email].permissions.seeMonthlyBills && { key: addIndex++, label: 'Add new expenditure', type: "expenditure" },
+        house && house.partners[user.email].permissions.seeIncome && { key: addIndex++, label: 'Add new income', type: "income"  },
     ];
 
     useEffect(() => {
@@ -127,16 +127,15 @@ const HouseProfileScreen = ({route}) => {
                 <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
                 <Ionicons name="ios-ellipsis-vertical" size={24} color="#52575D"></Ionicons>
             </View> */}
-            <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
+            { house && house.partners[user.email].isAuth && <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
                     <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{
-                            // navigation.navigate('EditHouseProfile',house);
-                            firebase.updateExpendsAndIncomes(route.params.hKeyP).then((uHouse)=> setHouse(uHouse) ).catch((e) =>{})
+                            navigation.navigate('EditHouseProfile',house);
                         }} >
                         <Icon  name="edit"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>
                     </TouchableOpacity>
                     
-                </View>
+                </View>}
                 <View style={{ alignSelf: "center" }}>
                     <View style={houseProfileStyles.profileHouseImage}>
                         <Image source={{uri:house.hImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
@@ -144,11 +143,14 @@ const HouseProfileScreen = ({route}) => {
 
                         {messageOptions && <ModalSelector
                             data={messageOptions}
-                            onChange={(option)=>{ Linking.openURL('whatsapp://send?text=Hi,\nI want to talk with you about our house.\n\n'+user.fName + " " +user.lName+'.&phone=' + option.phone)}}
+                            onChange={(option)=>{ 
+                                // Linking.openURL('whatsapp://send?text=Hi,\nI want to talk with you about our house.\n\n'+user.fName + " " +user.lName+'.&phone=' + option.phone)
+                                navigation.navigate("Chat",{userToChatWith:option, hKey})
+                            }}
                             style={houseProfileStyles.dm}
                             >
                             <View>
-                                    <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
+                                <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
                             </View>
                         </ModalSelector> }
 
@@ -221,7 +223,7 @@ const HouseProfileScreen = ({route}) => {
                         <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
                         <ModalSelector
                         data={addData}
-                        onChange={(option)=>{ option.key == 1 ? navigation.navigate('AddOrEditExpenditure',{hKey}):navigation.navigate('AddOrEditIncome',{hKey}) }}
+                        onChange={(option)=>{ option.type == "expenditure" ? navigation.navigate('AddOrEditExpenditure',{hKey}):navigation.navigate('AddOrEditIncome',{hKey}) }}
                         style={{marginRight:25,marginBottom:0}}
                         >
                                 <Icon  name="add"  type="icon" color={"grey"} />
@@ -264,7 +266,7 @@ const HouseProfileScreen = ({route}) => {
                 </ScrollView>)
             }
             </ScrollView>}
-            {(showMenuBar != -1 && !loading) && <BarMenu onPress={setChecked} scrollHandler={scrollHandler} index ={showMenuBar}/>}
+            {(showMenuBar != -1 && !loading) && <BarMenu onPress={setChecked} scrollHandler={scrollHandler} index ={showMenuBar} userPermissions={house.partners[user.email].permissions}/>}
         </SafeAreaView>
     );
 }

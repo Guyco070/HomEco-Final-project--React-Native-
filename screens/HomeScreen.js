@@ -50,7 +50,7 @@ const HomeScreen = () => {
         <View style={[styles.container]}>
             {loading ?    <Loading/>:<><Text style={styles.textBody}>{ user["fName"] == undefined? "" : user["fName"]+ " " + user["lName"] } </Text>
             <Text style={styles.textBody}>{user["fName"] == undefined? "" : "Email: " + user["email"] } </Text>
-            <UserHousesListView user={user}/>
+            {user && <UserHousesListView user={user}/>}
              {/*uploade products drom excel*/ }
             {/* <SheetJSApp/> */}
             {/* <ShoppingApi/> */}

@@ -33,6 +33,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import DrawerContent from './components/DrawerContent'
 import BarMenu from './components/BarMenu';
+import ChatScreen from './screens/ChatScreen'
+
 LogBox.ignoreAllLogs(true)
 // I18nManager.forceRTL(false);
 // I18nManager.allowRTL(false);
@@ -75,6 +77,7 @@ export default function App() {
       <Stack.Screen name="EditExpenditureScreen" component={EditExpenditureScreen} options={{ title: 'Edit Expenditure Screen'}}/>
       <Stack.Screen name="EditSelfIncome" component={EditSelfIncomeScreen} options={{ title: 'Edit SelfIncome Screen'}}/>
       <Stack.Screen name="GraphScreen" component={GraphHomeScreen} options={{ title: 'Graph Home Screen'}}/>
+      <Stack.Screen name="Chat" component={ChatScreen} options={{ title: 'Chat'}}/>
     </Stack.Navigator>
   }
   return (

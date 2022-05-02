@@ -6,12 +6,23 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const size = 20
 
-const BarMenu = ({onPress, scrollHandler, index}) => {
-    const [checked, setChecked] = useState(index ? index : 0);
+const BarMenu = ({onPress, scrollHandler, index, userPermissions}) => {
+    const [checked, setChecked] = useState(index ? index : -1);
     const [isShow, setIsShow] = useState(true);
 
     useEffect(() => {
-        onPress(checked)
+        if(checked === -1){
+            if(userPermissions["seeMonthlyBills"]) {
+                setChecked(0)
+                onPress(0)
+            }
+            else  {
+                setChecked(4)
+                onPress(4)
+            }
+            
+        }
+        else onPress(checked)
       }, [])
       
   return (
@@ -26,44 +37,48 @@ const BarMenu = ({onPress, scrollHandler, index}) => {
         :
         <View style={styles.container}>
             <View style={ styles.menuBar }>
-                <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(0); scrollHandler(); setChecked(0)}} activeOpacity={0.4}  pressMagnification={10}
-                    rippleColor= "rgba(0, 0, 0, .32)"
-                >
-                    <View style={[styles.IconBehave,{backgroundColor:checked === 0 ? "white" :"#0779ef"}]} >
-                        <Icon 
-                            name='home-export-outline'
-                            color={checked === 0? "#0779ef" : "white"}
-                            size={size}
-                        />
-                    </View>
-                    <Text style={{fontSize:10, color: "white" }}>Expenses</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(1); scrollHandler(); setChecked(1)}} activeOpacity={0.4}  pressMagnification={10}
-                    rippleColor= "rgba(0, 0, 0, .32)"
-                >
-                    <View style={[styles.IconBehave,{backgroundColor:checked === 1 ? "white" :"#0779ef"}]} >
-                        <Icon 
-                            name='home-import-outline'
-                            color={checked === 1? "#0779ef" : "white"}
-                            size={size}
-                        />
-                    </View>
-                    <Text style={{fontSize:10, color: "white" }}>Incomes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(2); scrollHandler(); setChecked(2)}}  activeOpacity={0.4}  pressMagnification={10}
-                    rippleColor= "rgba(0, 0, 0, .32)"
-                >
-                    <View style={[styles.IconBehave,{backgroundColor:checked === 2 ? "white" :"#0779ef"}]} >
-                        <Icon 
-                            name='chart-bar'
-                            color={checked === 2? "#0779ef" : "white"}
-                            size={size}
-                        />
-                    </View>
-                    <Text style={{fontSize:10, color: "white" }}>Graphs</Text>
-                </TouchableOpacity>
-
+                { userPermissions.seeMonthlyBills && 
+                    <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(0); scrollHandler(); setChecked(0)}} activeOpacity={0.4}  pressMagnification={10}
+                        rippleColor= "rgba(0, 0, 0, .32)"
+                    >
+                        <View style={[styles.IconBehave,{backgroundColor:checked === 0 ? "white" :"#0779ef"}]} >
+                            <Icon 
+                                name='home-export-outline'
+                                color={checked === 0? "#0779ef" : "white"}
+                                size={size}
+                            />
+                        </View>
+                        <Text style={{fontSize:10, color: "white" }}>Expenses</Text>
+                    </TouchableOpacity>
+                }
+                { userPermissions.seeIncome && 
+                    <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(1); scrollHandler(); setChecked(1)}} activeOpacity={0.4}  pressMagnification={10}
+                        rippleColor= "rgba(0, 0, 0, .32)"
+                    >
+                        <View style={[styles.IconBehave,{backgroundColor:checked === 1 ? "white" :"#0779ef"}]} >
+                            <Icon 
+                                name='home-import-outline'
+                                color={checked === 1? "#0779ef" : "white"}
+                                size={size}
+                            />
+                        </View>
+                        <Text style={{fontSize:10, color: "white" }}>Incomes</Text>
+                    </TouchableOpacity>
+                }
+                { userPermissions.seeMonthlyBills && 
+                    <TouchableOpacity style={{alignItems:'center'}} onPress={() => {onPress(2); scrollHandler(); setChecked(2)}}  activeOpacity={0.4}  pressMagnification={10}
+                        rippleColor= "rgba(0, 0, 0, .32)"
+                    >
+                        <View style={[styles.IconBehave,{backgroundColor:checked === 2 ? "white" :"#0779ef"}]} >
+                            <Icon 
+                                name='chart-bar'
+                                color={checked === 2? "#0779ef" : "white"}
+                                size={size}
+                            />
+                        </View>
+                        <Text style={{fontSize:10, color: "white" }}>Graphs</Text>
+                    </TouchableOpacity>
+                }
                 <TouchableOpacity  style={{alignItems:'center'}} onPress={() => {onPress(3); scrollHandler(); setChecked(3)}} activeOpacity={0.4}  pressMagnification={10}
                     rippleColor= "rgba(0, 0, 0, .32)"
                 >

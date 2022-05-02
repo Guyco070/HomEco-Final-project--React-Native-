@@ -134,6 +134,10 @@ const addUserToFirestore = async(email, fName, lName, phone, bDate, uImage ) => 
     //  uploadImageToStorage('users',uImage ? uImage : tempUserProfileImage,email).then(alert()).catch()
 }
 
+const addDocToFirestore = async(collect, newValue) => {
+  await setDoc(doc(collection(db, collect)), newValue);
+}
+
 const updateCollectAtFirestore = async(collect,key, col, newValue) => {
   const Data = doc(db, collect, key);
   await updateDoc(Data , col = col,newValue)
@@ -159,7 +163,7 @@ const setDefaultHousePartners = (partners) => {
       expends: {}, // {[ reasone, amount ]}
       allowance: {} // {[ from, amount ],...}
     }
-    permissions = {"seeIncome": true, "seeMonthlyBills": true}
+    permissions = {"seeIncome": true, "seeMonthlyBills": true, "changeGallery": false}
   }
   partnersDict[partners[0].email].isAuth = true
   partnersDict[partners[0].email].nowIn = true
@@ -190,16 +194,13 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
                   { itemName: 'item 3', quantity: 2, isSelected: false },]
    }
   await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail),house );
+  await setDoc(doc(collection(db, 'chats'), hName + "&" + cEmail),{} );
   return house
 }
 
 const updateHousePartners = (partners, oldPartners, oldHFullPartners) => {
   let partnersDict = {}
   let permissions = {"seeIncome": false, "seeMonthlyBills": false}
-  console.log("partners")
-  console.log(partners)
-  console.log("oldHFullPartners")
-  console.log(oldHFullPartners)
 
     for(let i in partners){
 
@@ -608,11 +609,28 @@ const addProductToFirestore = async(barcode, name, brand) => {
      });
 }
 
+const getChatFromFirestore = async(chatInvolves) =>{ // chatInvolves: Array
+  const collectCol = collection(db, "chats")
+  const collectSnapshot = await getDocs(query(collectCol, orderBy("createdAt","desc"),))
+  
+  // console.log(collectSnapshot.docs.map((doc) => console.log("involves" in doc.data() ? chatInvolves.every((x) => {return doc.data().involves.includes(x)}) : false)));
+  
+  const collectList = collectSnapshot.docs.filter((doc) => {return "involves" in doc.data() ? chatInvolves.every((x) => {return doc.data().involves.includes(x)}) : false}).map(doc => ({
+      _id: doc.data()._id,
+      createdAt: doc.data().createdAt.toDate(),
+      text: doc.data().text,
+      user: doc.data().user
+  }));
+
+  return collectList;
+}
+
+
 export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, 
-        getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,updateCollectAtFirestore, updateDocAllColsAtFirestore,
+        getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,addDocToFirestore, updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, 
         getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
         getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse, removeIncomeFromHouse, shoppingListToString, 
         getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeToHouseByMonth,
-        addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany, updateExpendsAndIncomes} 
+        addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany, updateExpendsAndIncomes, getChatFromFirestore, } 
 

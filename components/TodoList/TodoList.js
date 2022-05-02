@@ -51,7 +51,7 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
       },[isChanged])
 
 	useEffect(() => {
-        if(scrollHandler) scrollHandler();
+        if(scrollHandler && items) scrollHandler();
     },[scrollHandler,items])
 
 	const handleAddButtonClick = () => {

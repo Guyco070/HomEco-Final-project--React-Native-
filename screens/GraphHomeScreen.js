@@ -45,7 +45,7 @@ const GraphHomeScreen = ({route, scrollHandler}) => {
     }, [route])
 
     useEffect(() => {
-        if(scrollHandler) scrollHandler();
+        if(scrollHandler && house) scrollHandler();
     },[scrollHandler,house])
 
 

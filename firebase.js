@@ -3,7 +3,7 @@ import { getAuth } from "@firebase/auth"
 import { getApps, initializeApp } from "firebase/app"
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
-import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc, orderBy, Timestamp } from 'firebase/firestore'
+import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc, orderBy, Timestamp, onSnapshot } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
 import { firebaseConfig } from "./PrivateVariables"
 import { LogBox } from "react-native"
@@ -625,6 +625,11 @@ const getChatFromFirestore = async(chatInvolves) =>{ // chatInvolves: Array
   return collectList;
 }
 
+const setSnapshotById = (collect, docId, action) => {
+  const unsubscribe = onSnapshot( doc(db, collect, docId), action)
+  
+  return unsubscribe
+}
 
 export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, 
         getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,addDocToFirestore, updateCollectAtFirestore, updateDocAllColsAtFirestore,
@@ -632,5 +637,5 @@ export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRe
         getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
         getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse, removeIncomeFromHouse, shoppingListToString, 
         getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeToHouseByMonth,
-        addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany, updateExpendsAndIncomes, getChatFromFirestore, } 
+        addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany, updateExpendsAndIncomes, getChatFromFirestore, setSnapshotById } 
 

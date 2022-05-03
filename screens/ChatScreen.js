@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState, useCallback, useEffect, useLayoutEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import * as firebase from '../firebase'
+import { doc, onSnapshot } from 'firebase/firestore'
 
 const ChatScreen = ({ route }) => {
     const [messages, setMessages] = useState([]);
@@ -11,35 +12,24 @@ const ChatScreen = ({ route }) => {
   useEffect(() => {
     if(route?.params?.userToChatWith){
       firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )
-      firebase.getByDocIdFromFirestore("users", route.params.userToChatWith.key).then( (us) => { setAddressee(us)
-      // setMessages([
-      //   {
-      //     _id: us.email,
-      //     text: 'Hello developer',
-      //     createdAt: new Date(),
-      //     user: {
-      //       _id: 2,
-      //       name: 'React Native',
-      //       avatar: us.uImage,
-      //     },
-      //   },
-      // ])
-    }
-      )
+      firebase.getByDocIdFromFirestore("users", route.params.userToChatWith.key).then( (us) => { setAddressee(us) })
+      route.params.setHaveNewMessages(false)
     }
   }, [route])
  
   useLayoutEffect(()=>{
-    // firebase.getChatFromFirestore([user.email].concat([addressee.email]),route.params.hKey).then((messages) => setMessages(messages))
-    firebase.getByDocIdFromFirestore('chats', route.params.hKey).then((obj) => setMessages(obj.messages.map(doc => ({
+    const action = (doc) => {
+      // const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+      setMessages(doc.data().messages.map(doc => ({
         _id: doc._id,
         createdAt: doc.createdAt.toDate(),
         text: doc.text,
         user: doc.user
-    })))
-  )
-    
-    // return unsubscribe
+      })))
+    }
+
+    firebase.setSnapshotById("chats", route.params.hKey, action)
+   
   },[user,addressee])
 
   const onSend = useCallback((messages = []) => {

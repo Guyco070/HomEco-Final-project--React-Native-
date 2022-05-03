@@ -311,6 +311,16 @@ const houseProfileStyles = StyleSheet.create({
         width: 20,
         borderRadius: 10
     },
+    haveNewMessages:{
+        backgroundColor: "#F04228",
+        position: "absolute",
+        bottom: 16,
+        left: -15,
+        padding: 4,
+        height: 13,
+        width: 13,
+        borderRadius: 10,
+    },
     userProfileImage: {
         backgroundColor: "lightgrey",
         position: "absolute",

@@ -30,7 +30,9 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 
 
 	useEffect(() => {
-        firebase.getByDocIdFromFirestore('houses', hKey).then((house) => {setItems(house[listName])
+		firebase.setSnapshotById("houses", hKey, (doc) => {
+			const house = doc.data()
+			setItems(house[listName])
 			let tempIsAllMarked = true
 			let tempItems = house[listName]
 			if(tempItems.length == 0)
@@ -39,8 +41,7 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 				for(let item in tempItems)
 					if(!tempItems[item].isSelected) {tempIsAllMarked = false; break;}
 			setIsAllMarked(tempIsAllMarked)
-		})
-		
+		})	
       },[])
 
 	  useEffect(() => {

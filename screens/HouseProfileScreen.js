@@ -48,11 +48,12 @@ const HouseProfileScreen = ({route}) => {
     const [messageOptions,setMessageOptions] = useState([])
     const [messageToEmail,setMessageToEmail] = useState('')
 
+    const [haveNewMessages, setHaveNewMessages] = useState(false) 
     let addIndex = 0
     const addData = [
         { key: addIndex++, section: true, label: 'What would you like to add' },
-        house && house.partners[user.email].permissions.seeMonthlyBills && { key: addIndex++, label: 'Add new expenditure', type: "expenditure" },
-        house && house.partners[user.email].permissions.seeIncome && { key: addIndex++, label: 'Add new income', type: "income"  },
+        house && house.partners[user.email]?.permissions.seeMonthlyBills && { key: addIndex++, label: 'Add new expenditure', type: "expenditure" },
+        house && house.partners[user.email]?.permissions.seeIncome && { key: addIndex++, label: 'Add new income', type: "income"  },
     ];
 
     useEffect(() => {
@@ -63,6 +64,7 @@ const HouseProfileScreen = ({route}) => {
         if("hKeyP" in route.params){
             setHKey(route.params.hKeyP)
             firebase.updateExpendsAndIncomes(route.params.hKeyP).then((uHouse)=> setHouse(uHouse) ).catch((e) =>{})
+            firebase.setSnapshotById("chats", route.params.hKeyP, (doc) => setHaveNewMessages(true))
         }else if("house" in route.params) setHouse(route.params.house)
     }, [route])
 
@@ -88,10 +90,12 @@ const HouseProfileScreen = ({route}) => {
 
     const getMessageOptions = () => {
         let temp = []
+        temp.push({key: 0, label: "All partners of " + house.hName + " House",})
+
         for(let i in house.partners)
         {
             if(house.partners[i].user.email != user.email)
-                temp.push({key: i, label: house.partners[i].user.fName + " " + house.partners[i].user.lName, phone: house.partners[i].user.phone})
+                temp.push({key: i+1, label: house.partners[i].user.fName + " " + house.partners[i].user.lName, phone: house.partners[i].user.phone})
         }
         setMessageOptions(temp)
     }
@@ -127,7 +131,7 @@ const HouseProfileScreen = ({route}) => {
                 <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
                 <Ionicons name="ios-ellipsis-vertical" size={24} color="#52575D"></Ionicons>
             </View> */}
-            { house && house.partners[user.email].isAuth && <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
+            { house && house.partners[user.email]?.isAuth && <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
                     <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{
                             navigation.navigate('EditHouseProfile',house);
                         }} >
@@ -140,17 +144,19 @@ const HouseProfileScreen = ({route}) => {
                     <View style={houseProfileStyles.profileHouseImage}>
                         <Image source={{uri:house.hImage}} style={houseProfileStyles.image} resizeMode="center"></Image>
                     </View>
-
                         {messageOptions && <ModalSelector
                             data={messageOptions}
                             onChange={(option)=>{ 
-                                // Linking.openURL('whatsapp://send?text=Hi,\nI want to talk with you about our house.\n\n'+user.fName + " " +user.lName+'.&phone=' + option.phone)
-                                navigation.navigate("Chat",{userToChatWith:option, hKey})
+                                if(option.key === 0)
+                                    navigation.navigate("Chat",{userToChatWith:option, hKey, setHaveNewMessages})
+                                else
+                                    Linking.openURL('whatsapp://send?text=Hi,\nI want to talk with you about our house.\n\n'+user.fName + " " +user.lName+'.&phone=' + option.phone)
                             }}
                             style={houseProfileStyles.dm}
                             >
                             <View>
                                 <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
+                                { haveNewMessages && <View style={houseProfileStyles.haveNewMessages}/> }
                             </View>
                         </ModalSelector> }
 
@@ -266,7 +272,7 @@ const HouseProfileScreen = ({route}) => {
                 </ScrollView>)
             }
             </ScrollView>}
-            {(showMenuBar != -1 && !loading) && <BarMenu onPress={setChecked} scrollHandler={scrollHandler} index ={showMenuBar} userPermissions={house.partners[user.email].permissions}/>}
+            {(showMenuBar != -1 && !loading && house?.partners) && <BarMenu onPress={setChecked} scrollHandler={scrollHandler} index ={showMenuBar} userPermissions={house.partners[user.email].permissions}/>}
         </SafeAreaView>
     );
 }

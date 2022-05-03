@@ -46,7 +46,7 @@ const HouseGalleryViewer = (props) => {
         firebase.updateCollectAtFirestore("houses", hKey, "gallery", catchHouseImages)
         setCatchHouseImageLoading(false)
         props.scrollHandler();
-        setImageModalPickerVisable(false)
+        setImageModalPickerVisable(false) 
       }
     }, [catchHouseImages])
 

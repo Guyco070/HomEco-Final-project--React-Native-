@@ -1,4 +1,4 @@
-import { StyleSheet, View, } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
 import { 
@@ -15,10 +15,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import * as firebase from '../firebase'
 import { useNavigation } from '@react-navigation/native';
 import { signOut,auth } from '@firebase/auth'
+import UserHousesListView from './UserHousesListView'
 
 const DrawerContent = (props) => {
   const [user, setUser] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [showHouses, setShowHouses] = useState(false);
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -68,8 +70,25 @@ const toggleTheme = () => {
                 />
               )}
               label="Houses"
-              onPress={() => {navigation.navigate("Home")}}
+              onPress={() => {setShowHouses(!showHouses)}}
             />
+            {user && showHouses &&
+            <>
+              <View style={{marginLeft:40 }}>
+                  <UserHousesListView user={user} viewImage={false} withDetails={false}/>
+                    <TouchableOpacity
+                          onPress={() => {
+                            navigation.navigate("CreateNewHouse",user)
+                        }}
+                          style={styles.button}
+                          email = {user["email"]}
+                          >
+                          <Text style={styles.buttonText}>Create New House</Text>
+                  </TouchableOpacity>
+                </View>
+                <Drawer.Section />
+              </>
+              }
             <DrawerItem 
               icon={({color,size}) => (
                 <Icon 
@@ -200,5 +219,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 12,
     paddingHorizontal: 16,
+  },
+  button: {
+    backgroundColor: '#0782F9',
+    width: '80%',
+    padding: 7,
+    borderRadius: 100,
+    alignItems: 'center',
+    marginVertical: 25,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: '500',
+    fontSize: 16,
+    textAlign: 'center',
+    alignSelf:'center'
   },
 });

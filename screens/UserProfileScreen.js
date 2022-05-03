@@ -63,11 +63,11 @@ const UserProfileScreen = ({route}) => {
                 <SelfIncomeListViewer map = {user.incomes?user.incomes:[]} slice={3}/>
 
                 <View style={[styles.container,{marginVertical:15}]}>
-                    <UserHousesListView user={user} viewImage={false}/>
+                    <UserHousesListView user={user} viewImage={false} withDetails={true}/>
                 </View>
                
                 <View style={[styles.container,{marginVertical:15}]}>
-                    <UserIncomeToHousesList user={user} viewImage={false}/>
+                    <UserIncomeToHousesList user={user} viewImage={false} />
                 </View>
             </ScrollView>}
         </SafeAreaView>

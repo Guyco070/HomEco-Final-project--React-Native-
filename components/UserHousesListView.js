@@ -51,7 +51,7 @@ const UserHousesListView = (props) => {
                     <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {props.user.uImage} onPress={addImage} changeable={false} />
                 </TouchableScale>
             }
-            {housesList &&  <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0}]}>My houses</Text>}
+            {housesList && props?.withDetails && <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0}]}>My houses</Text>}
 
             {housesList && 
                     housesList 
@@ -65,7 +65,7 @@ const UserHousesListView = (props) => {
                             >
                                 <ListItem.Content>
                                 <ListItem.Title style={styles.listTextItem} >{l.hName}</ListItem.Title>
-                                <ListItem.Subtitle style={styles.listSubtitleTextItem}>{"Created at: " + l.cDate}</ListItem.Subtitle>
+                                {props?.withDetails && <ListItem.Subtitle style={styles.listSubtitleTextItem}>{"Created at: " + l.cDate}</ListItem.Subtitle>}
                                 </ListItem.Content>
                                 <Avatar source={{uri: l.hImage}} rounded/>
                             </ListItem>

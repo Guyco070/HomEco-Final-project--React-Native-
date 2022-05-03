@@ -272,7 +272,7 @@ const HouseProfileScreen = ({route}) => {
                 </ScrollView>)
             }
             </ScrollView>}
-            {(showMenuBar != -1 && !loading && house?.partners) && <BarMenu onPress={setChecked} scrollHandler={scrollHandler} index ={showMenuBar} userPermissions={house.partners[user.email].permissions}/>}
+            {(showMenuBar != -1 && !loading && house?.partners[user.email]) && <BarMenu onPress={setChecked} scrollHandler={scrollHandler} index ={showMenuBar} userPermissions={house.partners[user.email].permissions}/>}
         </SafeAreaView>
     );
 }

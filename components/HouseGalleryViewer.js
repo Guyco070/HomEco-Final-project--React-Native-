@@ -94,7 +94,7 @@ const HouseGalleryViewer = (props) => {
               <Image style={styles.imageThumbnail} source={{ uri: item.url }} />
               </TouchableOpacity>
 
-              {  ((house != '' && "email" in user) && (user?.email == item.creator || house.partners[user.email].permissions.changeGallery)) && <View style={docImageUploaderStyles.removeBtnContainer}>
+              {  ((house != '' && "email" in user && house?.partners) && (user?.email == item.creator || house.partners[user.email].permissions.changeGallery)) && <View style={docImageUploaderStyles.removeBtnContainer}>
                 <TouchableOpacity  style={[docImageUploaderStyles.removeBtn,]} onPress={() => onRemove(index)} >
                   <AntDesign name="close" size={17} color="black" />
                 </TouchableOpacity>

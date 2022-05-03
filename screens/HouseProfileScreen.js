@@ -64,7 +64,7 @@ const HouseProfileScreen = ({route}) => {
         if("hKeyP" in route.params){
             setHKey(route.params.hKeyP)
             firebase.updateExpendsAndIncomes(route.params.hKeyP).then((uHouse)=> setHouse(uHouse) ).catch((e) =>{})
-            firebase.setSnapshotById("chats", route.params.hKeyP, (doc) => setHaveNewMessages(true))
+            firebase.setSnapshotById("chats", route.params.hKeyP, (doc) => { if(navigation.getState().routes[navigation.getState().routes.length - 1].name != "Chat"); setHaveNewMessages(true)})
         }else if("house" in route.params) setHouse(route.params.house)
     }, [route])
 

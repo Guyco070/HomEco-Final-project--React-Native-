@@ -27,7 +27,6 @@ const ChatScreen = ({ route }) => {
         user: doc.user
       })))
     }
-
     firebase.setSnapshotById("chats", route.params.hKey, action)
    
   },[user,addressee])
@@ -45,6 +44,8 @@ const ChatScreen = ({ route }) => {
   useLayoutEffect(()=>{
     if(messages.length !== 0)
       firebase.updateCollectAtFirestore("chats", route.params.hKey, {messages})
+    route.params.setHaveNewMessages(false)
+    
   },[messages])
 
   return (

@@ -545,7 +545,7 @@ const removeIncomeFromHouse = async(hName, cEmail,incomes, income) =>
 
 const shoppingListToString = async(shoppingList) => 
 {
-  let str = ''
+  let str = '\n'
   for(const key in shoppingList) { str += (parseInt(key)+1) + ". " +shoppingList[key].itemName + " (" + shoppingList[key].quantity +")\n "}
   //str = str.substring(0,str.length-2)
   return str.toString()

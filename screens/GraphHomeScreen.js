@@ -109,7 +109,7 @@ const GraphHomeScreen = ({route, scrollHandler}) => {
                         colorScale={dataPie.map((d) => d.color )}
                         radius={ () => {x -= 15/expendsCount; return deviceWidth * 0.4 - x}}
                         innerRadius={70}
-                        labelRadius={({ innerRadius }) => (deviceWidth * 0.4 + innerRadius) / 2.5}
+                        labelRadius={({ innerRadius }) => (deviceWidth * 0.4 + innerRadius) / 2.8}
                         style={{
                             labels: { fill: "white" },
                             parent: { ...styles.shadow }
@@ -180,8 +180,8 @@ const GraphHomeScreen = ({route, scrollHandler}) => {
             <SeperatorSwitch isExpended={showBarChart} setIsExpended={setShowBarChart} title="Year Bar  Chart" topDevider={showPieChart} bottomDevider={!showBarChart} />
             {(showBarChart && house !=='') && <View style={{ alignItems: "center"}}>
             <Text>Last year expenses{"\n"}</Text>
-                <ScrollView horizontal style={{ marginStart: 10 }}>
-                    <VictoryChart width={ (dataBar["Expenditure"].length + dataBar["Income"].length) * 40 }>
+                <ScrollView horizontal style={{ marginStart: 10, minWidth: deviceWidth }} >
+                    <VictoryChart minWidth={deviceWidth} width={ Math.max(deviceWidth, (dataBar["Expenditure"].length + dataBar["Income"].length) * 40) }>
                         <VictoryAxis label={""} style={{ 
                                 axisLabel:{
                                     padding: 40,

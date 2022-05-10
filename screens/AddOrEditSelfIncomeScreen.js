@@ -156,6 +156,7 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
                             name={descIcon}
                             size={20}
                             color={'#0782F9'}
+                            style={{justifyContent:'center', marginTop: 18}}
                             type={descIcon != "bank" ? "ionicon" : "font-awesome"}
                             />
                     <Text style={{top:37,margin:1,fontSize:12}}>{desc}</Text>
@@ -180,13 +181,26 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
                             animationType="slide"
                             transparent={true}
                             >
-                            <View style = {modelContent.modalView}>
-                                <View style={[modelContent.modalRowView,{paddingTop:40,}]}>
+                            <View style = {[modelContent.modalView, {top:100, borderWidth:1}]}>
+                            <TouchableOpacity
+                                        title="Home"
+                                        leftIcon="Home" 
+                                        onPress={() => {handleAddDescription(desc); }}
+                                        style={{alignSelf: 'flex-end', margin:10}}
+                                        >
+                                            <Ionicons 
+                                                name={"close"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                    </TouchableOpacity>
+                                <View style={[modelContent.modalRowView,{paddingTop:85,}]}>
                                     <TouchableOpacity
                                                 title="Gift"
                                                 leftIcon="Gift"
                                                 onPress={() => {handleAddDescription("Gift"); setDescriptionIcon("gift-outline")}}
-                                                style={modelContent.button}
+                                                style={modelContent.chooseButton}
                                                 >
                                                     <Ionicons 
                                                         name={"gift-outline"}
@@ -201,7 +215,7 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
                                             title="Business"
                                             leftIcon="Business"
                                             onPress={() => {handleAddDescription("Business"); setDescriptionIcon("business-outline")}}
-                                            style={modelContent.button}
+                                            style={modelContent.chooseButton}
                                             >
                                                 <Ionicons 
                                                     name={"business-outline"}
@@ -215,7 +229,7 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
                                             title="Loan"
                                             leftIcon="Loan"
                                             onPress={() => {handleAddDescription("Loan"); setDescriptionIcon("bank")}}
-                                            style={modelContent.button}
+                                            style={modelContent.chooseButton}
                                             >
                                                 <FontAwesome 
                                                     name={"bank"}
@@ -229,7 +243,7 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
                                             title="ExtraIncome"
                                             leftIcon="ExtraIncome"
                                             onPress={() => {handleAddDescription("Salary"); setDescriptionIcon("cash-outline")}}
-                                            style={modelContent.button}
+                                            style={modelContent.chooseButton}
                                             >
                                                 <Ionicons
                                                     name={"cash-outline"}

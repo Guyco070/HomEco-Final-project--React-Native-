@@ -272,7 +272,7 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 			{listName=="shoppingList" && isAllMarked &&
 			<TouchableOpacity
 					title="Add  As Expenditure"
-					onPress={() => { firebase.shoppingListToString(items).then((SL) => navigation.navigate('EditExpenditureScreen',{hKey, exp:{ partner:uEmail,company: "", descOpitional: SL , amount: '', billingType: "One-time", invoices: [], contracts: [], desc: "Supermarket", descIcon:"cart-minus"}}))}}
+					onPress={() => { firebase.shoppingListToString(items).then((SL) => navigation.navigate('AddOrEditExpenditure',{hKey, exp:{ partner:uEmail,company: "", descOpitional: SL , amount: '', billingType: "One-time", invoices: [], contracts: [], desc: "Supermarket", descIcon:"cart-minus", }}))}}
 					style={[styles.button,{alignSelf:'center',backgroundColor:'#ffa000', width: 200}]}
 					>
 					<Text style={[styles.buttonText,]}>Add  As Expenditure</Text>

@@ -70,7 +70,7 @@ const ChangePermissions =(props) => {
            setHKey(firebase.getHouseKeyByNameAndCreatorEmail(newHName,props.house["cEmail"]))
         }
         else{
-            firebase.updateDocAllColsAtFirestore("houses",hKey,{hImage:catchImage, description: desc, partners: firebase.updateHousePartners(hPartners, oldHPartners)})
+            firebase.updateDocAllColsAtFirestore("houses",hKey,{hImage:catchImage, description: desc, partners: firebase.updateHousePartners(hPartners, oldHPartners,oldHPartners)})
         }
         navigation.replace("HouseProfile",{hKeyP: hKey})
     }

@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "HomEco-Final-project--React-Native-",
-    "slug": "HomEco-Final-project--React-Native-",
+    "name": "HomEco",
+    "slug": "HomEco",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/HomEcoLogo.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/HomEcoLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,12 +21,25 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/HomEcoLogo.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/HomEcoLogo.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/HomEcoLogo.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/House-bell-sound-effect.wav",
+            "./assets/House-bell-sound-effect.wav"
+          ]
+        }
+      ]
+    ]
   }
 }

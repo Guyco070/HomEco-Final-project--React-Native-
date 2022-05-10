@@ -200,8 +200,8 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
 
 const updateHousePartners = (partners, oldPartners, oldHFullPartners) => {
   let partnersDict = {}
-  let permissions = {"seeIncome": false, "seeMonthlyBills": false}
-
+  let permissions = {"seeIncome": false, "seeMonthlyBills": false, "changeGallery": false}
+    console.log(oldHFullPartners)
     for(let i in partners){
 
       for(let j in oldPartners)
@@ -231,28 +231,16 @@ const updateHousePartners = (partners, oldPartners, oldHFullPartners) => {
               allowance: oldHFullPartners[curPartner].allowance // {[ from, amount ],...}
           }
         }
-      console.log("partners[i]")
-      console.log(partners[i]["email"])
       }
   }
-  console.log("partnersDict")
-    console.log(partnersDict)
-
     return partnersDict
 }
 
-const replaceUpdatedHouseToFirestore = async(house, newHName, partners, hImage, description) => {
-  partners = updateHousePartners(partners,house.partners)
-  house = {
-    hName: newHName,
-    cEmail: house.cEmail,
-    partners: partners,
-    cDate: house.cDate,
-    expends: house.expends,
-    hImage: hImage ? hImage : tempHouseProfileImage,
-    description: description ? description : tempHouseDescripton,
-    shoppingList: house.shoppingList
-   }
+const replaceUpdatedHouseToFirestore = async(house, newHName, partners, hImage, description, oldHFullPartners) => {
+  partners = updateHousePartners(partners,house.partners, oldHFullPartners)
+  house['hName'] = newHName
+  house['hImage'] = hImage ? hImage : tempHouseProfileImage
+  house['description'] = description ? description : tempHouseDescripton
   await setDoc(doc(collection(db, 'houses'), newHName + "&" + house.cEmail),house );
   return house
 }
@@ -354,6 +342,8 @@ const getCurentPartnerOfHouse = async(hName,cEmail,curUEmail) => {
 
 const addExpendToHouse = async(hName, cEmail,expends, futureExpendes, expend) => 
 {
+  console.log("dddd")
+  console.log(expend)
   expends[expend.date] = expend
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
   
@@ -361,21 +351,32 @@ const addExpendToHouse = async(hName, cEmail,expends, futureExpendes, expend) =>
     addFutureExpenditureOrIncome(hName, cEmail, "futureExpendes", expend, futureExpendes)
 
   // Auto Classification
-   if(expend?.descOpitional != ''){
-      getByDocIdFromFirestore('expenditureTypesByOptionalDescription', expend.descOpitional).then(async(typeByOptionalDescription) => {
-          
-        if(typeByOptionalDescription)
-          if(expend.desc in typeByOptionalDescription)
-            updateCollectAtFirestore("expenditureTypesByOptionalDescription",expend.descOpitional , expend.desc, parseInt(typeByOptionalDescription[expend.desc]) + 1)
-          else updateCollectAtFirestore("expenditureTypesByOptionalDescription",expend.descOpitional , expend.desc, 1)
-        else{
-              const newDescription = {}
-              newDescription[expend.desc] = 1
-              await setDoc(doc(collection(db, 'expenditureTypesByOptionalDescription'), expend.descOpitional), newDescription); 
-            }
-      })
-   }
+  if(expend?.descOpitional != '' && expend.desc != "Supermarket"){
+    getByDocIdFromFirestore('expenditureTypesByOptionalDescription', expend.descOpitional).then(async(typeByOptionalDescription) => {
+      if(typeByOptionalDescription)
+        if(expend.desc in typeByOptionalDescription)
+          updateCollectAtFirestore("expenditureTypesByOptionalDescription",expend.descOpitional , expend.desc, parseInt(typeByOptionalDescription[expend.desc]) + 1)
+        else updateCollectAtFirestore("expenditureTypesByOptionalDescription",expend.descOpitional , expend.desc, 1)
+      else{
+            const newDescription = {}
+            newDescription[expend.desc] = 1
+            await setDoc(doc(collection(db, 'expenditureTypesByOptionalDescription'), expend.descOpitional), newDescription); 
+          }
+    })
   }
+
+  getByDocIdFromFirestore('expenditureTypesByCompany', expend.company).then(async(typeByCompany) => {
+    if(typeByCompany)
+      if(expend.desc in typeByCompany)
+        updateCollectAtFirestore("expenditureTypesByCompany",expend.company , expend.desc, parseInt(typeByCompany[expend.desc]) + 1)
+      else updateCollectAtFirestore("expenditureTypesByCompany",expend.company , expend.desc, 1)
+    else{
+          const newCompany = {}
+          newCompany[expend.desc] = 1
+          await setDoc(doc(collection(db, 'expenditureTypesByCompany'), expend.company), newCompany); 
+        }
+  })
+}
 
    
 const addIncomeToHouse = async(hName, cEmail, incomes, futureIncomes, income) => 

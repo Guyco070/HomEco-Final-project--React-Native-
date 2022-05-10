@@ -41,6 +41,16 @@ LogBox.ignoreLogs([
     }),
   });
 
+  const typeToIconDict = {"Home": "home", 
+                            "Food": "food", 
+                            "Car": "car", 
+                            "Travel": "airplane",
+                            "Shopping": "basket", 
+                            "Bills": "credit-card-settings-outline", 
+                            "Education": "school", 
+                            "Other": "help-outline",
+                            "Supermarket": "cart-minus"}
+
 const AddOrEditExpenditureScreen = ({route}) => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
@@ -130,12 +140,12 @@ const AddOrEditExpenditureScreen = ({route}) => {
             setBillingType(exp.billingType)
             setCompany(exp.company)
             setDescription(exp.desc)
-            setDescriptionIcon(exp.descIcon)
-            setAmount(exp.amount)
+            setDescriptionIcon(typeToIconDict[exp.desc])
+            exp?.amount && setAmount(exp.amount)
             setDescriptionOpitional(exp.descOpitional)
-            setIsEvent(exp.isEvent)
-            setPayments(exp.payments)
-            setTotalPayments(exp.totalPayments)
+            exp?.isEvent && setIsEvent(exp.isEvent)
+            exp?.payments ? setPayments(exp.payments) : setPayments(1)
+            exp?.totalPayments && setTotalPayments(exp.totalPayments)
             if(exp.isEvent)
                 updateEventDateText(exp.eventDate)
             if("notifications" in exp && exp.notifications.length != 0){
@@ -159,13 +169,17 @@ const AddOrEditExpenditureScreen = ({route}) => {
     useEffect(() => {
         if(descOpitional!=''){
             firebase.getExpenditureTypeAutoByOptionalDescription(descOpitional).then((type) => {
-                if(type && type != '')
+                if(type && type != ''){
                     setDescription(type)
+                    setDescriptionIcon(typeToIconDict[type])
+                }
             })
         }else{
             firebase.getExpenditureTypeAutoByCompany(company).then((type) => {
-                if(type && type != '')
+                if(type && type != ''){
                     setDescription(type)
+                    setDescriptionIcon(typeToIconDict[type])
+                }
             })
         }
       }, [descOpitional])
@@ -173,19 +187,25 @@ const AddOrEditExpenditureScreen = ({route}) => {
       useEffect(() => {
         if(descOpitional!=''){
             firebase.getExpenditureTypeAutoByOptionalDescription(descOpitional).then((type) => {
-                if(type && type != '')
+                if(type && type != ''){
                     setDescription(type)
+                    setDescriptionIcon(typeToIconDict[type])
+                }
                 else{
                     firebase.getExpenditureTypeAutoByCompany(company).then((type) => {
-                        if(type && type != '')
+                        if(type && type != ''){
                             setDescription(type)
+                            setDescriptionIcon(typeToIconDict[type])
+                        }
                     })
                 }
             })
         }else{
             firebase.getExpenditureTypeAutoByCompany(company).then((type) => {
-                if(type && type != '')
+                if(type && type != ''){
                     setDescription(type)
+                    setDescriptionIcon(typeToIconDict[type])
+                }
             })
         }
       }, [company])
@@ -224,13 +244,13 @@ const AddOrEditExpenditureScreen = ({route}) => {
                 else if(from == 'contract')
                 {
                     setContractImageLoading(true)
-                    cloudinary.uploadImageToCloudinary("contract",_image).then((url)=>{ setContractCatchImage([...catchContractImages, url]); }).catch((e) => alert(e.message))
+                    cloudinary.uploadImageToCloudinary("contract",_image).then((url)=>{ setContractCatchImage([...catchContractImages, url]);  }).catch((e) => alert(e.message))
                 }
             }
             else{
-                if(from == 'invoice')
-                    cloudinary.uploadImageToCloudinary("invoice",_image).then((url)=>{  catchInvoImages[index] = url; setInvoCatchImage([...catchInvoImages]); }).catch((e) => alert(e.message))
-                else if(from == 'contract')
+                if(from == 'invoice'){
+                    cloudinary.uploadImageToCloudinary("invoice",_image).then((url)=>{  catchInvoImages[index] = url; setInvoCatchImage([...catchInvoImages]);   }).catch((e) => alert(e.message))
+                }else if(from == 'contract')
                     cloudinary.uploadImageToCloudinary("contract",_image).then((url)=>{ catchContractImages[index] = url; setContractCatchImage([...catchContractImages]); }).catch((e) => alert(e.message))
             }
         }
@@ -261,6 +281,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
         } 
     
     const handleCreateExpend = async() => {
+        console.log("gg")
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc != "Type" && amount){
@@ -272,8 +293,10 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                         payments: payments === "" && totalPayments !== "" ? 1 : payments, totalPayments: totalPayments,
                                         totalAmount: totalPayments !== "" ? amount : ""}).then(()=>{
                                             if(!("date" in exp)) 
+                                            {
                                                 firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
-                                            })
+                                            }
+                                        })
                                     })
 
             navigation.replace("HouseProfile",{hKeyP: hKey, menuBarIndex: 0})
@@ -282,14 +305,20 @@ const AddOrEditExpenditureScreen = ({route}) => {
 
     const notficationHandling = async() => {
         let tempNotifications = []
+        console.log("new Date(notifications[i].notificationDate)")
+
         for(let i in notifications) {
-            if(!("identifier" in notifications[i]))
+            console.log(new Date(notifications[i].notificationDate).toLocaleString())
+            
+            if(!("identifier" in notifications[i])){
+                console.log("fghsfghfd")
                 tempNotifications.push({
                     identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional? descOpitional:company,
                                                                             notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
                     dateTextNotification: notifications[i].dateTextNotification, 
                     notificationDate: notifications[i].notificationDate
                 })
+            }
             else tempNotifications.push(notifications[i])
         }
         return tempNotifications
@@ -363,6 +392,11 @@ const AddOrEditExpenditureScreen = ({route}) => {
         setShowNotification(Platform.OS === 'ios')
         setNotificationDate(currentDate)
         let tempDate = new Date(currentDate)
+        console.log("currentDate")
+        console.log(currentDate)
+        console.log(tempDate.getTime())
+        console.log(tempDate.getHours())
+
         let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let minutes = tempDate.getMinutes()
         if(parseInt(minutes) < 10)
@@ -372,8 +406,9 @@ const AddOrEditExpenditureScreen = ({route}) => {
             hours = "0" + hours
         let fTime =  hours + ":" + minutes
         setDateTextNotification(fTime + '  |  ' + fDate)
-
-        setNotifications([...notifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: notificationDate.setSeconds(0)}])
+        notificationDate.setSeconds(0)
+        if(modeNotification === 'time')
+        setNotifications(currentNotifications => [...currentNotifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: notificationDate}])
     }
 
     const showModeNotification = (currentMode) => {
@@ -435,19 +470,19 @@ const AddOrEditExpenditureScreen = ({route}) => {
                         title="Home"
                         leftIcon="Home"
                         onPress={() => setModalOpen(true)}
-                        style={[modelContent.button,{marginBottom:0}]}
+                        style={[modelContent.button,{marginBottom:0,}]}
                         >
                             <Icon 
                                 name={descIcon}
                                 size={25}
                                 color={'#0782F9'}
-                                style={{top:10}}
+                                style={{justifyContent:'center',}}
                                 type={"material-community"}
                                 />
-                            <Text style={{top:10,margin:1}}></Text>
+                            {/* <Text style={{top:10,margin:1}}></Text> */}
                     </TouchableOpacity>
-                    <Text style={{top:10,margin:1}}>{desc}</Text>
-
+                    <Text style={{top:15,margin:1}}>{desc}</Text>
+                   
                     <View style={{ width: "55%",marginTop:70,alignItems:'center', marginLeft:10,marginRight:10,marginBottom:25,borderRadius:10,borderColor:'lightgrey', borderWidth:2}}>
                         <Picker
                             selectedValue={billingType}
@@ -607,12 +642,25 @@ const AddOrEditExpenditureScreen = ({route}) => {
                             transparent={true}
                             >
                             <View style = {modelContent.modalView}>
-                                <View style={[modelContent.modalRowView,{paddingTop:40,}]}>
+                            <TouchableOpacity
+                                        title="Home"
+                                        leftIcon="Home" 
+                                        onPress={() => {handleAddDescription(desc); }}
+                                        style={{alignSelf: 'flex-end', marginEnd:10}}
+                                        >
+                                            <Ionicons 
+                                                name={"close"}
+                                                size={20}
+                                                color={'#0782F9'}
+                                                style={{top:10}}
+                                                />
+                                    </TouchableOpacity>
+                                <View style={[modelContent.modalRowView,{paddingTop:85,}]}>
                                     <TouchableOpacity
                                         title="Home"
-                                        leftIcon="Home"
+                                        leftIcon="Home" 
                                         onPress={() => {handleAddDescription("Home"); setDescriptionIcon("home")}}
-                                        style={modelContent.button}
+                                        style={modelContent.chooseButton}
                                         >
                                             <Ionicons 
                                                 name={"home"}
@@ -625,7 +673,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Food"
                                         onPress={() => {handleAddDescription("Food"); setDescriptionIcon("food")}}
-                                        style={modelContent.button}
+                                        style={modelContent.chooseButton}
                                         >
                                             <Ionicons 
                                                 name="md-fast-food"
@@ -638,7 +686,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Car"
                                         onPress={() => {handleAddDescription("Car"); setDescriptionIcon("car")}}
-                                        style={modelContent.button}
+                                        style={modelContent.chooseButton}
                                         >
                                             <Ionicons 
                                                 name={"car"}
@@ -651,7 +699,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Travel"
                                         onPress={() => {handleAddDescription("Travel"); setDescriptionIcon("airplane")}}
-                                        style={modelContent.button}
+                                        style={modelContent.chooseButton}
                                         >
                                             <Entypo 
                                                 name={"aircraft"}
@@ -667,7 +715,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Shopping"
                                         onPress={() => {handleAddDescription("Shopping"); setDescriptionIcon("basket")}}
-                                        style={modelContent.button}
+                                        style={modelContent.chooseButton}
                                         >
                                             <FontAwesome 
                                                 name="shopping-bag"
@@ -678,9 +726,9 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                         <Text style={{top:37,margin:1,fontSize:12}}>Shopping</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        title="Bills"
+                                        title="Bills" 
                                         onPress={() => {handleAddDescription("Bills"); setDescriptionIcon("credit-card-settings-outline")}}
-                                        style={modelContent.button}
+                                        style={modelContent.chooseButton}
                                         >
                                             <FontAwesome5
                                                 name="money-check-alt"
@@ -693,7 +741,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Education"
                                         onPress={() => {handleAddDescription("Education"); setDescriptionIcon("school")}}
-                                        style={modelContent.button}
+                                        style={[modelContent.chooseButton,{width:73, marginHorizontal:13,}]}
                                         >
                                             <FontAwesome
                                                 name={"graduation-cap"}
@@ -706,7 +754,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                     <TouchableOpacity
                                         title="Other"
                                         onPress={() => {handleAddDescription("Other"); setDescriptionIcon("help-outline")}}
-                                        style={modelContent.button}
+                                        style={modelContent.chooseButton}
                                         >
                                             <AntDesign 
                                                 name={"help-outline"}
@@ -731,12 +779,12 @@ const AddOrEditExpenditureScreen = ({route}) => {
                     
                         {catchInvoImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
-                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => {setFromToImagePicker('invoice'); setIndexOfImage(index);}} onRemove={() => onRemove('invoice',index)} changeable={true} navigation={navigation}/>
+                                <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} image={val} onPress={() => addImage("",'invoice',index)} onRemove={() => onRemove('invoice',index)} changeable={true} navigation={navigation}/>
                             </View>
                             ))}</>}
                             
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
-                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => {setFromToImagePicker('invoice'); setIndexOfImage(-1);}} onRemove={-1} changeable={true} navigation={navigation}/>
+                            <UploadDocumentImage tempImage = {require('../assets/invoicing_icon.png')} onPress={() => addImage("",'invoice',-1)} onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
                         
                     </ScrollView>
@@ -749,12 +797,12 @@ const AddOrEditExpenditureScreen = ({route}) => {
                         { contractImageLoading ? <Loading/> : <>
                         {catchContractImages.map((val, index) => ( 
                             <View style={docImageUploaderStyles.mediaImageContainer}>
-                                <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} onPress={() => {setFromToImagePicker('contract'); setIndexOfImage(index);}} onRemove={() => onRemove('contract',index)} changeable={true} navigation={navigation}/>
+                                <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} image={val} onPress={() => addImage("",'contract',index)} onRemove={() => onRemove('contract',index)} changeable={true} navigation={navigation}/>
                             </View>
                             ))
                         }</>}
                         <View style={docImageUploaderStyles.mediaImageContainer}>    
-                            <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} onPress={() => {setFromToImagePicker('contract'); setIndexOfImage(-1);}}  onRemove={-1} changeable={true} navigation={navigation}/>
+                            <UploadDocumentImage tempImage = {require('../assets/contract_icon.png')} onPress={() => addImage("",'contract',-1)}  onRemove={-1} changeable={true} navigation={navigation}/>
                         </View>
 
                     </ScrollView>
@@ -769,11 +817,11 @@ const AddOrEditExpenditureScreen = ({route}) => {
             <View style={[styles.container,{marginTop: 5}]}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
-                        title={exp ? "Update":"Create"}
+                        title={exp && exp.desc !== "Supermarket" ? "Update":"Create"}
                         onPress={handleCreateExpend}
                         style={styles.button}
                         >
-                        <Text style={styles.buttonText}>{exp ? "Update":"Create"}</Text>
+                        <Text style={styles.buttonText}>{exp && exp.desc !== "Supermarket" ? "Update":"Create"}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

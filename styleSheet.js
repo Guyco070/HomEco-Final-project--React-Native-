@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { Directions } from 'react-native-gesture-handler'
+import { Colors } from './Colors'
 
 const styles = StyleSheet.create({
     container: {
@@ -198,7 +199,7 @@ const modelContent = StyleSheet.create({
     },
     modalView: {
         margin: 1,
-        marginTop:450,
+        marginTop:495,
         backgroundColor: "white",
         borderRadius: 20,
         padding: 10,
@@ -220,7 +221,7 @@ const modelContent = StyleSheet.create({
     button: {
         backgroundColor:'#0782F9',
         borderWidth:5,
-        borderColor:'#0782F9',
+        borderColor:Colors.main,
         alignItems:'center',
         justifyContent:'center',
         width:70,
@@ -228,6 +229,22 @@ const modelContent = StyleSheet.create({
         marginRight:15,
         marginBottom:350,
         top:10,
+        margin:10,
+        marginHorizontal:15,
+        backgroundColor:'#fff',
+        borderRadius:50,
+    },
+    chooseButton: {
+        backgroundColor:'#0782F9',
+        borderWidth:5,
+        borderColor:Colors.main,
+        alignItems:'center',
+        justifyContent:'center',
+        width:70,
+        height:70,
+        marginRight:15,
+        marginBottom:350,
+        top:20,
         margin:10,
         marginHorizontal:15,
         backgroundColor:'#fff',

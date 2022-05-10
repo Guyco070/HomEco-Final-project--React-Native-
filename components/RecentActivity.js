@@ -23,7 +23,8 @@ const typeIcones ={
     Shopping: "pricetags-outline",
     Bills: "card-outline",
     Education: "glasses-outline",
-    Other: "help-outline"
+    Other: "help-outline",
+    Supermarket: "cart-outline"
 }
 
 const RecentActivity = ({map,slice,hKey,type,scrollHandler, title}) => {

@@ -14,7 +14,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import TodoList from '../components/TodoList/TodoList';
 import Toast from 'react-native-toast-message';
 import UserHousesListView from '../components/UserHousesListView';
-import UserIncomeToHousesList from '../components/UserIncomeToHousesList';
+import UserIncomesOrExpendsToHousesList from '../components/UserIncomesOrExpendsToHousesList';
 import { Icon } from 'react-native-elements';
 
 
@@ -67,7 +67,7 @@ const UserProfileScreen = ({route}) => {
                 </View>
                
                 <View style={[styles.container,{marginVertical:15}]}>
-                    <UserIncomeToHousesList user={user} viewImage={false} />
+                    <UserIncomesOrExpendsToHousesList user={user} viewImage={false} type='incomes' isWithPaymentsTitle />
                 </View>
             </ScrollView>}
         </SafeAreaView>

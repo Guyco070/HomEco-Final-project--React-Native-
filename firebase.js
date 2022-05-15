@@ -595,14 +595,13 @@ const getUserIncomeToHouse = (house,uEmail) => {
       }
     }
 
-const getUserIncomeToHouseByMonth = (incomes,uEmail) => {
+const getUserIncomeOrExpendsToHouseByMonth = (incomes,uEmail) => {
     const arr = getSortedArrayDateFromDict(incomes)
     const curMonth = (new Date()).getMonth()
     let incomesAmount = 0
-    arr.map((income) => { if(income.date.toDate().getMonth() === curMonth && income.partner == uEmail) (incomesAmount += parseInt(income.amount)); console.log(parseInt(income.amount))}); 
-    console.log("incomesAmount")
-    console.log(incomesAmount)
-    return incomesAmount
+    let incomesQuntity = 0
+    arr.map((income) => { if(income.date.toDate().getMonth() === curMonth && income.partner == uEmail){ (incomesAmount += parseInt(income.amount)); incomesQuntity++; }; }); 
+    return {incomesAmount, incomesQuntity}
   }
 
 const addProductToFirestore = async(barcode, name, brand) => {
@@ -640,6 +639,6 @@ export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRe
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, 
         getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
         getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse, removeIncomeFromHouse, shoppingListToString, 
-        getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeToHouseByMonth,
+        getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeOrExpendsToHouseByMonth,
         addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany, updateExpendsAndIncomes, getChatFromFirestore, setSnapshotById } 
 

@@ -12,14 +12,15 @@ import TouchableScale from 'react-native-touchable-scale';
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import Loading from './Loading';
 import { AntDesign } from '@expo/vector-icons';
+import { monthNames } from '../Graphs';
 
 
-const UserIncomeToHosesList = (props) => {
-    const navigation = useNavigation()
+const UserIncomesOrExpendsToHousesList = (props) => {
     const [housesList, sethousesList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [changeIncome, setChangeIncome] = useState([])
     const [hIncome, setHIncome] = useState([])
+    const [hExpends, setHHExpends] = useState([])
     const [hIncomeToChange, setHIncomeToChange] = useState([])
 
 
@@ -28,17 +29,19 @@ const UserIncomeToHosesList = (props) => {
             .then((houses) => {
                 let tempChangeIncome = []
                 let tempChangeHIncome = []
+                let tempChangeHExpends = []
                 let tempChangeHIncomeToChange = []
+
                 for(let i in houses){
                     tempChangeIncome[i] = false
-                    tempChangeHIncome[i] = firebase.getUserIncomeToHouseByMonth(houses[i].incomes, props.user["email"])
+                    tempChangeHIncome[i] = firebase.getUserIncomeOrExpendsToHouseByMonth(houses[i].incomes, props.user["email"])
+                    tempChangeHExpends[i] = firebase.getUserIncomeOrExpendsToHouseByMonth(houses[i].expends, props.user["email"])
                     tempChangeHIncomeToChange[i] = tempChangeHIncome[i]
                 }
                 
-               
                 setChangeIncome([...tempChangeIncome])
                 setHIncome([...tempChangeHIncome])
-                
+                setHHExpends([...tempChangeHExpends])
                 setHIncomeToChange([...tempChangeHIncomeToChange])
                 
                 sethousesList(houses); 
@@ -65,8 +68,24 @@ const UserIncomeToHosesList = (props) => {
         (<ScrollView 
         style={{width:'80%',}}
         >
-            <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0}]}>Payments to houses</Text>
-            <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0,marginTop:5, fontSize:11,textTransform:'none'}]}>Total for current month</Text>
+            {props.isWithPaymentsTitle && <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0}]}>Payments to houses</Text>}
+            <View style={{margin:0, flexDirection:'row'}}>
+                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0,marginTop: props.isWithPaymentsTitle ? 5 : 15, fontSize:11,textTransform:'none'}]}>{monthNames[new Date().getMonth()] + " " + new Date().getFullYear() + " - Overall summary   | "}</Text>
+                <Text style={[houseProfileStyles.subText, {marginTop: props.isWithPaymentsTitle ? 1 : 11,fontSize:9,textTransform:'none'}]}>{"Quantity\nAmount"}</Text>
+                <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{marginLeft:0,marginTop: props.isWithPaymentsTitle ? 5 : 15, fontSize:11,textTransform:'none'}]}>{" | "}</Text>
+            </View>
+
+            <ListItem key={-1} bottomDivider>
+                <ListItem.Content style={{margin:0}} >
+                <View style={{margin:0}}>
+                    <Text>{}</Text>
+                </View>
+
+                </ListItem.Content>
+                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{alignSelf: 'flex-end',marginTop:5, fontSize:11,textTransform:'none'}]}>Incomes</Text>
+                    <Text style={[houseProfileStyles.subText, houseProfileStyles.recent,{alignSelf: 'flex-end',marginTop:5,marginLeft:20, fontSize:11,textTransform:'none'}]}>Expends</Text>
+                    <Text style={{margin:0}}>        </Text>
+            </ListItem>
 
             {housesList && 
                     housesList 
@@ -83,11 +102,17 @@ const UserIncomeToHosesList = (props) => {
                             {/* <TouchableOpacity  style={docImageUploaderStyles.removeBtn} onPress={props.onRemove}>
                                     <AntDesign name="close" size={17} color="black" />
                             </TouchableOpacity> */}
-                                                            <Text style={{margin:0}}>{l.hName}</Text>
+                                <Text style={{margin:0}}>{l.hName}</Text>
 
                                 </ListItem.Content>
-                                <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hIncome[i]}</Text>
-
+                                <View style={{ width: "25%" }}>
+                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hIncome[i].incomesQuntity}</Text>
+                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hIncome[i].incomesAmount}</Text>
+                                </View>
+                                <View style={{ width: "25%" }}>
+                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hExpends[i].incomesQuntity}</Text>
+                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hExpends[i].incomesAmount}</Text>
+                                </View>
                                 <AntDesign name="creditcard" size={17} color="black" />
 
                             </ListItem>
@@ -106,4 +131,4 @@ const UserIncomeToHosesList = (props) => {
     )
 }
 
-export default UserIncomeToHosesList
+export default UserIncomesOrExpendsToHousesList

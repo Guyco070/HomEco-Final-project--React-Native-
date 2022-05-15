@@ -106,12 +106,12 @@ const UserIncomesOrExpendsToHousesList = (props) => {
 
                                 </ListItem.Content>
                                 <View style={{ width: "25%" }}>
-                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hIncome[i].incomesQuntity}</Text>
-                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hIncome[i].incomesAmount}</Text>
+                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{ "   "+hIncome[i].incomesQuntity}</Text>
+                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hIncome[i].incomesAmount + " $"}</Text>
                                 </View>
                                 <View style={{ width: "25%" }}>
-                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hExpends[i].incomesQuntity}</Text>
-                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hExpends[i].incomesAmount}</Text>
+                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{"   "+hExpends[i].incomesQuntity}</Text>
+                                    <Text style={[styles.listTextItem,{alignSelf:'center'}]} >{hExpends[i].incomesAmount + " $"}</Text>
                                 </View>
                                 <AntDesign name="creditcard" size={17} color="black" />
 

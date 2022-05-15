@@ -19,13 +19,16 @@ const ChatScreen = ({ route }) => {
  
   useLayoutEffect(()=>{
     const action = (doc) => {
+      console.log(route.params.hKey)
+      console.log(doc)
       // const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
-      setMessages(doc.data().messages.map(doc => ({
-        _id: doc._id,
-        createdAt: doc.createdAt.toDate(),
-        text: doc.text,
-        user: doc.user
-      })))
+      if(doc)
+        setMessages(doc.data().messages.map(doc => ({
+          _id: doc._id,
+          createdAt: doc.createdAt.toDate(),
+          text: doc.text,
+          user: doc.user
+        })))
     }
     firebase.setSnapshotById("chats", route.params.hKey, action)
    

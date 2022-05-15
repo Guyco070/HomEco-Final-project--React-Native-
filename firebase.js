@@ -138,6 +138,10 @@ const addDocToFirestore = async(collect, newValue) => {
   await setDoc(doc(collection(db, collect)), newValue);
 }
 
+const addDocByIdToFirestore = async(collect, key, values) => {
+  await setDoc(doc(collection(db, collect), key),values);
+}
+
 const updateCollectAtFirestore = async(collect,key, col, newValue) => {
   const Data = doc(db, collect, key);
   await updateDoc(Data , col = col,newValue)
@@ -194,7 +198,7 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
                   { itemName: 'item 3', quantity: 2, isSelected: false },]
    }
   await setDoc(doc(collection(db, 'houses'), hName + "&" + cEmail),house );
-  await setDoc(doc(collection(db, 'chats'), hName + "&" + cEmail),{} );
+  await setDoc(doc(collection(db, 'chats'), hName + "&" + cEmail),{ messges: [] });
   return house
 }
 
@@ -237,6 +241,7 @@ const updateHousePartners = (partners, oldPartners, oldHFullPartners) => {
 }
 
 const replaceUpdatedHouseToFirestore = async(house, newHName, partners, hImage, description, oldHFullPartners) => {
+  getByDocIdFromFirestore('chats',house.hName + "&" + house.cEmail).then( messages => addDocByIdToFirestore('chats',newHName + "&" + house.cEmail, messages))
   partners = updateHousePartners(partners,house.partners, oldHFullPartners)
   house['hName'] = newHName
   house['hImage'] = hImage ? hImage : tempHouseProfileImage
@@ -342,8 +347,6 @@ const getCurentPartnerOfHouse = async(hName,cEmail,curUEmail) => {
 
 const addExpendToHouse = async(hName, cEmail,expends, futureExpendes, expend) => 
 {
-  console.log("dddd")
-  console.log(expend)
   expends[expend.date] = expend
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
   
@@ -633,7 +636,7 @@ const setSnapshotById = (collect, docId, action) => {
 }
 
 export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, 
-        getWhereFromFirestore, deleteRowFromFirestore, addUserToFirestore,addDocToFirestore, updateCollectAtFirestore, updateDocAllColsAtFirestore,
+        getWhereFromFirestore, deleteRowFromFirestore, addDocByIdToFirestore, addUserToFirestore,addDocToFirestore, updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, 
         getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
         getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse, removeIncomeFromHouse, shoppingListToString, 

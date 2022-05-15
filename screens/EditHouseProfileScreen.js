@@ -124,6 +124,7 @@ const EditHouseProfileScreen =({route}) => {
                     firebase.replaceUpdatedHouseToFirestore(house ,newHName , hPartners,  catchImage, desc, oldHFullPartners)
                     .then((createdHouse) =>{
                         firebase.deleteRowFromFirestore("houses",hKey)
+                        firebase.deleteRowFromFirestore("chats",hKey)
                         navigation.replace("HouseProfile",{hKeyP:firebase.getHouseKeyByNameAndCreatorEmail(newHName,house.cEmail)})
                     }
                     ).catch(error => alert(error.message));

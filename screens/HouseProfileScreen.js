@@ -14,7 +14,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 import TodoList from '../components/TodoList/TodoList';
 import Toast from 'react-native-toast-message';
 import TouchableScale from 'react-native-touchable-scale';
-import { Timestamp } from 'firebase/firestore';
+import { collection, doc, setDoc, Timestamp } from 'firebase/firestore';
 import ModalSelector from 'react-native-modal-selector'
 import * as Linking from 'expo-linking';
 import { Icon } from 'react-native-elements';
@@ -138,8 +138,8 @@ const HouseProfileScreen = ({route}) => {
                         <Icon  name="edit"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>
                     </TouchableOpacity>
-                    
                 </View>}
+
                 <View style={{ alignSelf: "center" }}>
                     <View style={houseProfileStyles.profileHouseImage}>
                         <Image source={{uri:house.hImage}} style={houseProfileStyles.image} resizeMode="center"></Image>

@@ -347,11 +347,16 @@ const getCurentPartnerOfHouse = async(hName,cEmail,curUEmail) => {
 
 const addExpendToHouse = async(hName, cEmail,expends, futureExpendes, expend) => 
 {
-  expends[expend.date] = expend
-  updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
-  
-  if(expend.billingType !== "One-time")
-    addFutureExpenditureOrIncome(hName, cEmail, "futureExpendes", expend, futureExpendes)
+  if(expend.date <= new Date()){
+    expends[expend.date] = expend
+    updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
+
+    if(expend.billingType !== "One-time")
+      addFutureExpenditureOrIncome(hName, cEmail, "futureExpendes", expend, futureExpendes)
+  }else {
+    futureExpendes[expend.date] = expend
+    updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "futureExpendes", futureExpendes)
+  }
 
   // Auto Classification
   if(expend?.descOpitional != '' && expend.desc != "Supermarket"){
@@ -384,11 +389,15 @@ const addExpendToHouse = async(hName, cEmail,expends, futureExpendes, expend) =>
    
 const addIncomeToHouse = async(hName, cEmail, incomes, futureIncomes, income) => 
 {
-  incomes[income.date] = income
-  updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "incomes", incomes)
-  if(income.billingType !== "One-time")
-    addFutureExpenditureOrIncome(hName, cEmail, "futureIncomes", income, futureIncomes)
-
+  if(income.date <= new Date()){
+    incomes[income.date] = income
+    updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "incomes", incomes)
+    if(income.billingType !== "One-time")
+      addFutureExpenditureOrIncome(hName, cEmail, "futureIncomes", income, futureIncomes)
+  }else{
+    futureIncomes[income.date] = income
+    updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "futureIncomes", futureIncomes)
+  }
 }
 
 const futureDateActions = {

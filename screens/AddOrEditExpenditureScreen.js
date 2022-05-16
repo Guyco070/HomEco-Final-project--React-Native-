@@ -281,7 +281,6 @@ const AddOrEditExpenditureScreen = ({route}) => {
         } 
     
     const handleCreateExpend = async() => {
-        console.log("gg")
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc != "Type" && amount){

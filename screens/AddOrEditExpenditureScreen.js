@@ -291,7 +291,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                     desc, amount: totalPayments !== "" ? parseInt(amount)/parseInt(totalPayments) : amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
                                         eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText, 
                                         payments: payments === "" && totalPayments !== "" ? 1 : payments, totalPayments: totalPayments,
-                                        totalAmount: totalPayments !== "" ? amount : ""}).then(()=>{
+                                        totalAmount: totalPayments !== "" ? amount : "", isFuture: false}).then(()=>{
                                             if(!("date" in exp)) 
                                             {
                                                 firebase.updateCollectAtFirestore("houses", hKey, "shoppingList", [])
@@ -349,13 +349,36 @@ const AddOrEditExpenditureScreen = ({route}) => {
     const handleDeleteExpenditure = () => {
         Alert.alert(
             "Are your sure?",
-            "Are you sure you want to remove this beautiful box?",
+            "Are you sure you want to remove this expenditure ?",
             [
               // The "Yes" button
               {
                 text: "Yes",
                 onPress: () => {
-                    firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                    if(exp.billingType !== "One-time"){
+                        Alert.alert(
+                        "This expense is defined as an expense that will recur in the future.",
+                        "would you like to delete future expenses as well? ?",
+                        [
+                            // The "Yes" button
+                            {
+                            text: "Yes",
+                            onPress: () => {
+                                firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp, house.futureExpendes, true).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                            },
+                            },
+                            // The "No" button
+                            // Does nothing but dismiss the dialog when tapped
+                            {
+                            text: "No",
+                            onPress: () => {
+                                firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp, house.futureExpendes, false).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                            },
+                            },
+                        ]
+                        );
+                    }
+                    else firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp, house.futureExpendes, false).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
                 },
               },
               // The "No" button
@@ -442,7 +465,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
             {/* <UploadProfileImage tempImage = {require('../assets/add_house.png')} image = {hImage} onPress={addImage} changeable={true}/> */}
             {/* {imageModalPickerVisable && <ImagePickerModal imageModalPickerVisable={imageModalPickerVisable} setImageModalPickerVisable={setImageModalPickerVisable} addImage={addImage} index={indexOfImage} from={fromToImagePicker}/> } */}
 
-            {(exp && "date" in exp) &&
+            {(exp && "date" in exp) && 
             <View style={TodoSheet.trash}>
                 <TouchableOpacity style={{margin:25} } onPress={handleDeleteExpenditure} >
                     <Icon name="trash"  type="ionicon" size={22}/>

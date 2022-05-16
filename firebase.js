@@ -428,6 +428,7 @@ const getFutureExpenditure = (curCreate) => {
     futureDateActions[curCreate.billingType](curCreate)
 
     curCreate["date"] = curCreate.date
+    curCreate["isFuture"] = true
 
     return curCreate
   }else return null
@@ -453,7 +454,6 @@ const addFutureExpenditureOrIncome = (hName, cEmail, type, curCreate, futures) =
 
     if(nextExpenditure  != null){ 
       futures[nextExpenditure.date] = nextExpenditure
-
       updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), type, futures)
   }
 }
@@ -534,16 +534,31 @@ const removeUserSelfIncome = async(uEmail,incomes, income) =>
   updateCollectAtFirestore("users",  uEmail, "incomes", incomes)
 }
 
-const removeExpendFromHouse = async(hName, cEmail,expends, expend) => 
+const removeExpendFromHouse = async(hName, cEmail,expends, expend, futureExpendes, isRemovingFeautures) => 
 {
   delete expends[expend.date.toDate()]
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "expends", expends)
+
+  if(isRemovingFeautures){
+    const nextExpenditure = getFutureExpenditure(expend)
+    if(nextExpenditure  != null){
+      delete futureExpendes[nextExpenditure.date]
+      updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "futureExpendes", futureExpendes)
+    }
+  }
 }
 
-const removeIncomeFromHouse = async(hName, cEmail,incomes, income) => 
+const removeIncomeFromHouse = async(hName, cEmail,incomes, income, futureIncomes, isRemovingFeautures) => 
 {
   delete incomes[income.date.toDate()]
   updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "incomes", incomes)
+  if(isRemovingFeautures){
+    const nextIncome = getFutureExpenditure(income)
+    if(nextIncome  != null){
+      delete futureIncomes[nextIncome.date]
+      updateCollectAtFirestore("houses", getHouseKeyByNameAndCreatorEmail(hName, cEmail), "futureIncomes", futureIncomes)
+    }
+  }
 }
 
 const shoppingListToString = async(shoppingList) => 

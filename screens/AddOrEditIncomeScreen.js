@@ -142,7 +142,7 @@ const AddOrEditIncomeScreen = ({route}) => {
         else if(amount){
                 notficationHandling().then((tempNotifications) => {
                     firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes, house.futureIncomes, {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email, amount: amount,
-                       billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText})
+                       billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText, isFuture: false})
                 })
             navigation.replace("HouseProfile",{hKeyP: hKey, menuBarIndex: 1})
         }else alert("Sorry, you must fill in all the fields!")
@@ -235,7 +235,30 @@ const AddOrEditIncomeScreen = ({route}) => {
               {
                 text: "Yes",
                 onPress: () => {
-                    firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                    if(income.billingType !== "One-time"){
+                      Alert.alert(
+                      "This income is defined as an income that will recur in the future.",
+                      "would you like to delete future incomes as well? ?",
+                      [
+                          // The "Yes" button
+                          {
+                          text: "Yes",
+                          onPress: () => {
+                              firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income, house.futureIncomes, true).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                          },
+                          },
+                          // The "No" button
+                          // Does nothing but dismiss the dialog when tapped
+                          {
+                          text: "No",
+                          onPress: () => {
+                            firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income, house.futureIncomes, false).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                          },
+                          },
+                      ]
+                      );
+                  }
+                  else firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income, house.futureIncomes, false).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
                 },
               },
               // The "No" button

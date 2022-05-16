@@ -247,7 +247,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler, title}) => {
                                                                 </ScrollView>
                                                             </View> }
                                                         </View>
-                                                        { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) &&
+                                                        { (firebase.auth.currentUser?.email == l.partner || cEmail == firebase.auth.currentUser?.email) && !l?.isFuture &&
                                                                 <TouchableOpacity  onPress={ () => handleEdit(l) } style={{alignSelf: 'center', alignItems: 'flex-end', margin:7 }}>
                                                                     <Icon  name="edit"  type="icon" color={"grey"} size={20}/>
                                                                 </TouchableOpacity>

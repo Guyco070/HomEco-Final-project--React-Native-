@@ -19,8 +19,6 @@ const ChatScreen = ({ route }) => {
  
   useLayoutEffect(()=>{
     const action = (doc) => {
-      console.log(route.params.hKey)
-      console.log(doc)
       // const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
       if(doc)
         setMessages(doc.data().messages.map(doc => ({

@@ -59,7 +59,7 @@ export default function App() {
   const HomeStackScreen = ({navigation}) => {
     return <Stack.Navigator  screenOptions={{headerShown:false,}}>
       <Stack.Screen name="LoadUserScreen" component={LoadUserScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Login" component={LoginScreen}/>
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="EditUserProfile" component={EditUserProfileScreen} options={{ title: 'Edit User Profile'}}/>
@@ -80,6 +80,7 @@ export default function App() {
       <Stack.Screen name="Chat" component={ChatScreen} options={{ title: 'Chat'}}/>
     </Stack.Navigator>
   }
+  
   return (
     <NavigationContainer>
       <Drawer.Navigator drawerContent={props => <DrawerContent {...props}/>} screenOptions={{

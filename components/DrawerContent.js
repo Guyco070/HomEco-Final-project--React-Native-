@@ -16,7 +16,8 @@ import * as firebase from '../firebase'
 import { useNavigation } from '@react-navigation/native';
 import { signOut,auth } from '@firebase/auth'
 import UserHousesListView from './UserHousesListView'
-
+import { StackActions } from '@react-navigation/native';
+import { deviceHeight } from '../SIZES'
 const DrawerContent = (props) => {
   const [user, setUser] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -30,7 +31,8 @@ const DrawerContent = (props) => {
   const handleSignOut = () => {
     signOut(firebase.auth)
     .then(() => {
-        navigation.replace("Login")
+        setUser(false)
+        navigation.dispatch(StackActions.replace("Login"))
     })
     .catch(error => alert(error.message)
     );
@@ -40,7 +42,7 @@ const toggleTheme = () => {
   setIsDarkTheme(!isDarkTheme)
 }
   return (
-    <View style={{flex:1}}>
+    <View style={{flex:1,}}>
       { user && 
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
@@ -157,7 +159,7 @@ const toggleTheme = () => {
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>}
-      { user && <Drawer.Section style={styles.bottomDrawerSection}>
+      { user ? <Drawer.Section style={styles.bottomDrawerSection}>
         <DrawerItem 
           icon={({color,size}) => (
             <Icon 
@@ -169,6 +171,8 @@ const toggleTheme = () => {
           label="Sign Out"
           onPress={() => {handleSignOut()}}
         />
+      </Drawer.Section> :
+      <Drawer.Section style={[styles.bottomDrawerSection, { top: deviceHeight-25 } ]} title="Please login first">
       </Drawer.Section>}
     </View>
   )

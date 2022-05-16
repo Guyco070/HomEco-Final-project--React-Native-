@@ -13,7 +13,6 @@ import ShoppingApi from '../barcodeScripts/ShoppingApi';
 import * as shufersal from '../barcodeScripts/ShufersalScraping';
 import General from '../screens/General';
 
-
 const HomeScreen = () => {
     const navigation = useNavigation()
     const [user, setUser] = useState([]);
@@ -21,6 +20,11 @@ const HomeScreen = () => {
 
 
     useEffect(() => {
+        navigation.getParent().setOptions( ({ 
+            // headerLeft: ()=>{
+            //   <Icon.Button name="menu" size={25} backgroundColor="#0779ef" />
+            // },
+         }))
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); })    // before opening the page
       }, [])
 

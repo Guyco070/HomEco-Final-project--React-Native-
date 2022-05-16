@@ -46,7 +46,7 @@ const UserHousesListView = (props) => {
 
             {   (props?.viewImage) || !("viewImage" in props)  &&
                 <TouchableScale
-                onPress={() => {navigation.navigate('UserProfileScreen')}}
+                onPress={() => {navigation.replace('UserProfileScreen')}}
                 >
                     <UploadProfileImage tempImage = {require('../assets/signup.png')} image = {props.user.uImage} onPress={addImage} changeable={false} />
                 </TouchableScale>

@@ -133,7 +133,8 @@ const HouseProfileScreen = ({route}) => {
             </View> */}
             { house && house.partners[user.email]?.isAuth && <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
                     <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{
-                            navigation.navigate('EditHouseProfile',house);
+                            // navigation.navigate('EditHouseProfile',house);
+                            console.log(navigation.pop())
                         }} >
                         <Icon  name="edit"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>

@@ -6,13 +6,13 @@ import { Colors } from '../Colors';
 import { popUpTip, styles } from '../styleSheet';
 import * as firebase from '../firebase'
 
-const TipPopUp = ({ setShowPopUpTip }) => {
+const TipPopUp = ({ setShowPopUpTip, tipsCounter }) => {
     const [tip, setTip] = useState()
 
     useEffect(() => {
         firebase.getCollectionFromFirestore('tips').then( tips => {
             console.log(Math.floor(Math.random() * tips.length))
-            setTip(tips[0])
+            setTip(tips[tipsCounter % tips.length])
         })
     },[])
 
@@ -21,8 +21,8 @@ const TipPopUp = ({ setShowPopUpTip }) => {
             transparent={true}
             backdropOpacity={0.5}
             animationType="slide"
-            onAccessibilityTap={() => setShowPopUpTip()}
-            onRequestClose={() => setShowPopUpTip()}>
+            onAccessibilityTap={() => setShowPopUpTip(false)}
+            onRequestClose={() => setShowPopUpTip(false)}>
             { tip &&
             <View style={popUpTip.mainContainer}>
                 <View style={popUpTip.container}>

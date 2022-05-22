@@ -1,32 +1,25 @@
 import React, { useEffect,useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Text, View, SafeAreaView, Image, ScrollView, LogBox } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 import Loading from '../components/Loading';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { styles, houseProfileStyles } from '../styleSheet';
 import { useNavigation } from '@react-navigation/native';
 import RecentActivity from '../components/RecentActivity';
-import ChangeSelfIncome from '../components/ChangeSelfIncome';
-import Input from '../components/Inputs';
-import BarcodeScanner from '../components/BarcodeScanner';
-import { Button } from 'react-native-elements/dist/buttons/Button';
 import TodoList from '../components/TodoList/TodoList';
 import Toast from 'react-native-toast-message';
 import TouchableScale from 'react-native-touchable-scale';
-import { collection, doc, setDoc, Timestamp } from 'firebase/firestore';
 import ModalSelector from 'react-native-modal-selector'
 import * as Linking from 'expo-linking';
 import { Icon } from 'react-native-elements';
 import BarMenu from '../components/BarMenu';
 import GraphHomeScreen from './GraphHomeScreen';
-import { ref } from 'firebase/storage';
 import HouseGalleryViewer from '../components/HouseGalleryViewer';
 
+import TipPopUp from '../components/TipPopUp';
 LogBox.ignoreAllLogs(true)
 
-
- 
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',
    ]);
@@ -49,6 +42,9 @@ const HouseProfileScreen = ({route}) => {
     const [messageToEmail,setMessageToEmail] = useState('')
 
     const [haveNewMessages, setHaveNewMessages] = useState(false) 
+
+    const [showPopUpTip, setShowPopUpTip] = useState(false)
+
     let addIndex = 0
     const addData = [
         { key: addIndex++, section: true, label: 'What would you like to add' },
@@ -57,7 +53,11 @@ const HouseProfileScreen = ({route}) => {
     ];
 
     useEffect(() => {
-        firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us)} )    // before opening the page
+        firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { 
+            setUser(us)
+            if("lastUse" in us && us?.lastUse.toDate().toDateString() !== new Date().toDateString()) setShowPopUpTip(us?.isGetTips)
+        } )    // before opening the page
+        firebase.updateCollectAtFirestore('users', firebase.auth.currentUser?.email, 'lastUse', new Date())
     }, [])
 
     useEffect(() => {    
@@ -127,14 +127,14 @@ const HouseProfileScreen = ({route}) => {
                 setRef(ref)
             }}
             >
+            { showPopUpTip && <TipPopUp setShowPopUpTip={setShowPopUpTip}/>}
             {/* <View style={houseProfileStyles.titleBar}>
                 <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
                 <Ionicons name="ios-ellipsis-vertical" size={24} color="#52575D"></Ionicons>
             </View> */}
             { house && house.partners[user.email]?.isAuth && <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
                     <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{
-                            // navigation.navigate('EditHouseProfile',house);
-                            console.log(navigation.pop())
+                            navigation.navigate('EditHouseProfile',house);
                         }} >
                         <Icon  name="edit"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>
@@ -161,15 +161,15 @@ const HouseProfileScreen = ({route}) => {
                             </View>
                         </ModalSelector> }
 
-                    <View style={houseProfileStyles.active}></View>
-                            <View style={houseProfileStyles.userProfileImage}>
-                                <TouchableScale
-                                style={[houseProfileStyles.userProfileImage,{borderWidth:0}]} 
-                                onPress={() => {navigation.navigate('UserProfileScreen',{hKeyP:firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})}}
-                                >
-                                    <Image source={{uri:user.uImage}} style={houseProfileStyles.image} resizeMode="center" ></Image>
-                                </TouchableScale>
-                            </View>
+                        <View style={houseProfileStyles.active}></View>
+                        <View style={houseProfileStyles.userProfileImage}>
+                            <TouchableScale
+                            style={[houseProfileStyles.userProfileImage,{borderWidth:0}]} 
+                            onPress={() => {navigation.navigate('UserProfileScreen',{hKeyP:firebase.getHouseKeyByNameAndCreatorEmail(house.hName,house.cEmail)})}}
+                            >
+                                <Image source={{uri:user.uImage}} style={houseProfileStyles.image} resizeMode="center" ></Image>
+                            </TouchableScale>
+                        </View>
                 </View>
 
                 <View style={houseProfileStyles.infoContainer}>

@@ -18,14 +18,20 @@ import { signOut,auth } from '@firebase/auth'
 import UserHousesListView from './UserHousesListView'
 import { StackActions } from '@react-navigation/native';
 import { deviceHeight } from '../SIZES'
+import Toast from 'react-native-toast-message';
+
 const DrawerContent = (props) => {
   const [user, setUser] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isWithTips, setIsWithTips] = useState(false);
   const [showHouses, setShowHouses] = useState(false);
   const navigation = useNavigation()
 
   useEffect(() => {
-    firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); })    // before opening the page
+    firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { 
+      setUser(us); 
+      firebase.getByDocIdFromFirestore('users',us.email).then( user => 'isGetTips' in user && setIsWithTips(user.isGetTips))
+    })    // before opening the page
   }, [firebase.auth.currentUser?.email])
 
   const handleSignOut = () => {
@@ -40,6 +46,17 @@ const DrawerContent = (props) => {
 
 const toggleTheme = () => {
   setIsDarkTheme(!isDarkTheme)
+}
+
+const toggleTips = () => {
+  if(!isWithTips) 
+    Toast .show({
+      type: 'success',
+      text1: 'Tips,',
+      text2: "Get tips for managing your\nhome economy once a day!" ,
+      })
+  firebase.updateCollectAtFirestore("users", user.email, 'isGetTips', !isWithTips)
+  setIsWithTips(!isWithTips)
 }
   return (
     <View style={{flex:1,}}>
@@ -156,7 +173,19 @@ const toggleTheme = () => {
                     </View>
                   </View>
                 </TouchableRipple>
+
+                <TouchableRipple onPress={()=>{toggleTips()}}>
+                  <View style={styles.preference}>
+                    <Text>Tips</Text>
+                    <View pointerEvents='none'>
+                      <Switch value={isWithTips}/>
+                    </View>
+                  </View>
+                </TouchableRipple>
           </Drawer.Section>
+          <View style={styles.toastContainer}>
+            <Toast  position='bottom'/>
+          </View>
         </View>
       </DrawerContentScrollView>}
       { user ? <Drawer.Section style={styles.bottomDrawerSection}>
@@ -221,8 +250,14 @@ const styles = StyleSheet.create({
   preference: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    alignItems: 'center',
+    paddingVertical: 5,
     paddingHorizontal: 16,
+  },
+  toastContainer: {
+    alignItems: 'center',
+    height: 70,
+    marginLeft: 10,
   },
   button: {
     backgroundColor: '#0782F9',

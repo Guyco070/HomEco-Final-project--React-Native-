@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { Directions } from 'react-native-gesture-handler'
 import { Colors } from './Colors'
+import { deviceHeight, deviceWidth } from './SIZES'
 
 const styles = StyleSheet.create({
     container: {
@@ -306,7 +307,6 @@ const houseProfileStyles = StyleSheet.create({
         height: 200,
         borderRadius: 100,
         overflow: "hidden",
-        
     },
     dm: {
         backgroundColor: "#41444B",
@@ -335,7 +335,7 @@ const houseProfileStyles = StyleSheet.create({
         left: -15,
         padding: 4,
         height: 13,
-        width: 13,
+        width: 13, 
         borderRadius: 10,
     },
     userProfileImage: {
@@ -349,8 +349,7 @@ const houseProfileStyles = StyleSheet.create({
         justifyContent: "center",
         borderWidth: 2,
         borderColor:"#0782F9",
-        elevation: 5,
-
+        elevation:0
     },
     infoContainer: {
         alignSelf: "center",
@@ -569,4 +568,56 @@ const TodoSheet = StyleSheet.create({
         maxWidth:'70%'
       }
 })
-export {styles, imageUploaderStyles,docImageUploaderStyles, houseProfileStyles, TodoSheet, modelContent}
+
+const popUpTip = StyleSheet.create({
+    mainContainer: {
+        height: deviceHeight,
+        justifyContent:'center',
+        backgroundColor: 'rgba(52, 52, 52, 0.8)',
+        elevation:10
+    },
+    container: {
+        alignItems: "center",
+        justifyContent: "center",
+        alignSelf: 'center',
+        borderColor: "black",
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderRadius: 25,
+        width: deviceWidth - deviceWidth*0.2,
+        maxHeight: deviceHeight - deviceHeight*0.3,
+        padding: 15,
+    },
+    textContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 5,
+    },
+    title: {
+        fontSize:20,
+        fontWeight:'900',
+        margin: 10,
+        color:Colors.sub,
+        textTransform: 'capitalize',
+        textAlign:'center'
+    },
+    text: {
+        fontSize:18,
+        fontWeight:'900',
+        color: "black",
+        textAlign:'center'
+
+    },
+    iconContainer: {
+        alignItems: "center",
+        justifyContent: "center",
+        alignSelf: 'center',
+        borderColor: Colors.main,
+        backgroundColor: 'white',
+        borderWidth: 4,
+        borderRadius: 100,
+        padding:10
+    }
+})
+
+export {styles, imageUploaderStyles,docImageUploaderStyles, houseProfileStyles, TodoSheet, modelContent, popUpTip}

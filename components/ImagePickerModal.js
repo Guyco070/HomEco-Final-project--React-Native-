@@ -8,7 +8,6 @@ import { deviceHeight } from '../SIZES';
 
 const ImagePickerModal = ({imageModalPickerVisable,setImageModalPickerVisable,addImage,from,index}) => {
   return (
-  
         <Modal
         transparent={true}
         backdropOpacity={0.3}

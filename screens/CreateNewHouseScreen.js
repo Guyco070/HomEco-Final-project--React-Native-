@@ -65,7 +65,7 @@ const CreateNewHouseScreen = () => {
         setSearch(search)
         if(search != ''){
             search = search.toLowerCase()
-            firebase.getCollectionFromFirestoreByKeySubString("users",search)
+            firebase.getDocFromFirestoreByKeySubString("users",search)
             .then((partnersList) => { 
                 if(partnersList.length != 0){
                     setPartnersList(partnersList.filter((doc) => {if(doc.email != user.email && !(hPartners.includes(doc))) return doc} )) /*(doc.fName + " " + doc.lName + " - " + doc.email)}*/

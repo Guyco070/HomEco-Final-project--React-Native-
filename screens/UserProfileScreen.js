@@ -46,11 +46,11 @@ const UserProfileScreen = ({route}) => {
             {loading? <Loading/> : 
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
-                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.navigate('EditUserProfile')}} >
+                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.replace('EditUserProfile')}} >
                         <Icon  name="edit"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Edit</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.navigate('AddOrEditSelfIncome')}} >
+                    <TouchableOpacity style={{margin:25,marginBottom:0} } onPress={()=>{navigation.replace('AddOrEditSelfIncome')}} >
                         <Icon  name="add"  type="icon" color={"grey"} />
                         <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Add</Text>
                     </TouchableOpacity>

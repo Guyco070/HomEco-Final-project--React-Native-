@@ -37,8 +37,8 @@ const DrawerContent = (props) => {
   const handleSignOut = () => {
     signOut(firebase.auth)
     .then(() => {
-        setUser(false)
-        navigation.dispatch(StackActions.replace("Login"))
+      setUser(false)
+      navigation.dispatch(StackActions.replace("Login"))
     })
     .catch(error => alert(error.message)
     );

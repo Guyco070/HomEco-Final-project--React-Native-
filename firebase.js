@@ -6,9 +6,9 @@ import 'firebase/compat/auth'
 import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc, orderBy, Timestamp, onSnapshot } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
 import { firebaseConfig } from "./PrivateVariables"
-import { LogBox } from "react-native"
+// import { LogBox } from "react-native"
 
-LogBox.ignoreAllLogs(true)
+// LogBox.ignoreAllLogs(true)
 
 const uiConfig = {
   // Popup signin flow rather than redirect flow.
@@ -64,7 +64,7 @@ const getByDocIdFromFirestore = async(collect, docId) =>{
     // console.log("Document data:", docSnap.data());
   } else {
     // doc.data() will be undefined in this case
-    console.log("No such document!");
+    // console.log("No such document!");
     return false
   }
 
@@ -79,7 +79,7 @@ const getCollectionFromFirestore = async(collect) =>{
   return collectList;
 }
 
-const getCollectionFromFirestoreByKeySubString = async(collect,substring) =>{
+const getDocFromFirestoreByKeySubString = async(collect,substring) =>{
   if(substring == '')
     return [];
   const collectCol = collection(db, collect);
@@ -106,19 +106,18 @@ const getUCollectionFromFirestoreByUserNameSubString = async(collect,substring) 
 
 const getWhereFromFirestore = async(collect, col, term , value) => { // term can be - == ,<= ,>=, in (value is an array), array-contains-any (value is an array)... https://firebase.google.com/docs/firestore/query-data/queries// todo: fix return to return a llist
   const q = query(collection(db, collect), where(col, term, value))
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log("doc.id, doc.data()");
+  const querySnapshot = getDocs(q);
+  // querySnapshot.forEach((doc) => {
+  //   // doc.data() is never undefined for query doc snapshots
+  //   console.log("doc.id, doc.data()");
 
-    console.log(doc.id, " => ", doc.data());
-  });
-  const collectList = querySnapshot.docs.map(doc => doc.data());
-  return collectList
+  //   console.log(doc.id, " => ", doc.data());
+  // });;
+  return querySnapshot.docs.map(doc => doc.data())
 }
 
 const deleteRowFromFirestore = async(collect, docId) => {
-  await deleteDoc(doc(db,collect, docId))
+  return await deleteDoc(doc(db,collect, docId)).then(() => true)
 }
 
 const addUserToFirestore = async(email, fName, lName, phone, bDate, uImage ) => {
@@ -135,21 +134,21 @@ const addUserToFirestore = async(email, fName, lName, phone, bDate, uImage ) => 
 }
 
 const addDocToFirestore = async(collect, newValue) => {
-  await setDoc(doc(collection(db, collect)), newValue);
+  return await setDoc(doc(collection(db, collect)), newValue).then( () => true);
 }
 
 const addDocByIdToFirestore = async(collect, key, values) => {
-  await setDoc(doc(collection(db, collect), key),values);
+  return await setDoc(doc(collection(db, collect), key),values).then( () => true);
 }
 
 const updateCollectAtFirestore = async(collect,key, col, newValue) => {
   const Data = doc(db, collect, key);
-  await updateDoc(Data , col = col,newValue)
+  return await updateDoc(Data , col = col,newValue).then(() => true)
 }
 
 const updateDocAllColsAtFirestore = async(collect,key,newValuesDict) => {
   const Data = doc(db, collect, key)
-  await updateDoc(Data , newValuesDict)
+  return await updateDoc(Data , newValuesDict).then(() => true)
 }
 
 const setDefaultHousePartners = (partners) => {
@@ -205,7 +204,6 @@ const addHouseToFirestore = async(hName, cEmail, partners, hImage, description) 
 const updateHousePartners = (partners, oldPartners, oldHFullPartners) => {
   let partnersDict = {}
   let permissions = {"seeIncome": false, "seeMonthlyBills": false, "changeGallery": false}
-    console.log(oldHFullPartners)
     for(let i in partners){
 
       for(let j in oldPartners)
@@ -665,7 +663,7 @@ const setSnapshotById = (collect, docId, action) => {
 export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRemove,capitalize ,capitalizeAll , getUserArrayFromPartnersDict,getByDocIdFromFirestore, getCollectionFromFirestore, 
         getWhereFromFirestore, deleteRowFromFirestore, addDocByIdToFirestore, addUserToFirestore,addDocToFirestore, updateCollectAtFirestore, updateDocAllColsAtFirestore,
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, 
-        getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
+        getDocFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
         getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse, removeIncomeFromHouse, shoppingListToString, 
         getHouseExpendsAmount ,getSortedArrayDateFromDict, getStrDateAndTimeToViewFromSrtDate, getStrDateToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeOrExpendsToHouseByMonth,
         addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany, updateExpendsAndIncomes, getChatFromFirestore, setSnapshotById } 

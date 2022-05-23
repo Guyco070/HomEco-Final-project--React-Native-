@@ -72,7 +72,6 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 				if(items[isIn].isSelected){
 					items[isIn].isSelected = false
 				}handleQuantityIncrease(isIn)
-
 				Toast .show({
 					type: 'success',
 					text1: 'Hoo! Product quantity increased by one !',

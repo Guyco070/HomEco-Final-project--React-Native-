@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox, Toucha
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import Loading from '../components/Loading';
-import { getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate } from '../firebase';
+import { getSortedArrayDateFromDict, getStrDateAndTimeToViewFromSrtDate } from '../firebase';
 import { styles,houseProfileStyles,docImageUploaderStyles } from '../styleSheet';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { useNavigation } from '@react-navigation/native';
@@ -181,7 +181,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler, title}) => {
                                                 <TouchableOpacity onPress={()=> {setIsExpended(l.date)}}>
                                                     <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
                                                         <View style={{width:"100%", flexDirection: "row",marginTop:2}}>
-                                                            <Text style={{ fontWeight: "400" ,marginRight:20}}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
+                                                            <Text style={{ fontWeight: "400" ,marginRight:20}}>{getStrDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
                                                             {type === 'Expenditure' && <View
                                                                 style={[houseProfileStyles.typeIcone,]}
                                                                 >
@@ -198,7 +198,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler, title}) => {
                                                         {type == 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"\nCompany: " + l.company}</Text>}
                                                         {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{ l.amount} $</Text>
                                                         {type === 'Income' && <Text style={{ fontWeight: "400" }}>{"\nCreator: " + l.partner}</Text>}
-                                                        {l.isEvent && <>{"\n"}Event Time: <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.eventDate.toDate()))}</Text></>}
+                                                        {l.isEvent && <>{"\n"}Event Time: <Text style={{ fontWeight: "400" }}>{getStrDateAndTimeToViewFromSrtDate((l.eventDate.toDate()))}</Text></>}
                                                        
                                                     </Text>
                                                     </TouchableOpacity>

@@ -22,7 +22,7 @@ LogBox.ignoreAllLogs(true)
 const EditUserProfileScreen = () => {
     const navigation = useNavigation()
 
-    const [user, setUser] = useState([]);
+    const [user, setUser] = useState(false);
     const [uImage, setImage] = useState('');
     const [fName, setFName] = useState('');
     const [lName, setLName] = useState('');
@@ -41,28 +41,39 @@ const EditUserProfileScreen = () => {
       }, [])
 
     useEffect(()=>{
-        setImage(user.uImage)
-        setFName(user.fName)
-        setLName(user.lName)
-        if(typeof(user.bDate) === 'string'){
-            let tempDate = user.bDate.trim().split('/')
-            if(tempDate[0][0] !== '0' && parseInt(tempDate[0]) < 10) tempDate[0] = "0" + tempDate[0]
-            if(tempDate[1][0] !== '0' && parseInt(tempDate[1]) < 10) tempDate[1] = "0" + tempDate[1]
-            let tempText = tempDate[0] + '/' + tempDate[1] + '/' + tempDate[2]
-            tempDate = tempDate[1] + '/' + tempDate[0] + '/' + tempDate[2]
-            setBDate(new Date(tempDate))
-            setDateText(tempText)
+        if(user){
+            setImage(user.uImage)
+            setFName(user.fName)
+            setLName(user.lName)
+            try{
+                setBDate(user.bDate.toDate())
+                setDateText(firebase.getStrDateToViewFromSrtDate(user.bDate.toDate()).replace(".","/").replace(".","/"))
+            }catch{
+                let tempDate = user.bDate.trim().split('/')
+                if(tempDate[0][0] !== '0' && parseInt(tempDate[0]) < 10) tempDate[0] = "0" + tempDate[0]
+                if(tempDate[1][0] !== '0' && parseInt(tempDate[1]) < 10) tempDate[1] = "0" + tempDate[1]
+                let tempText = tempDate[0] + '/' + tempDate[1] + '/' + tempDate[2]
+                tempDate = tempDate[1] + '/' + tempDate[0] + '/' + tempDate[2]
+                setBDate(new Date(tempDate))
+                setDateText(tempText)
+            }
+            setPhone(user.phone)
         }
-        setPhone(user.phone)
     },[user])
+    const getBDate = () => {
+        try{
+            return firebase.getStrDateToViewFromSrtDate(user.bDate.toDate())
+        }catch{
+            return user.bDate
+        }
+    }
 
     const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || bDate;
         setShow(Platform.OS === 'ios')
         setBDate(currentDate)
         let tempDate = new Date(currentDate)
-        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
-        let fTime = 'Hours: ' + tempDate.getHours() + " | Minutes: " + tempDate.getMinutes()
+        let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         setDateText(fDate)
     }
 
@@ -101,6 +112,7 @@ const EditUserProfileScreen = () => {
         if(phone!=""){
             firebase.updateCollectAtFirestore("users",user["email"],"phone",phone)
         }
+        navigation.replace("UserProfileScreen")
     }
     
 

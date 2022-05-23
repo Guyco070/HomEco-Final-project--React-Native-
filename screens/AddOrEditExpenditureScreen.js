@@ -328,7 +328,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
         setShow(Platform.OS === 'ios')
         setEventDate(currentDate)
         let tempDate = new Date(currentDate)
-        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let minutes = tempDate.getMinutes()
         if(parseInt(minutes) < 10)
             minutes = "0" + minutes
@@ -393,7 +393,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
         const currentDate = selectedDate || eventDate;
         setEventDate(currentDate.toDate())
         let tempDate = new Date(currentDate.toDate())
-        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let minutes = tempDate.getMinutes()
         if(parseInt(minutes) < 10)
             minutes = "0" + minutes
@@ -419,7 +419,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
         console.log(tempDate.getTime())
         console.log(tempDate.getHours())
 
-        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let minutes = tempDate.getMinutes()
         if(parseInt(minutes) < 10)
             minutes = "0" + minutes
@@ -443,7 +443,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
         setShowCustomDate(Platform.OS === 'ios')
         setCustomDate(currentDate)
         let tempDate = new Date(currentDate)
-        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let minutes = tempDate.getMinutes()
         if(parseInt(minutes) < 10)
             minutes = "0" + minutes

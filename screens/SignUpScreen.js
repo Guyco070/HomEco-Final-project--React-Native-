@@ -74,7 +74,7 @@ const SignUpScreen = props => {
         setShow(Platform.OS === 'ios')
         setBDate(currentDate)
         let tempDate = new Date(currentDate)
-        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let fTime = 'Hours: ' + tempDate.getHours() + " | Minutes: " + tempDate.getMinutes()
         setDateText(fDate)
     }

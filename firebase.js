@@ -588,12 +588,16 @@ const getSortedArrayDateFromDict = (dict) => {
   }); 
 }
 
-const getSrtDateAndTimeToViewFromSrtDate = (date) =>{
+const getStrDateAndTimeToViewFromSrtDate = (date) =>{
   let minutes = 10
   if(date.getMinutes() < minutes)
     minutes = "0" + date.getMinutes().toString()
   else minutes = date.getMinutes()
   return  date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + "  " + date.getHours() + ":" + minutes
+}
+
+const getStrDateToViewFromSrtDate = (date) =>{
+  return  date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear()
 }
 
 const changePartnerIncomeOfHouse = async(hKey,uEmail,income) => {
@@ -663,6 +667,6 @@ export { auth, db, uiConfig ,tempHouseProfileImage, tempUserProfileImage,arrayRe
         setDefaultHousePartners ,addHouseToFirestore, replaceUpdatedHouseToFirestore, updateHousePartners, updateHouseAtFirestore,getHousesByUserEmail, getHouseKeyByNameAndCreatorEmail, 
         getCollectionFromFirestoreByKeySubString,getUCollectionFromFirestoreByUserNameSubString,
         getHousePartnersByKey, getHouseIncome, getCurentPartnerOfHouse, addExpendToHouse,addIncomeToHouse ,addUserSelfIncome, removeUserSelfIncome, removeExpendFromHouse, removeIncomeFromHouse, shoppingListToString, 
-        getHouseExpendsAmount ,getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeOrExpendsToHouseByMonth,
+        getHouseExpendsAmount ,getSortedArrayDateFromDict, getStrDateAndTimeToViewFromSrtDate, getStrDateToViewFromSrtDate, changePartnerIncomeOfHouse, getUserIncomeToHouse, getUserIncomeOrExpendsToHouseByMonth,
         addProductToFirestore, getExpenditureTypeAutoByOptionalDescription, getExpenditureTypeAutoByCompany, updateExpendsAndIncomes, getChatFromFirestore, setSnapshotById } 
 

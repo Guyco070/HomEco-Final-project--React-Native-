@@ -33,6 +33,14 @@ const UserProfileScreen = ({route}) => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { setUser(us); setLoading(false)} )    // before opening the page
     }, [])
 
+    const getBDate = () => {
+        try{
+            return firebase.getStrDateToViewFromSrtDate(user.bDate.toDate())
+        }catch{
+            return user.bDate
+        }
+    }
+    
     return (
         <SafeAreaView style={houseProfileStyles.container}>
             {loading? <Loading/> : 
@@ -57,7 +65,7 @@ const UserProfileScreen = ({route}) => {
                     <Text style={[houseProfileStyles.text, { fontWeight: "200", fontSize: 36 }]}>{user.fName + " " + user.lName}</Text>
                     <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.email}</Text> 
                     <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.phone}</Text> 
-                    <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.bDate}</Text> 
+                    <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 14 }]}>{getBDate()}</Text> 
                 </View>
 
                 <SelfIncomeListViewer map = {user.incomes?user.incomes:[]} slice={3}/>

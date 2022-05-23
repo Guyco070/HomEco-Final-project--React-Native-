@@ -231,14 +231,13 @@ const HouseProfileScreen = ({route}) => {
             <View style={{ flexDirection:'row', justifyContent:'space-between'  }}>
 
                         <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]}>Recent Activity</Text>
-                        <ModalSelector
-                        data={addData}
-                        onChange={(option)=>{ option.type == "expenditure" ? navigation.navigate('AddOrEditExpenditure',{hKey}):navigation.navigate('AddOrEditIncome',{hKey}) }}
-                        style={{marginRight:25,marginBottom:0}}
+                        <TouchableOpacity
+                        onPress={()=>{ checked === 0 && navigation.navigate('AddOrEditExpenditure',{hKey}); checked === 1 && navigation.navigate('AddOrEditIncome',{hKey}) }}
+                        style={{marginRight:25,marginBottom:0,}}
                         >
                                 <Icon  name="add"  type="icon" color={"grey"} />
                                 {/* <Text style={[houseProfileStyles.text, { color: "#AEB5BC", fontSize: 10 }]}>Add</Text> */}
-                        </ModalSelector>
+                        </TouchableOpacity>
                     </View>
 
                         {checked === 0 && 

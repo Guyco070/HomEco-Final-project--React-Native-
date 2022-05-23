@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox, Toucha
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import Loading from '../components/Loading';
-import { getSortedArrayDateFromDict, getSrtDateAndTimeToViewFromSrtDate } from '../firebase';
+import { getSortedArrayDateFromDict, getStrDateAndTimeToViewFromSrtDate } from '../firebase';
 import { styles,houseProfileStyles,docImageUploaderStyles } from '../styleSheet';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { useNavigation } from '@react-navigation/native';
@@ -66,7 +66,7 @@ const SelfIncomeListViewer = ({map,slice}) => {
                                             <View style={{ width: 250 }}>
                                                 <TouchableOpacity onPress={()=> {setIsExpended(l.date)}}>
                                                     <Text style={[houseProfileStyles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                                        <Text style={{ fontWeight: "400" }}>{getSrtDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
+                                                        <Text style={{ fontWeight: "400" }}>{getStrDateAndTimeToViewFromSrtDate((l.date.toDate()))}</Text>
 
                                                         {"\n"}Company: <Text style={{ fontWeight: "400" }}>{l.company}</Text>
                                                         {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{l.amount} $</Text>

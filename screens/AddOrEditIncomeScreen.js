@@ -135,8 +135,6 @@ const AddOrEditIncomeScreen = ({route}) => {
     }, [customDate])
 
     const handleCreateIncome = async() => {
-        console.log("house")
-        console.log(house)
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(amount){
@@ -166,7 +164,7 @@ const AddOrEditIncomeScreen = ({route}) => {
         setShow(Platform.OS === 'ios')
         setEventDate(currentDate)
         let tempDate = new Date(currentDate)
-        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let minutes = tempDate.getMinutes()
         if(parseInt(minutes) < 10)
             minutes = "0" + minutes
@@ -187,7 +185,7 @@ const AddOrEditIncomeScreen = ({route}) => {
         setShowNotification(Platform.OS === 'ios')
         setNotificationDate(currentDate)
         let tempDate = new Date(currentDate)
-        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let minutes = tempDate.getMinutes()
         if(parseInt(minutes) < 10)
             minutes = "0" + minutes
@@ -210,7 +208,7 @@ const AddOrEditIncomeScreen = ({route}) => {
         setShowCustomDate(Platform.OS === 'ios')
         setCustomDate(currentDate)
         let tempDate = new Date(currentDate)
-        let fDate = firebase.getSrtDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+        let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let minutes = tempDate.getMinutes()
         if(parseInt(minutes) < 10)
             minutes = "0" + minutes

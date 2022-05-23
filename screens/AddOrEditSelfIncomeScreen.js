@@ -98,10 +98,11 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
     };
 
     const handleCreateIncome = () => {
-        if(incomeType == "Icome type") alert("Sorry, Billing type is the title... ")
+        if(incomeType == "Income type") alert("Sorry, Income type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc && amount){
-            firebase.addUserSelfIncome(user.email,user.incomes , {date:("date" in income)?income.date.toDate():new Date(),partner:user.email,company: company, desc: desc, amount: amount, incomeType: incomeType, payslips: catchPayslipsImages, descOptional})
+            console.log("income", income)
+            firebase.addUserSelfIncome(user.email,user.incomes , {date: (income && ("date" in income))?income.date.toDate():new Date(),partner:user.email,company: company, desc: desc, amount: amount, incomeType: incomeType, payslips: catchPayslipsImages, descOptional})
             navigation.replace("UserProfileScreen")
         }else alert("Sorry, you must fill in all the fields!")
     }
@@ -166,7 +167,7 @@ const AddOrEditSelfIncomeScreen = ({route}) => {
                     selectedValue={incomeType}
                     onValueChange={(incomeType, itemIndex) => { setIncomeType(incomeType) }}
                 >
-                    <Picker.Item label="       - Billing type -" value="Billing type"/>
+                    <Picker.Item label="       - Income type -" value="Income type"/>
                     <Picker.Item label="       One-time" value="One-time"/>
                     <Picker.Item label="       Weekly" value="Weekly"/>
                     <Picker.Item label="       Fortnightly" value="Fortnightly"/>

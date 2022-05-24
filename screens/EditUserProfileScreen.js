@@ -51,19 +51,13 @@ const EditUserProfileScreen = () => {
                 setBDate(user.bDate.toDate())
                 setDateText(firebase.getStrDateToViewFromSrtDate(user.bDate.toDate()).replace(".","/").replace(".","/"))
             }catch{
-                if(user.bDate === '') {
-                    setBDate(new Date())
-                    setDateText(firebase.getStrDateToViewFromSrtDate(new Date()).replace(".","/").replace(".","/"))
-                }else{
-                    let tempDate = user.bDate.trim().split('/')
-                    if(tempDate[0][0] !== '0' && parseInt(tempDate[0]) < 10) tempDate[0] = "0" + tempDate[0]
-                    if(tempDate[1][0] !== '0' && parseInt(tempDate[1]) < 10) tempDate[1] = "0" + tempDate[1]
-                    let tempText = tempDate[0] + '/' + tempDate[1] + '/' + tempDate[2]
-                    tempDate = tempDate[1] + '/' + tempDate[0] + '/' + tempDate[2]
-                    setBDate(new Date(tempDate))
-                    setDateText(tempText)
-                }
-                
+                let tempDate = user.bDate.trim().split('/')
+                if(tempDate[0][0] !== '0' && parseInt(tempDate[0]) < 10) tempDate[0] = "0" + tempDate[0]
+                if(tempDate[1][0] !== '0' && parseInt(tempDate[1]) < 10) tempDate[1] = "0" + tempDate[1]
+                let tempText = tempDate[0] + '/' + tempDate[1] + '/' + tempDate[2]
+                tempDate = tempDate[1] + '/' + tempDate[0] + '/' + tempDate[2]
+                setBDate(new Date(tempDate))
+                setDateText(tempText)            
             }
             setPhone(user.phone)
         }

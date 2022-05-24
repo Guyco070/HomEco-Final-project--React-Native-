@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal, Alert} from 'react-native';
+import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal, Alert, Platform} from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
@@ -19,6 +19,7 @@ import * as Notifications from 'expo-notifications';
 import CustomNotifications from '../CustomNotifications'
 import { async } from '@firebase/util';
 import SeperatorSwitch from '../components/SeperatorSwitch';
+import { deviceWidth } from '../SIZES';
 // import * as CustomNotificationsFuncs from '../CustomNotifications'
 LogBox.ignoreAllLogs(true)
 
@@ -123,15 +124,15 @@ const AddOrEditIncomeScreen = ({route}) => {
     }, [])
 
     useEffect(() => {
-        if(mode == 'date') showMode('time')
+        if(mode == 'date' && Platform.OS === 'ios') showMode('time')
       }, [eventDate])
 
     useEffect(() => {
-      if(modeNotification == 'date') showModeNotification('time')
+      if(modeNotification == 'date' && Platform.OS === 'ios') showModeNotification('time')
     }, [notificationDate])
 
     useEffect(() => {
-      if(modeCustomDate == 'date') showModeCustomDate('time')
+      if(modeCustomDate == 'date' && Platform.OS === 'ios') showModeCustomDate('time')
     }, [customDate])
 
     const handleCreateIncome = async() => {
@@ -194,8 +195,10 @@ const AddOrEditIncomeScreen = ({route}) => {
             hours = "0" + hours
         let fTime =  hours + ":" + minutes
         setDateTextNotification(fTime + '  |  ' + fDate)
-
-        setNotifications([...notifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: notificationDate.setSeconds(0)}])
+        try{
+            notificationDate.setSeconds(0)
+        }catch{}
+        setNotifications([...notifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: notificationDate}])
     }
 
     const showModeNotification = (currentMode) => {
@@ -320,6 +323,30 @@ const AddOrEditIncomeScreen = ({route}) => {
                                 <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1,color:eventDate?'black':'grey' }}>{eventDate? dateText : "Event Date"}</Text> 
                             </TouchableOpacity>
                         </View>
+                        {show &&
+                                (<>
+                                  <DateTimePicker 
+                                    testID='dateTimePickeer'
+                                    value = {eventDate? eventDate: new Date()}
+                                    mode = {mode}
+                                    is24Hour = {true}
+                                    onChange={ onDateChange }
+                                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                                    style={{width:deviceWidth}}
+                                  />
+                                  { Platform.OS ==='ios' && eventDate !=='' && <View style={[styles.container,{marginTop: 5}]}>
+                                          <View style={styles.buttonContainer}>
+                                              <TouchableOpacity
+                                                  title={eventDate && mode==='date' ? "Set time" : "Set Date"}
+                                                  onPress={ () => setMode(mode==='date' ? "time" : "date")}
+                                                  style={styles.button}
+                                                  >
+                                                  <Text style={styles.buttonText}>{eventDate && mode==='date' ? "Set time" : "Set Date"}</Text>
+                                              </TouchableOpacity>
+                                          </View>
+                                      </View>}
+                                  </>)
+                            }
                         { dateText != 'Empty' &&
                           <SeperatorSwitch isExpended={isWithNotification} setIsExpended={setIsWithNotification} title="Set notification" topDevider={true} width="85%" withCheckIcon={true}/>
                         }
@@ -385,37 +412,56 @@ const AddOrEditIncomeScreen = ({route}) => {
                     </View>
                 }
                 {showNotification &&
-                    (<DateTimePicker 
-                    testID='dateTimePickeerNotification'
-                    value = {notificationDate? (eventDate && notificationDate<eventDate? notificationDate: (eventDate?eventDate: new Date())) : (eventDate? eventDate: new Date())}
-                    mode = {modeNotification}
-                    is24Hour = {true}
-                    display='default'
-                    onChange={ onDateChangeNotification }
-                    maximumDate={eventDate? eventDate:new Date()}
-                    minimumDate={new Date()}
-                    />)
+                    (<>
+                      <DateTimePicker 
+                        testID='dateTimePickeerNotification'
+                        value = {notificationDate? (eventDate && notificationDate<eventDate? notificationDate: (eventDate?eventDate: new Date())) : (eventDate? eventDate: new Date())}
+                        mode = {modeNotification}
+                        is24Hour = {true}
+                        onChange={ onDateChangeNotification }
+                        maximumDate={eventDate? eventDate:new Date()}
+                        minimumDate={new Date()}
+                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                        style={{width:deviceWidth}}
+                        />
+                      { Platform.OS ==='ios' && notificationDate !=='' && <View style={[styles.container,{marginTop: 5}]}>
+                          <View style={styles.buttonContainer}>
+                              <TouchableOpacity
+                                  title={notificationDate && modeNotification==='date' ? "Set time" : "Set Date"}
+                                  onPress={ () => setModeNotification( modeNotification==='date' ? "time" : "date")}
+                                  style={styles.button}
+                                  >
+                                  <Text style={styles.buttonText}>{notificationDate && modeNotification==='date' ? "Set time" : "Set Date"}</Text>
+                              </TouchableOpacity>
+                          </View>
+                      </View>}
+                    </>)
                 }
-                {show &&
-                    (<DateTimePicker 
-                    testID='dateTimePickeer'
-                    value = {eventDate? eventDate: new Date()}
-                    mode = {mode}
-                    is24Hour = {true}
-                    display='default'
-                    onChange={ onDateChange }
-                    />)
-                }
+                
                 {showCustomDate &&
-                    (<DateTimePicker 
-                    testID='dateTimePickeerCustomDate'
-                    value = {customDate? customDate: new Date()}
-                    mode = {modeCustomDate}
-                    is24Hour = {true}
-                    display='default'
-                    onChange={ onDateChangeCustomDate }
-                    maximumDate={new Date()}
-                    />)
+                    (<>
+                    <DateTimePicker 
+                        testID='dateTimePickeerCustomDate'
+                        value = {customDate? customDate: new Date()}
+                        mode = {modeCustomDate}
+                        is24Hour = {true}
+                        onChange={ onDateChangeCustomDate }
+                        maximumDate={new Date()}
+                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                        style={{width:deviceWidth}}
+                    />
+                    { Platform.OS ==='ios' && customDate !=='' && <View style={[styles.container,{marginTop: 5}]}>
+                      <View style={styles.buttonContainer}>
+                          <TouchableOpacity
+                              title={customDate && modeCustomDate==='date' ? "Set time" : "Set Date"}
+                              onPress={ () => setModeCustomDate(modeCustomDate==='date' ? "time" : "date")}
+                              style={styles.button}
+                              >
+                              <Text style={styles.buttonText}>{customDate && modeCustomDate==='date' ? "Set time" : "Set Date"}</Text>
+                          </TouchableOpacity>
+                      </View>
+                  </View>}
+                  </>)
                 }
                 </View>
             <View style={[styles.container,{marginTop: 5}]}>

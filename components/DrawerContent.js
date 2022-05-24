@@ -201,8 +201,7 @@ const toggleTips = () => {
           onPress={() => {handleSignOut()}}
         />
       </Drawer.Section> :
-      <Drawer.Section style={[styles.bottomDrawerSection, { top: deviceHeight-25 } ]} title="Please login first">
-      </Drawer.Section>}
+      <Drawer.Section style={[styles.bottomDrawerSection, { top: deviceHeight-deviceHeight*0.07 } ]} title="Please login first"/>}
     </View>
   )
 }

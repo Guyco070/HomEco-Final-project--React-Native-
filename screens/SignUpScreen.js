@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import ModalSelector from 'react-native-modal-selector'
 import RNPhoneCodeSelect from "react-native-phone-code-select";
 import ImagePickerModal from '../components/ImagePickerModal';
+import { deviceWidth } from '../SIZES';
 
 
 const SignUpScreen = props => {
@@ -118,12 +119,13 @@ const SignUpScreen = props => {
                 </View>
                 {show &&
                     (<DateTimePicker 
-                    testID='dateTimePickeer'
-                    value = {bDate? bDate: new Date()}
-                    mode = {mode}
-                    is24Hour = {true}
-                    display='default'
-                    onChange={ onDateChange }
+                        testID='dateTimePickeer'
+                        value = {bDate? bDate: new Date()}
+                        mode = {mode}
+                        is24Hour = {true}
+                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                        onChange={ onDateChange }
+                        style={{width:deviceWidth}}
                     />)
                 }
                 <Input name="Email" icon="envelope" keyboardType="email-address" onChangeText={text => setEmail(text)} /> 
@@ -138,8 +140,8 @@ const SignUpScreen = props => {
                         <Text style={styles.buttonText}>Create</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.container}>
-                    <Text style={styles.textBody}>{'\n'}{'\n'}Already have an account</Text>
+                <View style={{...styles.container, marginBottom: 30}}>
+                    <Text style={styles.textBody}>Already have an account</Text>
                     <Text style={[styles.textBody , {color: 'blue'}]} onPress={() => navigation.replace('Login')}>Login here</Text>
                 </View>
             </View>

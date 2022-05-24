@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Colors } from '../Colors';
 
 class Inputs extends Component {
-    state = {isFocused: false};
+    state = {isFocused: false, hidePassword: true};
 
     onFocusChange = () => {
         // alert(event.target.value)
@@ -22,6 +22,10 @@ class Inputs extends Component {
 
     }
 
+    isPassword(){
+       return (this.props.name.includes('Password') || this.props.name.includes('password'))
+    }
+
     render() {
         return(
             <View style={[styles.container, this.props?.style,
@@ -34,7 +38,7 @@ class Inputs extends Component {
                     onBlur = {this.onFocusChange}
                     inputContainerStyle={styles.inputContainer}
                     inputStyle={styles.inputText}
-                    secureTextEntry={this.props.pass}
+                    secureTextEntry={ this.state.hidePassword && this.props.pass}
                     onChangeText={this.props.onChangeText}
                     value = {this.props.value}
                     onPressIn={this.props.onPress}
@@ -48,6 +52,15 @@ class Inputs extends Component {
                             size={22}
                             color={this.state.isFocused ? '#0779e4' : 'grey'}    
                         />
+                    }
+                    rightIcon={ this.isPassword() &&
+                        <TouchableOpacity onPress={() => this.setState({hidePassword: !this.state.hidePassword})}>
+                            <Icon 
+                                name={ this.state.hidePassword ? "eye-slash" : "eye"}
+                                size={22}
+                                color={this.state.isFocused ? '#0779e4' : 'grey'}    
+                            />
+                        </TouchableOpacity>
                     }
                 />
             </View>

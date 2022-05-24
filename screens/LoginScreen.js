@@ -56,7 +56,7 @@ const LoginScreen = () => {
                         <Input name="Email" icon="user" onChangeText={text => setEmail(text)} />
 
                     <Input
-                        name="Pasword"
+                        name="Password"
                         value={ password }
                         onChangeText={text => setPassword(text)}
                         pass={true}

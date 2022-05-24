@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginScreen from './LoginScreen';
 import { LogBox } from "react-native"
 import ImagePickerModal from '../components/ImagePickerModal';
+import { deviceWidth } from '../SIZES';
 
 LogBox.ignoreAllLogs(true)
 
@@ -45,17 +46,24 @@ const EditUserProfileScreen = () => {
             setImage(user.uImage)
             setFName(user.fName)
             setLName(user.lName)
+            if(Platform.OS === 'ios') setShow(true)
             try{
                 setBDate(user.bDate.toDate())
                 setDateText(firebase.getStrDateToViewFromSrtDate(user.bDate.toDate()).replace(".","/").replace(".","/"))
             }catch{
-                let tempDate = user.bDate.trim().split('/')
-                if(tempDate[0][0] !== '0' && parseInt(tempDate[0]) < 10) tempDate[0] = "0" + tempDate[0]
-                if(tempDate[1][0] !== '0' && parseInt(tempDate[1]) < 10) tempDate[1] = "0" + tempDate[1]
-                let tempText = tempDate[0] + '/' + tempDate[1] + '/' + tempDate[2]
-                tempDate = tempDate[1] + '/' + tempDate[0] + '/' + tempDate[2]
-                setBDate(new Date(tempDate))
-                setDateText(tempText)
+                if(user.bDate === '') {
+                    setBDate(new Date())
+                    setDateText(firebase.getStrDateToViewFromSrtDate(new Date()).replace(".","/").replace(".","/"))
+                }else{
+                    let tempDate = user.bDate.trim().split('/')
+                    if(tempDate[0][0] !== '0' && parseInt(tempDate[0]) < 10) tempDate[0] = "0" + tempDate[0]
+                    if(tempDate[1][0] !== '0' && parseInt(tempDate[1]) < 10) tempDate[1] = "0" + tempDate[1]
+                    let tempText = tempDate[0] + '/' + tempDate[1] + '/' + tempDate[2]
+                    tempDate = tempDate[1] + '/' + tempDate[0] + '/' + tempDate[2]
+                    setBDate(new Date(tempDate))
+                    setDateText(tempText)
+                }
+                
             }
             setPhone(user.phone)
         }
@@ -129,7 +137,7 @@ const EditUserProfileScreen = () => {
             <Text style={{textAlign: "left"}} >Phone *</Text>
             <Input name={user["phone"] ? user["phone"] : ""} icon="phone" value={phone? phone : ""} keyboardType="phone-pad" onChangeText={text => setPhone(text)} /> 
             <Text style={{textAlign: "left"}} >Birth Day *</Text>
-            
+            { Platform.OS !== 'ios' &&
             <View style={styles.dateInputButton}>
                 <Icon name={'birthday-cake'} size={22}
                             color={show? '#0779e4':'grey'} style={{marginLeft:10}}/>
@@ -140,8 +148,8 @@ const EditUserProfileScreen = () => {
                         >
                     <Text style={{fontSize:18, fontWeight:'bold',marginHorizontal:10, marginVertical:10, textAlign:'left', flex:1 }}>{bDate? dateText : ""}</Text> 
                 </TouchableOpacity>
-            </View>
-            
+            </View> 
+            }
 
             {show &&
                 (<DateTimePicker 
@@ -149,8 +157,9 @@ const EditUserProfileScreen = () => {
                 value = {bDate}
                 mode = {mode}
                 is24Hour = {true}
-                display='default'
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={ onDateChange }
+                style={{width:deviceWidth}}
                 />)
             }
             <TouchableOpacity

@@ -1,12 +1,14 @@
 import React, {useEffect, useState, } from 'react'
-import { Dimensions, View, ImageBackground,Text,Share } from 'react-native'
+import { Dimensions, View, ImageBackground,Text,Share, Platform } from 'react-native'
 import ImageView from "react-native-image-viewing";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Linking from 'expo-linking';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { deviceHeight, deviceWidth } from '../SIZES';
+import { useNavigation } from '@react-navigation/native';
 
 const ImageViewer = (props) => {
+  const navigation = useNavigation()
   const [visible, setIsVisible] = useState(true);
 
   const [images, setImages] = useState([]);
@@ -44,6 +46,10 @@ const ImageViewer = (props) => {
     return tempImages
   }; 
 
+  useEffect(() => {
+    if(visible == false)
+      props.route.params.navigation.goBack()
+  },[visible])
   let shareOnWhatsApp = async (image) => {
       try {
         const result = await Share.share({
@@ -74,7 +80,7 @@ const ImageViewer = (props) => {
       images={images}
       imageIndex={"index" in props.route.params ? props.route.params.index: 0}
       visible={visible}
-      onRequestClose={() => {props.route.params.navigation.goBack();}}
+      onRequestClose={() => {Platform.OS === 'ios' ? setIsVisible(false) : props.route.params.navigation.goBack()}}
       presentationStyle={'fullScreen'}
       onLongPress={(currentImage)=>{ shareOnWhatsApp(currentImage)}}
       

@@ -6,6 +6,7 @@ import * as Linking from 'expo-linking';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { deviceHeight, deviceWidth } from '../SIZES';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const ImageViewer = (props) => {
   const navigation = useNavigation()
@@ -51,27 +52,33 @@ const ImageViewer = (props) => {
       props.route.params.navigation.goBack()
   },[visible])
   let shareOnWhatsApp = async (image) => {
+    
       try {
-        const result = await Share.share({
-          message:
-          image.uri,
-          url:
-          image.uri
-        });
-        if (result.action === Share.sharedAction) {
-          if (result.activityType) {
-            // shared with activity type of result.activityType
-          } else {
-            // shared
+        const baseUrl = `https://ulvis.net/api.php?url=${image.uri}&private=1`;
+        axios({
+          method: 'get',
+          url: `${baseUrl}/api/users/1`,
+        }).then(async(response) => {
+          const result = await Share.share({
+            message:
+            response.data,
+            url:
+            response.data
+          });
+          if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+              // shared with activity type of result.activityType
+            } else {
+              // shared
+            }
+          } else if (result.action === Share.dismissedAction) {
+            // dismissed
           }
-        } else if (result.action === Share.dismissedAction) {
-          // dismissed
-        }
+        });
       } catch (error) {
         alert(error.message);
       }
     };
-    // Linking.openURL('whatsapp://send?text=' + images[index].uri)
 
   return (
     <View>

@@ -259,12 +259,12 @@ const HouseProfileScreen = ({route}) => {
                 }
                 { checked === 3 && <>
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]} >Shopping List</Text>
-                    <TodoList hKey = {hKey} listName={"shoppingList"} uEmail = {user.email} navigation={navigation} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
+                    <TodoList list = {house.shoppingList} listName={"shoppingList"} uEmail = {user.email} navigation={navigation} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
                     </>
                 }
                 { checked === 4 && <>
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]} >Tasks List</Text>
-                    <TodoList hKey = {hKey} listName={"tasksList"} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
+                    <TodoList list = {house.tasksList} listName={"tasksList"} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
                     </>
                 }
                 { checked === 5 && <>

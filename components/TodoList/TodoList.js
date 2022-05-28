@@ -12,7 +12,7 @@ import * as firebase from '../../firebase'
 import Toast from 'react-native-toast-message';
 
 
-const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar}) => {
+const TodoList = ({list, listName,uEmail, navigation,scrollHandler,setShowMenuBar}) => {
 	// HINT: each "item" in our list names a name,
 	// a boolean to tell if its been completed, and a quantity
 	const [items, setItems] = useState();
@@ -30,19 +30,16 @@ const TodoList = ({hKey,listName,uEmail, navigation,scrollHandler,setShowMenuBar
 
 
 	useEffect(() => {
-		firebase.setSnapshotById("houses", hKey, (doc) => {
-			const house = doc.data()
-			setItems(house[listName])
-			let tempIsAllMarked = true
-			let tempItems = house[listName]
-			if(tempItems.length == 0)
-				tempIsAllMarked = false
-			else
-				for(let item in tempItems)
-					if(!tempItems[item].isSelected) {tempIsAllMarked = false; break;}
-			setIsAllMarked(tempIsAllMarked)
-		})	
-      },[])
+		setItems(list)
+		let tempIsAllMarked = true
+		
+		if(list.length == 0)
+			tempIsAllMarked = false
+		else
+			for(let item in list)
+				if(!list[item].isSelected) {tempIsAllMarked = false; break;}
+		setIsAllMarked(tempIsAllMarked)
+      },[list])
 
 	  useEffect(() => {
 		if(items)

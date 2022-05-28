@@ -36,9 +36,9 @@ import BarMenu from './components/BarMenu';
 import ChatScreen from './screens/ChatScreen'
 
 LogBox.ignoreAllLogs(true)
-// I18nManager.forceRTL(false);
-// I18nManager.allowRTL(false);
-// I18nManager.swapLeftAndRightInRTL(false);
+I18nManager.forceRTL(false);
+I18nManager.allowRTL(false);
+I18nManager.swapLeftAndRightInRTL(false);
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator()

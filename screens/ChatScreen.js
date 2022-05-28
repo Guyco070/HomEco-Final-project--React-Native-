@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState, useCallback, useEffect, useLayoutEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import * as firebase from '../firebase'
-import { doc, onSnapshot } from 'firebase/firestore'
 
 const ChatScreen = ({ route }) => {
     const [messages, setMessages] = useState([]);
@@ -20,7 +19,7 @@ const ChatScreen = ({ route }) => {
   useLayoutEffect(()=>{
     const action = (doc) => {
       // const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
-      if(doc)
+      if(doc && doc.data().messages)
         setMessages(doc.data().messages.map(doc => ({
           _id: doc._id,
           createdAt: doc.createdAt.toDate(),

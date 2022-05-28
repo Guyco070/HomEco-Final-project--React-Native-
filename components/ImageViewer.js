@@ -54,10 +54,9 @@ const ImageViewer = (props) => {
   let shareOnWhatsApp = async (image) => {
     
       try {
-        const baseUrl = `https://ulvis.net/api.php?url=${image.uri}&private=1`;
         axios({
           method: 'get',
-          url: `${baseUrl}/api/users/1`,
+          url: `https://ulvis.net/api.php?url=${image.uri}&private=1`,
         }).then(async(response) => {
           const result = await Share.share({
             message:
@@ -74,11 +73,13 @@ const ImageViewer = (props) => {
           } else if (result.action === Share.dismissedAction) {
             // dismissed
           }
+          console.log();
         });
       } catch (error) {
         alert(error.message);
       }
     };
+    // Linking.openURL('whatsapp://send?text=' + images[index].uri)
 
   return (
     <View>

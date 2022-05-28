@@ -124,22 +124,23 @@ const AddOrEditIncomeScreen = ({route}) => {
     }, [])
 
     useEffect(() => {
-        if(mode == 'date' && Platform.OS === 'ios') showMode('time')
+        if(mode == 'date' && Platform.OS !== 'ios') showMode('time')
       }, [eventDate])
 
     useEffect(() => {
-      if(modeNotification == 'date' && Platform.OS === 'ios') showModeNotification('time')
+      if(modeNotification == 'date' && Platform.OS !== 'ios') showModeNotification('time')
     }, [notificationDate])
 
     useEffect(() => {
-      if(modeCustomDate == 'date' && Platform.OS === 'ios') showModeCustomDate('time')
+      if(modeCustomDate == 'date' && Platform.OS !== 'ios') showModeCustomDate('time')
     }, [customDate])
 
     const handleCreateIncome = async() => {
         if(billingType == "Billing type") alert("Sorry, Billing type is the title... ")
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(amount){
-                notficationHandling().then((tempNotifications) => {
+                notficationHandling()
+                .then((tempNotifications) => {
                     firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes, house.futureIncomes, {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email, amount: amount,
                        billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText, isFuture: false})
                 })
@@ -151,8 +152,8 @@ const AddOrEditIncomeScreen = ({route}) => {
         let tempNotifications = []
         for(let i in notifications) {
             tempNotifications.push({
-                identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional && descOpitional,
-                                                                    notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
+                identifier: await schedulePushNotification("The income event is approaching! 🕞 " + descOpitional,
+                                                                    dateText,"data",new Date(notifications[i].notificationDate)), 
                 dateTextNotification: notifications[i].dateTextNotification, 
                 notificationDate: notifications[i].notificationDate
             })
@@ -184,6 +185,9 @@ const AddOrEditIncomeScreen = ({route}) => {
       const onDateChangeNotification = (event, selectedDate) => {
         const currentDate = selectedDate || notificationDate;
         setShowNotification(Platform.OS === 'ios')
+        try{
+          currentDate.setSeconds(0)
+        }catch{}
         setNotificationDate(currentDate)
         let tempDate = new Date(currentDate)
         let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
@@ -195,10 +199,7 @@ const AddOrEditIncomeScreen = ({route}) => {
             hours = "0" + hours
         let fTime =  hours + ":" + minutes
         setDateTextNotification(fTime + '  |  ' + fDate)
-        try{
-            notificationDate.setSeconds(0)
-        }catch{}
-        setNotifications([...notifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: notificationDate}])
+        setNotifications([...notifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: currentDate}])
     }
 
     const showModeNotification = (currentMode) => {

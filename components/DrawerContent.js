@@ -165,14 +165,14 @@ const toggleTips = () => {
             />
           </Drawer.Section>
           <Drawer.Section title='Preferences'>
-                <TouchableRipple onPress={()=>{toggleTheme()}}>
+                {/* <TouchableRipple onPress={()=>{toggleTheme()}}>
                   <View style={styles.preference}>
                     <Text>Dark Theme</Text>
                     <View pointerEvents='none'>
                       <Switch value={isDarkTheme}/>
                     </View>
                   </View>
-                </TouchableRipple>
+                </TouchableRipple> */}
 
                 <TouchableRipple onPress={()=>{toggleTips()}}>
                   <View style={styles.preference}>

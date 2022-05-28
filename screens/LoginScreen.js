@@ -73,7 +73,7 @@ const LoginScreen = () => {
                     </TouchableOpacity>
                     <Text style={styles.textBody}>{'\n'}Don't Have an Acoount ? </Text>
                         <Text style={[styles.textBody , {color: 'blue'}]} onPress={() => navigation.navigate('SignUp')}>Sign Up</Text>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={{ width:219 ,borderRadius:5, paddingVertical:10, paddingHorizontal:30, flexDirection: 'row', backgroundColor: '#3578E5', marginTop: 20 }}
                         onPress={() => {}}>
                         <Icon name='facebook' size={20} color='#fff' />
@@ -89,18 +89,9 @@ const LoginScreen = () => {
                         <Text style={{ marginLeft: 10, color: '#fff', fontWeight: 'bold' }}>
                             Login With Google 
                         </Text>
-                    </TouchableOpacity>  
-                    {/*<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />*/}
-
-                        
-                    {/*
-                    <TouchableOpacity
-                    onPress={handleSignUp}
-                    style={[styles.button, styles.buttonOutline]}
-                    >
-                        <Text style={styles.buttonOutlineText}>Register</Text>
-                    </TouchableOpacity>
-                    */}    
+                    </TouchableOpacity>   */}
+                    {/* <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} /> */}
+ 
                 </View>
                 </View>
             </View>

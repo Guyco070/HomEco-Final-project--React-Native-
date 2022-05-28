@@ -122,7 +122,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
       });
   
       responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        console.log(response);
+        // console.log(response);
       });
   
       return () => {
@@ -286,7 +286,8 @@ const AddOrEditExpenditureScreen = ({route}) => {
         else if (isNaN(amount)) alert("Sorry, Amount should be a number !" + amount)
         else if(company && desc != "Type" && amount){
             removeNotficationHandling()
-            notficationHandling().then((tempNotifications) => {
+            notficationHandling()
+            .then((tempNotifications) => {
             firebase.addExpendToHouse(house.hName, house.cEmail, house.expends, house.futureExpendes, {date: isWithCustomDate? customDate : ((exp && "date" in exp) ? exp.date.toDate() : new Date()),partner:user.email,company, 
                                     desc, amount: totalPayments !== "" ? parseInt(amount)/parseInt(totalPayments) : amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
                                         eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText, 
@@ -305,16 +306,12 @@ const AddOrEditExpenditureScreen = ({route}) => {
 
     const notficationHandling = async() => {
         let tempNotifications = []
-        console.log("new Date(notifications[i].notificationDate)")
 
         for(let i in notifications) {
-            console.log(new Date(notifications[i].notificationDate).toLocaleString())
-            
             if(!("identifier" in notifications[i])){
-                console.log("fghsfghfd")
                 tempNotifications.push({
-                    identifier: await schedulePushNotification("The event is approaching! 🕞 " + descOpitional? descOpitional:company,
-                                                                            notifications[i].dateTextNotification,"data",new Date(notifications[i].notificationDate)), 
+                    identifier: await schedulePushNotification("The expend event is approaching! 🕞 " + descOpitional? descOpitional:company,
+                                                                           dateText,"data",new Date(notifications[i].notificationDate)), 
                     dateTextNotification: notifications[i].dateTextNotification, 
                     notificationDate: notifications[i].notificationDate
                 })
@@ -413,12 +410,11 @@ const AddOrEditExpenditureScreen = ({route}) => {
       const onDateChangeNotification = (event, selectedDate) => {
         const currentDate = selectedDate || notificationDate;
         setShowNotification(Platform.OS === 'ios')
+        try{
+            currentDate.setSeconds(0)
+        }catch{}
         setNotificationDate(currentDate)
         let tempDate = new Date(currentDate)
-        console.log("currentDate")
-        console.log(currentDate)
-        console.log(tempDate.getTime())
-        console.log(tempDate.getHours())
 
         let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
         let minutes = tempDate.getMinutes()
@@ -429,11 +425,8 @@ const AddOrEditExpenditureScreen = ({route}) => {
             hours = "0" + hours
         let fTime =  hours + ":" + minutes
         setDateTextNotification(fTime + '  |  ' + fDate)
-        try{
-            notificationDate.setSeconds(0)
-        }catch{}
         if(modeNotification === 'time')
-        setNotifications(currentNotifications => [...currentNotifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: notificationDate}])
+        setNotifications(currentNotifications => [...currentNotifications, {dateTextNotification: fTime + '  |  ' + fDate, notificationDate: currentDate}])
     }
 
     const showModeNotification = (currentMode) => {
@@ -913,7 +906,6 @@ async function schedulePushNotification(title,body,data,trigger) {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
     } else {
       alert('Must use physical device for Push Notifications');
     }

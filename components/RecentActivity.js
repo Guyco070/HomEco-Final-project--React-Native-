@@ -198,7 +198,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler, title}) => {
                                                         {type == 'Expenditure' && <Text style={{ fontWeight: "400" }}>{"\nCompany: " + l.company}</Text>}
                                                         {"\n"}Amount: <Text style={{ fontWeight: "400" }}>{ l.amount} $</Text>
                                                         {type === 'Income' && <Text style={{ fontWeight: "400" }}>{"\nCreator: " + l.partner}</Text>}
-                                                        {l.isEvent && <>{"\n"}Event Time: <Text style={{ fontWeight: "400" }}>{getStrDateAndTimeToViewFromSrtDate((l.eventDate.toDate()))}</Text></>}
+                                                        {/* {l.isEvent && <>{"\n"}Event Time: <Text style={{ fontWeight: "400" }}>{getStrDateAndTimeToViewFromSrtDate((l.eventDate.toDate()))}</Text></>} */}
                                                        
                                                     </Text>
                                                     </TouchableOpacity>

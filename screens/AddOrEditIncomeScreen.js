@@ -141,10 +141,10 @@ const AddOrEditIncomeScreen = ({route}) => {
         else if(amount){
                 notficationHandling()
                 .then((tempNotifications) => {
-                    firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes, house.futureIncomes, {date: isWithCustomDate? customDate :(income? income.date : new Date()),partner:user.email, amount: amount,
+                    firebase.addIncomeToHouse(house.hName,house.cEmail,house.incomes, house.futureIncomes, {date: isWithCustomDate? customDate :(income ? income.date.toDate() : isEvent ? eventDate : new Date()),partner:user.email, amount: amount,
                        billingType: billingType, isEvent: isEvent, eventDate: eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText, isFuture: false})
                 })
-            navigation.replace("HouseProfile",{hKeyP: hKey, menuBarIndex: 1})
+                navigation.goBack()
         }else alert("Sorry, you must fill in all the fields!")
     }
 
@@ -228,6 +228,20 @@ const AddOrEditIncomeScreen = ({route}) => {
       setModeCustomDate(currentMode)
     }
 
+    const updateEventDateText = (selectedDate) => {
+      const currentDate = selectedDate || eventDate;
+      setEventDate(currentDate.toDate())
+      let tempDate = new Date(currentDate.toDate())
+      let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
+      let minutes = tempDate.getMinutes()
+      if(parseInt(minutes) < 10)
+          minutes = "0" + minutes
+      let hours = tempDate.getHours()
+      if(parseInt(hours) < 10)
+          hours = "0" + hours
+      let fTime =  hours + ":" + minutes
+      setDateText(fDate + '  |  ' + fTime)
+  }
       const handleDeleteIncome = () => {
         Alert.alert(
             "Are your sure?",
@@ -246,7 +260,7 @@ const AddOrEditIncomeScreen = ({route}) => {
                           {
                           text: "Yes",
                           onPress: () => {
-                              firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income, house.futureIncomes, true).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                              firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income, house.futureIncomes, true).then(navigation.goBack())
                           },
                           },
                           // The "No" button
@@ -254,13 +268,13 @@ const AddOrEditIncomeScreen = ({route}) => {
                           {
                           text: "No",
                           onPress: () => {
-                            firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income, house.futureIncomes, false).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                            firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income, house.futureIncomes, false).then(navigation.goBack())
                           },
                           },
                       ]
                       );
                   }
-                  else firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income, house.futureIncomes, false).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                  else firebase.removeIncomeFromHouse(house.hName,house.cEmail,house.incomes,income, house.futureIncomes, false).then(navigation.goBack())
                 },
               },
               // The "No" button

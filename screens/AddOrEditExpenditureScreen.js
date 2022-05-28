@@ -288,7 +288,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
             removeNotficationHandling()
             notficationHandling()
             .then((tempNotifications) => {
-            firebase.addExpendToHouse(house.hName, house.cEmail, house.expends, house.futureExpendes, {date: isWithCustomDate? customDate : ((exp && "date" in exp) ? exp.date.toDate() : new Date()),partner:user.email,company, 
+            firebase.addExpendToHouse(house.hName, house.cEmail, house.expends, house.futureExpendes, {date: isWithCustomDate? customDate : ((exp && "date" in exp) ? exp.date.toDate() : isEvent ? eventDate : new Date()),partner:user.email,company, 
                                     desc, amount: totalPayments !== "" ? parseInt(amount)/parseInt(totalPayments) : amount, billingType, invoices: catchInvoImages, contracts: catchContractImages, isEvent,
                                         eventDate, descOpitional, notifications: tempNotifications, isWithCustomDate, customDateText, 
                                         payments: payments === "" && totalPayments !== "" ? 1 : payments, totalPayments: totalPayments,
@@ -299,8 +299,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                                             }
                                         })
                                     })
-
-            navigation.replace("HouseProfile",{hKeyP: hKey, menuBarIndex: 0})
+            navigation.goBack()
         }else alert("Sorry, you must fill in all the fields!")
     }
 
@@ -361,7 +360,7 @@ const AddOrEditExpenditureScreen = ({route}) => {
                             {
                             text: "Yes",
                             onPress: () => {
-                                firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp, house.futureExpendes, true).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                                firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp, house.futureExpendes, true).then(navigation.goBack())
                             },
                             },
                             // The "No" button
@@ -369,13 +368,13 @@ const AddOrEditExpenditureScreen = ({route}) => {
                             {
                             text: "No",
                             onPress: () => {
-                                firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp, house.futureExpendes, false).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                                firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp, house.futureExpendes, false).then(navigation.goBack())
                             },
                             },
                         ]
                         );
                     }
-                    else firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp, house.futureExpendes, false).then(navigation.replace("HouseProfile",{hKeyP:hKey}))
+                    else firebase.removeExpendFromHouse(house.hName,house.cEmail,house.expends,exp, house.futureExpendes, false).then(navigation.goBack())
                 },
               },
               // The "No" button

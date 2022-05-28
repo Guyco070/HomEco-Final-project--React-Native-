@@ -128,7 +128,9 @@ const addUserToFirestore = async(email, fName, lName, phone, bDate, uImage ) => 
       bDate: bDate,
       email: email.replace(' ',''),
       uImage: uImage ? uImage : tempUserProfileImage,
-      incomes: {}
+      incomes: {},
+      tipsCounter: 0,
+      isGetTips: true
      });
     //  uploadImageToStorage('users',uImage ? uImage : tempUserProfileImage,email).then(alert()).catch()
 }

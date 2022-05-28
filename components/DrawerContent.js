@@ -117,7 +117,7 @@ const toggleTips = () => {
                 />
               )}
               label="Profile"
-              onPress={() => {navigation.navigate('UserProfileScreen')}}
+              onPress={() => {navigation.dispatch(StackActions.replace('UserProfileScreen'))}}
             />
             {/* <DrawerItem 
               icon={({color,size}) => (
@@ -161,7 +161,7 @@ const toggleTips = () => {
                 />
               )}
               label="Support"
-              onPress={() => {}}
+              onPress={() => {navigation.dispatch(StackActions.replace("Support"))}}
             />
           </Drawer.Section>
           <Drawer.Section title='Preferences'>

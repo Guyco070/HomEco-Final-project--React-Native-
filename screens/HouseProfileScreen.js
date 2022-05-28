@@ -55,12 +55,12 @@ const HouseProfileScreen = ({route}) => {
     useEffect(() => {
         firebase.getByDocIdFromFirestore("users", firebase.auth.currentUser?.email).then( (us) => { 
             setUser(us)
-            if("lastUse" in us && us?.lastUse.toDate().toDateString() !== new Date().toDateString()){
+            if(!("lastUse" in us) | ("lastUse" in us && us?.lastUse.toDate().toDateString() !== new Date().toDateString())){
                 setShowPopUpTip(us?.isGetTips)
                 firebase.updateCollectAtFirestore('users', firebase.auth.currentUser?.email, 'tipsCounter', "tipsCounter" in us ? us.tipsCounter+1 : 1)
-            }   
-        } )    // before opening the page
-        firebase.updateCollectAtFirestore('users', firebase.auth.currentUser?.email, 'lastUse', new Date())
+            }
+            firebase.updateCollectAtFirestore('users', firebase.auth.currentUser?.email, 'lastUse', new Date())
+        })
     }, [])
 
     useEffect(() => {    

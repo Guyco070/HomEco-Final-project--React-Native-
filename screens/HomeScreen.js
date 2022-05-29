@@ -5,12 +5,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import UserHousesListView from '../components/UserHousesListView'
 import * as firebase from '../firebase'
 import { styles } from '../styleSheet'
-import readProductsFromEXCL, * as s from "../barcodeScripts/productsFileScript.js"
-import SheetJSApp from '../barcodeScripts/productsFileScript.js';
-import TodoList from '../components/TodoList/TodoList';
 import Loading from '../components/Loading';
 import ShoppingApi from '../barcodeScripts/ShoppingApi';
 import * as shufersal from '../barcodeScripts/ShufersalScraping';
+import readProductsFromEXCL, * as s from "../barcodeScripts/productsFileScript.js"
+import SheetJSApp from '../barcodeScripts/productsFileScript.js';
 import General from '../screens/General';
 
 const HomeScreen = () => {

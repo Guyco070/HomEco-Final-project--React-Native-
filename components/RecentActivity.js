@@ -27,7 +27,7 @@ const typeIcones ={
     Supermarket: "cart-outline"
 }
 
-const RecentActivity = ({map,slice,hKey,type,scrollHandler, title}) => {
+const RecentActivity = ({map,slice,hKey,type,scrollHandler, title, houseCreator}) => {
     const navigation = useNavigation()
 
     const [loading, setLoading] = useState(true);
@@ -80,9 +80,12 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler, title}) => {
         setFilterList(getSortedArrayDateFromDict(map))
         setSortedList(getSortedArrayDateFromDict(map))
         setNewSlice(slice)
-        firebase.getByDocIdFromFirestore("houses",hKey).then((house)=>setHouseCreator(house.cEmail)).catch((e) =>{})
-        
+        setHouseCreator(houseCreator)
       },[map])
+
+      useEffect(() => {
+        if(scrollHandler && toViewList) scrollHandler();
+        },[scrollHandler,toViewList])
 
     useEffect(() => {
         for(const key in toViewList)

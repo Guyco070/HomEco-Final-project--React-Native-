@@ -107,7 +107,6 @@ const HouseProfileScreen = ({route}) => {
 
         if(dataSourceCords != [])
         {
-            console.log(dataSourceCords)
             ref.scrollTo({
                 x: 0,
                 y: dataSourceCords,
@@ -242,13 +241,13 @@ const HouseProfileScreen = ({route}) => {
 
                         {checked === 0 && 
                             <>
-                             <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Expenses"/>
-                             <RecentActivity map = {house.futureExpendes?house.futureExpendes:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Future Expenses"/>
+                             <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Expenses" scrollHandler={scrollHandler} houseCreator={house.cEmail}/>
+                             <RecentActivity map = {house.futureExpendes?house.futureExpendes:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Future Expenses" scrollHandler={scrollHandler} houseCreator={house.cEmail}/>
                             </> }
                         {checked === 1 && 
                             <>
-                             <RecentActivity map = {house.incomes?house.incomes:[]} slice={3} hKey={hKey} type={'Income'} title="Incomes"/>
-                             <RecentActivity map = {house.futureIncomes?house.futureIncomes:[]} slice={3} hKey={hKey} type={'Income'} title="Future Incomes"/>
+                             <RecentActivity map = {house.incomes?house.incomes:[]} slice={3} hKey={hKey} type={'Income'} title="Incomes" scrollHandler={scrollHandler} houseCreator={house.cEmail}/>
+                             <RecentActivity map = {house.futureIncomes?house.futureIncomes:[]} slice={3} hKey={hKey} type={'Income'} title="Future Incomes" scrollHandler={scrollHandler}/>
                             </> }
                     </>
                 }

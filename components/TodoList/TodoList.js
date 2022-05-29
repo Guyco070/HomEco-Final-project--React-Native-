@@ -12,7 +12,7 @@ import * as firebase from '../../firebase'
 import Toast from 'react-native-toast-message';
 
 
-const TodoList = ({list, listName,uEmail, navigation,scrollHandler,setShowMenuBar}) => {
+const TodoList = ({hKey,list, listName,uEmail, navigation,scrollHandler,setShowMenuBar}) => {
 	// HINT: each "item" in our list names a name,
 	// a boolean to tell if its been completed, and a quantity
 	const [items, setItems] = useState();

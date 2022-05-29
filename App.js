@@ -35,6 +35,7 @@ import DrawerContent from './components/DrawerContent'
 import BarMenu from './components/BarMenu';
 import ChatScreen from './screens/ChatScreen'
 import SupportScreen from './screens/SupportScreen';
+import CurrencyConverterScreen from './screens/CurrencyConverterScreen';
 
 LogBox.ignoreAllLogs(true)
 I18nManager.forceRTL(false);
@@ -80,6 +81,7 @@ export default function App() {
       <Stack.Screen name="GraphScreen" component={GraphHomeScreen} options={{ title: 'Graph Home Screen'}}/>
       <Stack.Screen name="Chat" component={ChatScreen} options={{ title: 'Chat'}}/>
       <Stack.Screen name="Support" component={SupportScreen} options={{ title: 'Support'}}/>
+      <Stack.Screen name="CurrencyConverter" component={CurrencyConverterScreen} options={{ title: 'Currency Converter'}}/>
     </Stack.Navigator>
   }
   

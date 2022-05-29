@@ -155,6 +155,17 @@ const toggleTips = () => {
             <DrawerItem 
               icon={({color,size}) => (
                 <Icon 
+                  name='calculator'
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="Currency Converter"
+              onPress={() => {navigation.dispatch(StackActions.replace("CurrencyConverter"))}}
+            />
+            <DrawerItem 
+              icon={({color,size}) => (
+                <Icon 
                   name='account-check-outline'
                   color={color}
                   size={size}

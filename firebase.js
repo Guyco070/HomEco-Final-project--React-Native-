@@ -415,7 +415,7 @@ const countNext = (curCreate) => {
   const curDate = new Date(curCreate.date)
   
   for(i;;i++){ 
-    if("date" in curCreate && new Date(curCreate.date) <= now){
+    if(curCreate.billingType !== 'One-time' && "date" in curCreate && new Date(curCreate.date) <= now){
       futureDateActions[curCreate.billingType](curCreate)
     }else{ break}
   } 
@@ -433,7 +433,7 @@ const getFutureExpenditure = (curCreate) => {
 
     if(curCreate.payments !== "")
       curCreate["payments"] = parseInt(curCreate.payments) + 1
-
+    if( curCreate.billingType !== 'One-time')
     futureDateActions[curCreate.billingType](curCreate)
 
     curCreate["date"] = curCreate.date
@@ -453,7 +453,6 @@ const getAllNextExpendituresOrIncomes = (curCreate) => {
     neois.push(JSON.parse(JSON.stringify(curCreate)))
     getFutureExpenditure(curCreate)
   }
-  // console.log("-neois",neois,"neois-")
 
   return neois
 }
@@ -483,8 +482,7 @@ const updateExpendOrIncome = (house, futureType, type) => { // futureType = "fut
     })
 }
 
-const updateExpendsAndIncomes = async(hKey) => {
-   return await getByDocIdFromFirestore("houses",hKey).then((house) => {
+const updateExpendsAndIncomes = (hKey,house) => {
     updateExpendOrIncome(house, "futureExpendes", "expends")
     updateExpendOrIncome(house, "futureIncomes", "incomes")
 
@@ -492,7 +490,6 @@ const updateExpendsAndIncomes = async(hKey) => {
     updateDoc(Data ,{futureExpendes: house.futureExpendes, expends: house.expends})
 
     return house
-  })
 }
 
 const getExpenditureTypeAutoByOptionalDescription = async(descOpitional) => {

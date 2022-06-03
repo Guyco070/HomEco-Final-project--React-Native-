@@ -39,22 +39,30 @@ const CurrencyConverterScreen = () => {
       }
     
     const handleAmount1Change = (amount1) => {
-        setAmount2(format(amount1 * rates[currency2].amount / rates[currency1].amount));
-        setAmount1(amount1);
+        if(!isNaN(amount1)){
+            setAmount2(format(amount1 * rates[currency1].amount / rates[currency2].amount));
+            setAmount1(amount1);  
+        }else{
+            handleAmount1Change(0)
+        }
     }
 
     const handleCurrency1Change = (currency1) => {
-        setAmount2(format(amount1 * rates[currency2].amount / rates[currency1].amount));
+        setAmount2(format(amount1 * rates[currency1].amount / rates[currency2].amount));
         setCurrency1(currency1);
     }
 
     const handleAmount2Change = (amount2) => {
-        setAmount1(format(amount2 * rates[currency1].amount / rates[currency2].amount));
-        setAmount2(amount2);
+        if(!isNaN(amount2)){
+            setAmount1(format(amount2 * rates[currency2].amount / rates[currency1].amount));
+            setAmount2(amount2);
+        }else{
+            handleAmount2Change(0)
+        }
     }
 
     const handleCurrency2Change = (currency2) => {
-        setAmount1(format(amount2 * rates[currency1].amount / rates[currency2].amount));
+        setAmount1(format(amount2 * rates[currency2].amount / rates[currency1].amount));
         setCurrency2(currency2);
     }
     

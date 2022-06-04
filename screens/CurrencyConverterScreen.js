@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import CurrencyInput from '../components/CurrencyInput';
 import { Icon } from 'react-native-elements'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import * as cc from 'currency-codes'
+import { deviceHeight } from '../SIZES';
 
 const CurrencyConverterScreen = () => {
     const [rates, setRates] = useState()
@@ -94,6 +96,17 @@ return (
                 amount={amount2}
                 currency={currency2}
             />}
+        <ScrollView style={styles.countriesContainer}>
+            <Text style={styles.currencyTitle}>{currency1 + ":"}</Text>
+            {
+                cc.code(currency1).countries.map((x, i) => (<Text style={styles.countryItem} key={i}>{x}</Text>))
+            }
+            <Text style={styles.currencyTitle}>{currency2 + ":"}</Text>
+            {
+                cc.code(currency2).countries.map((x, i) => (<Text style={styles.countryItem} key={i}>{x}</Text>))
+            }
+            <Text>{'\n'}</Text>
+        </ScrollView>
     </View>
   )
 }
@@ -111,5 +124,24 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         textAlign: 'center',
         marginVertical: 20
+    },
+    countriesContainer: {
+        maxHeight: deviceHeight/2,
+        marginVertical: 20,
+        borderWidth: 1,
+        borderColor: 'grey',
+        paddingHorizontal: 7,
+        borderRadius: 15
+    },
+    currencyTitle: {
+        alignSelf:'center',
+        marginTop: 30,
+        marginBottom: 3,
+        fontSize: 15,
+        fontWeight: 'bold',
+    },
+    countryItem: {
+        alignSelf:'center',
+        marginVertical:2
     }
 })

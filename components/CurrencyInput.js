@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
 import Inputs from './Inputs'
 import { Colors } from '../Colors'
+import getSymbolFromCurrency from 'currency-symbol-map'
+import * as cc from 'currency-codes'
+import { deviceWidth } from '../SIZES'
 
 const CurrencyInput = (props) => {
   return (
@@ -10,6 +13,7 @@ const CurrencyInput = (props) => {
         <View style={styles.container}>
             <SelectDropdown
                 buttonStyle = {styles.select}
+                dropdownStyle={{ width: deviceWidth/2 }}
                 defaultValue={props.currency}
                 data={props.currencies}
                 onSelect={(selectedItem, index) => {
@@ -23,10 +27,10 @@ const CurrencyInput = (props) => {
                 rowTextForSelection={(item, index) => {
                     // text represented for each item in dropdown
                     // if data array is an array of objects then return item.property to represent item in dropdown
-                    return item
+                    return item + " (" + cc.code(item).countries[0] + ")"
                 }}
             />
-            <Inputs style={styles.input} name={props.amount.toString()} value={props.amount.toString()} onChangeText={ text => props.onAmountChange(parseFloat(text)) } keyboardType="phone-pad"/>
+            <Inputs style={styles.input} name={props.amount.toString()} value={props.amount.toString() + " " + getSymbolFromCurrency(props.currency)} onChangeText={ text => props.onAmountChange(parseFloat(text)) } keyboardType="phone-pad"/>
         </View>
     </View>
   )

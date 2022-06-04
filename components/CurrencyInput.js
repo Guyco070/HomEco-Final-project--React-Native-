@@ -8,6 +8,8 @@ import * as cc from 'currency-codes'
 import { deviceWidth } from '../SIZES'
 
 const CurrencyInput = (props) => {
+    const [isSelected, setIsSelected] = useState(false)
+
   return (
     <View>
         <View style={styles.container}>
@@ -30,7 +32,13 @@ const CurrencyInput = (props) => {
                     return item + " (" + cc.code(item).countries[0] + ")"
                 }}
             />
-            <Inputs style={styles.input} name={props.amount.toString()} value={props.amount.toString() + " " + getSymbolFromCurrency(props.currency)} onChangeText={ text => props.onAmountChange(parseFloat(text)) } keyboardType="phone-pad"/>
+            <Inputs 
+                style={styles.input} name={props.amount.toString()} 
+                value={ isSelected ? props.amount.toString() : props.amount.toString() + " " + getSymbolFromCurrency(props.currency)} 
+                onChangeText={ text => props.onAmountChange(parseFloat(text)) } keyboardType="phone-pad"
+                onPress = { ()=> setIsSelected(true) }
+                onPressOut = { ()=> setIsSelected(false) }
+            />
         </View>
     </View>
   )

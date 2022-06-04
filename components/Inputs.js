@@ -42,6 +42,7 @@ class Inputs extends Component {
                     onChangeText={this.props.onChangeText}
                     value = {this.props.value}
                     onPressIn={this.props.onPress}
+                    onEndEditing={this.props.onPressOut}
                     disabled={this.props.disabled}
                     accessible={this.props.accessible}
                     focusable={this.props.focusable}

@@ -5,13 +5,9 @@ import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
 import { styles, houseProfileStyles, docImageUploaderStyles,modelContent, TodoSheet } from '../styleSheet'
-import * as ImagePicker from 'expo-image-picker';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { ListItem, Avatar } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
-import { Divider } from 'react-native-elements/dist/divider/Divider';
-import { color } from 'react-native-reanimated';
-import UploadProfileImage from '../components/UploadProfileImage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Icon } from 'react-native-elements'
 import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
@@ -881,13 +877,12 @@ const AddOrEditExpenditureScreen = ({route}) => {
 
 async function schedulePushNotification(title,body,data,trigger) {
     return await Notifications.scheduleNotificationAsync({
-      content: {
-        title: title,
-        body: body,
-        data: { data: 'goes here' },
-      },
-    trigger
-    //   trigger: { seconds: 2 },
+        content: {
+            title: title,
+            body: body,
+            data: { data: 'goes here' },
+        },
+        trigger: { seconds: 0 },
     });
   }
   

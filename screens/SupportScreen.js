@@ -10,7 +10,14 @@ const SupportScreen = () => {
     const video = useRef(null);
     const [status, setStatus] = useState({});
     const [viewVideo, setViewVideo] = useState(false);
-
+    const bodyArray = [
+        "Create your own homes, add partners and give them permissions as you wish, get a proper home management association, add income and expenses for the home and keep track of your expense details using various graphs to help you manage your home economy.",
+        "Also, you can keep track of your synchronized home shopping list or home to-do list thus saving time and money.",
+        "You can even upload photos to the photo gallery of the house so you and all the members of the house can enjoy a fun and interesting social experience in addition to managing the home economy.",
+        "The app offers other different options like personal finance management and personal tracking of the expenses for your homes.\n",
+        "Hopefully you will have a fun experience from the savings and even learn a thing or two about your financial conduct, your family members and more.\n",
+        "This page will be updated in the future and we recommend that you take a look from time to time and find out what's new about the app and how you can best use it."
+    ]
     return (
     <ScrollView>
         <View style={styles.videoContainer}>
@@ -41,6 +48,12 @@ const SupportScreen = () => {
             }
         /> */}
         </View>
+        <Text style={[houseProfileStyles.text, { fontWeight: "200", fontSize: 20, textAlign: 'center' }]}>
+            About HomEco:
+            </Text>
+        {
+            bodyArray.map((text) => (<Text style={[houseProfileStyles.text, { fontWeight: "200", fontSize: 15, textAlign: 'center' }]}>{text}</Text>))
+        }
     </ScrollView>
     );
 }
@@ -51,7 +64,6 @@ const SupportScreen = () => {
             alignSelf: 'center',
             alignItems:'center',
             width: deviceWidth,
-            height: deviceHeight,
         },
         video: {
             margin: 10,
@@ -68,6 +80,9 @@ const SupportScreen = () => {
             width: deviceWidth,
             height: 160,
             borderWidth: 1
+        },
+        body:{
+
         }
      }); 
 

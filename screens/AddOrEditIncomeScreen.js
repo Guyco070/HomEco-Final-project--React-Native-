@@ -20,6 +20,7 @@ import CustomNotifications from '../CustomNotifications'
 import { async } from '@firebase/util';
 import SeperatorSwitch from '../components/SeperatorSwitch';
 import { deviceWidth } from '../SIZES';
+import { Timestamp } from 'firebase/firestore';
 // import * as CustomNotificationsFuncs from '../CustomNotifications'
 LogBox.ignoreAllLogs(true)
 
@@ -230,8 +231,14 @@ const AddOrEditIncomeScreen = ({route}) => {
 
     const updateEventDateText = (selectedDate) => {
       const currentDate = selectedDate || eventDate;
-      setEventDate(currentDate.toDate())
-      let tempDate = new Date(currentDate.toDate())
+      let tempDate
+      try{
+        setEventDate(currentDate.toDate())
+        tempDate = new Date(currentDate.toDate())
+      }catch{
+        setEventDate(new Timestamp(currentDate.seconds, currentDate.nanoseconds).toDate())
+        tempDate = new Date(new Timestamp(currentDate.seconds, currentDate.nanoseconds).toDate())
+      }
       let fDate = firebase.getStrDateAndTimeToViewFromSrtDate(tempDate).replace('.','/').replace('.','/').substring(0,10)
       let minutes = tempDate.getMinutes()
       if(parseInt(minutes) < 10)
@@ -408,7 +415,7 @@ const AddOrEditIncomeScreen = ({route}) => {
               }
                 { !isEvent && 
                     <View style={{ width: "95%",alignItems:'center',borderRadius:10,borderColor:'lightgrey', borderBottomWidth: 1 ,  borderTopWidth: !isWithCustomDate ? 1: 0}}>
-                      <SeperatorSwitch isExpended={isWithCustomDate} setIsExpended={setIsWithCustomDate} title="Set retroactive expenditure" withCheckIcon={true} />
+                      <SeperatorSwitch isExpended={isWithCustomDate} setIsExpended={setIsWithCustomDate} title="Set retroactive income" withCheckIcon={true} />
 
                       {isWithCustomDate && 
                         <View style={styles.dateInputButton}>

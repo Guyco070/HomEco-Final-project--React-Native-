@@ -2,6 +2,16 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState, useCallback, useEffect, useLayoutEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import * as firebase from '../firebase'
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    vibrate: true
+  }),
+});
 
 const ChatScreen = ({ route }) => {
     const [messages, setMessages] = useState([]);
@@ -39,6 +49,13 @@ const ChatScreen = ({ route }) => {
       text,
       user
     } = messages[0]
+
+    if("notificationToken" in user)
+      schedulePushNotification(
+          user.notificationToken,
+          'HomEco - New Message from ' + user.fName + ' ' + user.lName,
+          text
+        )
   }, [])
  
   useLayoutEffect(()=>{
@@ -71,3 +88,16 @@ const ChatScreen = ({ route }) => {
 export default ChatScreen
 
 const styles = StyleSheet.create({})
+
+
+async function schedulePushNotification(expoToken, title,body,data) {
+  return await Notifications.scheduleNotificationAsync({
+    // to: expoToken,
+      content: {
+          title: title,
+          body: body,
+          data: { data: 'goes here' },
+      },
+      trigger: { seconds: 2 },
+  });
+}

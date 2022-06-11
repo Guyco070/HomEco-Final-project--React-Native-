@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox, TouchableOpacity ,Picker} from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox, TouchableOpacity ,Picker, Platform} from "react-native";
 import { Divider } from 'react-native-elements/dist/divider/Divider';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import Loading from '../components/Loading';
@@ -76,15 +76,17 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler, title, houseCreator}
     
 
     useEffect(() => {
-        setToViewList(getSortedArrayDateFromDict(map))
-        setFilterList(getSortedArrayDateFromDict(map))
-        setSortedList(getSortedArrayDateFromDict(map))
-        setNewSlice(slice)
-        setHouseCreator(houseCreator)
+        if(map && houseCreator && slice){
+            setToViewList(getSortedArrayDateFromDict(map))
+            setFilterList(getSortedArrayDateFromDict(map))
+            setSortedList(getSortedArrayDateFromDict(map))
+            setNewSlice(slice)
+            setHouseCreator(houseCreator)
+        }
       },[map])
 
       useEffect(() => {
-        if(scrollHandler && toViewList) scrollHandler();
+        if(Platform.OS !== 'ios' && scrollHandler && toViewList) scrollHandler();
         },[scrollHandler,toViewList])
 
     useEffect(() => {
@@ -92,7 +94,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler, title, houseCreator}
             isExpended[toViewList[key].date.toDate()] = false
         setIsExpendedConst(isExpended)
         setLoading(false);
-        if(scrollHandler) scrollHandler()
+        if(Platform.OS !== 'ios' && scrollHandler ) scrollHandler() 
     },[toViewList])
 
       const setIsExpended=(date) => {
@@ -129,7 +131,7 @@ const RecentActivity = ({map,slice,hKey,type,scrollHandler, title, houseCreator}
 
     return (
         <View>
-        {loading?(<Loading/>) :
+        {loading ?(<Loading/>) :
         (<ScrollView 
         style={{width:'100%',borderTopColor: 'lightgrey', borderTopWidth:1,borderTopLeftRadius:35,borderTopRightRadius:35, marginTop: 12}}
         >  

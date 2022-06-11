@@ -193,12 +193,12 @@ const TodoList = ({hKey,list, listName,uEmail, navigation,scrollHandler,setShowM
 								</TouchableOpacity>
 								:
 								(listName=='shoppingList') && <View style={TodoSheet.quantity}>
-									<TouchableOpacity onPress={() => handleQuantityDecrease(index)}>
-										<Icon name="chevron-forward-outline" type="ionicon" /> 
-									</TouchableOpacity>
-									<Text> {item.quantity} </Text>
 									<TouchableOpacity onPress={() => handleQuantityIncrease(index)}>
 										<Icon type="ionicon" name="chevron-back-outline"  />
+									</TouchableOpacity>
+									<Text> {item.quantity} </Text>
+									<TouchableOpacity onPress={() => handleQuantityDecrease(index)}>
+										<Icon name="chevron-forward-outline" type="ionicon" /> 
 									</TouchableOpacity>
 								</View>}	
 							</View>

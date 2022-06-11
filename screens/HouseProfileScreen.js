@@ -239,15 +239,15 @@ const HouseProfileScreen = ({route}) => {
                         </TouchableOpacity>
                     </View>
 
-                        {checked === 0 && 
+                        {checked === 0 && (house !== '') && house?.expends && house?.futureExpendes && house?.cEmail && hKey && 
                             <>
-                             <RecentActivity map = {house.expends?house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Expenses" scrollHandler={scrollHandler} houseCreator={house.cEmail}/>
-                             <RecentActivity map = {house.futureExpendes?house.futureExpendes:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Future Expenses" scrollHandler={scrollHandler} houseCreator={house.cEmail}/>
+                             <RecentActivity map = {house.expends? house.expends:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Expenses" scrollHandler={scrollHandler} houseCreator={house.cEmail}/>
+                             <RecentActivity map = {house.futureExpendes? house.futureExpendes:[]} slice={3} hKey={hKey} type={'Expenditure'} title="Future Expenses" scrollHandler={scrollHandler} houseCreator={house.cEmail}/>
                             </> }
-                        {checked === 1 && 
+                        {checked === 1 && house && house?.incomes && house?.futureIncomes && house?.cEmail &&
                             <>
-                             <RecentActivity map = {house.incomes?house.incomes:[]} slice={3} hKey={hKey} type={'Income'} title="Incomes" scrollHandler={scrollHandler} houseCreator={house.cEmail}/>
-                             <RecentActivity map = {house.futureIncomes?house.futureIncomes:[]} slice={3} hKey={hKey} type={'Income'} title="Future Incomes" scrollHandler={scrollHandler}/>
+                             <RecentActivity map = {house.incomes? house.incomes:[]} slice={3} hKey={hKey} type={'Income'} title="Incomes" scrollHandler={scrollHandler} houseCreator={house.cEmail}/>
+                             <RecentActivity map = {house.futureIncomes? house.futureIncomes:[]} slice={3} hKey={hKey} type={'Income'} title="Future Incomes" scrollHandler={scrollHandler}/>
                             </> }
                     </>
                 }
@@ -258,12 +258,12 @@ const HouseProfileScreen = ({route}) => {
                 }
                 { checked === 3 && <>
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]} >Shopping List</Text>
-                    <TodoList list = {house.shoppingList} listName={"shoppingList"} uEmail = {user.email} navigation={navigation} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
+                    <TodoList  hKey = {hKey} list = {house.shoppingList} listName={"shoppingList"} uEmail = {user.email} navigation={navigation} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
                     </>
                 }
                 { checked === 4 && <>
                     <Text style={[houseProfileStyles.subText, houseProfileStyles.recent]} >Tasks List</Text>
-                    <TodoList list = {house.tasksList} listName={"tasksList"} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
+                    <TodoList  hKey = {hKey} list = {house.tasksList} listName={"tasksList"} scrollHandler={scrollHandler} setShowMenuBar={setShowMenuBar}/>
                     </>
                 }
                 { checked === 5 && <>

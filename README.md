@@ -8,7 +8,7 @@
 
 ---
 
-#### Technologies:
+### Technologies:
 
 <div>
     <img alt="React Native" src="https://img.shields.io/badge/React%20Native-61DBFB?style=for-the-badge&logo=react&logoColor=white" />

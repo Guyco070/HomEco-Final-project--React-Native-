@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet,View,Text,TouchableOpacity } from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 const Submit = props => {
     return(

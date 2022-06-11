@@ -1,8 +1,6 @@
 import React, {useEffect, useState, } from 'react'
-import { Dimensions, View, ImageBackground,Text,Share, Platform } from 'react-native'
+import { View, Text,Share, Platform } from 'react-native'
 import ImageView from "react-native-image-viewing";
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import * as Linking from 'expo-linking';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { deviceHeight, deviceWidth } from '../SIZES';
 import { useNavigation } from '@react-navigation/native';

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions' 
 import * as firebase from '../firebase'
 import * as expoBS from 'expo-barcode-scanner'
-import Toast from 'react-native-toast-message';
 import Input from '../components/Inputs';
 import { TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements/dist/icons/Icon';

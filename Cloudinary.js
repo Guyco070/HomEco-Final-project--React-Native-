@@ -1,5 +1,4 @@
 import * as ImagePicker from 'expo-image-picker';
-import { Dimensions } from 'react-native';
 
 const apiUrl = 'https://api.cloudinary.com/v1_1/guyco10/image/upload';
 

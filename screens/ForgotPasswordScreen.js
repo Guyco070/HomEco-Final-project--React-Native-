@@ -1,6 +1,6 @@
 import { sendPasswordResetEmail ,getAuth } from '@firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import React, { PureComponent, useState } from 'react'
+import React, { useState } from 'react'
 import { Text, View ,StyleSheet, KeyboardAvoidingView, TouchableOpacity, Alert} from 'react-native'
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { Input } from 'react-native-elements/dist/input/Input';

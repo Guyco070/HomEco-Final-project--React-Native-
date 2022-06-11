@@ -1,29 +1,23 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal, Alert, Platform, } from 'react-native';
+import { Text, View,ScrollView, TouchableOpacity, Picker, LogBox, Modal, Alert, Platform, } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
 import { styles, houseProfileStyles, docImageUploaderStyles,modelContent, TodoSheet } from '../styleSheet'
 import UploadDocumentImage from '../components/UploadDocumentImage';
-import { ListItem, Avatar } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Icon } from 'react-native-elements'
-import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
+import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5} from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
-import CustomNotifications from '../CustomNotifications'
-import { async } from '@firebase/util';
 import Loading from '../components/Loading';
-import ImagePickerModal from '../components/ImagePickerModal';
 import { Colors } from '../Colors';
 import SeperatorSwitch from '../components/SeperatorSwitch';
 import { deviceWidth } from '../SIZES';
 
-// import * as CustomNotificationsFuncs from '../CustomNotifications'
 LogBox.ignoreAllLogs(true)
-
-//import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',

@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Image, View, Platform, TouchableOpacity, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { Image, View, TouchableOpacity, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { styles,docImageUploaderStyles,TodoSheet } from '../styleSheet';
+import { styles,docImageUploaderStyles } from '../styleSheet';
 import * as ImagePicker from 'expo-image-picker';
-import Icon from 'react-native-fontawesome';
 
 
 export default function UploadDocumentImage(props) {

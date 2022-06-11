@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity,KeyboardAvoidingView, Alert } from 'react-native';
+import { Text, View, ScrollView } from 'react-native';
 import * as firebase from '../firebase'
-import * as cloudinary from '../Cloudinary'
-import Input from './Inputs';
-import { docImageUploaderStyles, houseProfileStyles, styles } from '../styleSheet'
-import * as ImagePicker from 'expo-image-picker';
-import UploadProfileImage from './UploadProfileImage';
-import { ListItem, Avatar } from 'react-native-elements';
+import { houseProfileStyles, styles } from '../styleSheet'
+import { ListItem } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
-import { Divider } from 'react-native-elements/dist/divider/Divider';
 import Loading from './Loading';
 import { AntDesign } from '@expo/vector-icons';
 import { monthNames } from '../Graphs';

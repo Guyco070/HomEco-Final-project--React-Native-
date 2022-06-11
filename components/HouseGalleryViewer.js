@@ -8,7 +8,6 @@ import * as cloudinary from '../Cloudinary'
 import { docImageUploaderStyles } from '../styleSheet';
 import { AntDesign } from '@expo/vector-icons';
 import ImagePickerModal from './ImagePickerModal';
-import { Camera } from 'expo-camera';
 
 const HouseGalleryViewer = (props) => {
     const [catchHouseImages, setHouseCatchImages] = useState([]);

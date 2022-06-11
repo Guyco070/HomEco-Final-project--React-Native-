@@ -1,11 +1,11 @@
 import React, {useState, useRef} from 'react';
-import { View, StyleSheet, Button, Image, ScrollView, Text } from 'react-native';
-import { Video, AVPlaybackStatus } from 'expo-av';
-import { deviceHeight, deviceWidth } from '../SIZES';
+import { View, StyleSheet, Image, ScrollView, Text } from 'react-native';
+import { Video } from 'expo-av';
+import { deviceWidth } from '../SIZES';
 import { HomEcoVideo } from '../PrivateVariables';
-import { useFocusEffect } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { houseProfileStyles } from '../styleSheet';
+
 const SupportScreen = () => {
     const video = useRef(null);
     const [status, setStatus] = useState({});

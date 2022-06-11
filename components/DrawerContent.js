@@ -5,7 +5,6 @@ import {
   Avatar,
   Title,
   Caption,
-  Paragraph,
   Drawer,
   Text,
   TouchableRipple,
@@ -14,7 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import * as firebase from '../firebase'
 import { useNavigation } from '@react-navigation/native';
-import { signOut,auth } from '@firebase/auth'
+import { signOut } from '@firebase/auth'
 import UserHousesListView from './UserHousesListView'
 import { StackActions } from '@react-navigation/native';
 import { deviceHeight } from '../SIZES'

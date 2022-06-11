@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet,Text,TouchableOpacity } from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Account = props => {

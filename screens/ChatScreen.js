@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useState, useCallback, useEffect, useLayoutEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import * as firebase from '../firebase'

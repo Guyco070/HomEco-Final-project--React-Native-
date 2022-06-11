@@ -1,9 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Modal } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import BottomSheet from 'reanimated-bottom-sheet';
-import { Button } from 'react-native-elements';
 import { deviceHeight } from '../SIZES';
 
 const ImagePickerModal = ({imageModalPickerVisable,setImageModalPickerVisable,addImage,from,index}) => {

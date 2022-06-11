@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
 import { styles, TodoSheet } from '../styleSheet'
-import * as ImagePicker from 'expo-image-picker';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { ListItem, Avatar } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
 import { Divider } from 'react-native-elements/dist/divider/Divider';
-import { set } from 'react-native-reanimated';
 import Loading from '../components/Loading';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import ChangePermissions from '../components/ChangePermissions';
@@ -18,10 +16,6 @@ import { LogBox } from "react-native"
 import ImagePickerModal from '../components/ImagePickerModal';
 
 LogBox.ignoreAllLogs(true)
-
-//import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
-
-
 
 const EditHouseProfileScreen =({route}) => {
     const navigation = useNavigation()

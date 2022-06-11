@@ -1,14 +1,10 @@
-import React, { useEffect,useState,Component } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox ,Dimensions,AppRegistry,Platform,ActivityIndicator } from "react-native";
+import React, { useEffect,useState } from 'react'
+import { StyleSheet, Text, View, ScrollView, LogBox ,Dimensions, } from "react-native";
 import * as firebase from '../firebase'
 import * as Graphs from '../Graphs'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import Input from '../components/Inputs';
-import { Button } from 'react-native-elements/dist/buttons/Button';
-import TouchableScale from 'react-native-touchable-scale';
-import {LineChart,BarChart,PieChart,ProgressChart,ContributionGraph,StackedBarChart} from "react-native-chart-kit";
-import { VictoryBar, VictoryChart, VictoryGroup, VictoryLegend, VictoryTheme, VictoryPie, VictoryAxis} from "victory-native";
+import { VictoryBar, VictoryChart, VictoryGroup, VictoryLegend, VictoryPie, VictoryAxis} from "victory-native";
 import Loading from '../components/Loading';
 import { deviceWidth } from '../SIZES';
 import SeperatorSwitch from '../components/SeperatorSwitch';

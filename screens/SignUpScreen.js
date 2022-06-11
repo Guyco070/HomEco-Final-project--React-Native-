@@ -1,13 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { Text, View,Image,ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
-import * as ImagePicker from 'expo-image-picker';
-import { AntDesign } from '@expo/vector-icons';
 import UploadProfileImage from '../components/UploadProfileImage';
 
 
-import { styles,imageUploaderStyles } from '../styleSheet';
+import { styles } from '../styleSheet';
 
 import Input from '../components/Inputs';
 import * as firebase from '../firebase'
@@ -15,13 +13,12 @@ import * as cloudinary from '../Cloudinary'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import ModalSelector from 'react-native-modal-selector'
 import RNPhoneCodeSelect from "react-native-phone-code-select";
 import ImagePickerModal from '../components/ImagePickerModal';
 import { deviceWidth } from '../SIZES';
 
 
-const SignUpScreen = props => {
+const SignUpScreen = () => {
     const navigation = useNavigation()
     const [fName, setFName] = useState('');
     const [catchImage, setCatchImage] = useState('');

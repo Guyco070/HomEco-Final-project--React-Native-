@@ -11,8 +11,6 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 
 
-
-
 const SelfIncomeListViewer = ({map,slice}) => {
     const navigation = useNavigation()
 

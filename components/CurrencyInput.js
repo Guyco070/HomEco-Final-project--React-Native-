@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
 import Inputs from './Inputs'

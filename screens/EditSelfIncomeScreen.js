@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Alert } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, Picker, LogBox, Alert } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
 import { styles, houseProfileStyles, docImageUploaderStyles, TodoSheet,modelContent } from '../styleSheet'
-import * as ImagePicker from 'expo-image-picker';
 import UploadDocumentImage from '../components/UploadDocumentImage';
-import { ListItem, Avatar } from 'react-native-elements';
-import TouchableScale from 'react-native-touchable-scale'; 
-import { Divider } from 'react-native-elements/dist/divider/Divider';
-import { color } from 'react-native-reanimated';
-import UploadProfileImage from '../components/UploadProfileImage';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { Ionicons ,Foundation,FontAwesome5,FontAwesome} from '@expo/vector-icons';
 import { Modal } from 'react-native-paper';
 
 LogBox.ignoreAllLogs(true)
-//import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',

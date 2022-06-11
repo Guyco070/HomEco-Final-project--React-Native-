@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity,KeyboardAvoidingView } from 'react-native';
+import { Text, View,ScrollView, TouchableOpacity,KeyboardAvoidingView } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
 import { styles } from '../styleSheet'
-import * as ImagePicker from 'expo-image-picker';
 import UploadProfileImage from '../components/UploadProfileImage';
 import { ListItem, Avatar } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
 import { Divider } from 'react-native-elements/dist/divider/Divider';
-//import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 import { LogBox } from "react-native"
 
 LogBox.ignoreAllLogs(true)

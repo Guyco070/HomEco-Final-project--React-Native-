@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox,Modal, Alert } from 'react-native';
+import { Text, View,ScrollView, TouchableOpacity, Picker, LogBox,Modal, Alert } from 'react-native';
 import * as firebase from '../firebase'
 import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
 import { styles, houseProfileStyles, docImageUploaderStyles,modelContent, TodoSheet } from '../styleSheet'
-import * as ImagePicker from 'expo-image-picker';
 import UploadDocumentImage from '../components/UploadDocumentImage';
-import { ListItem, Avatar } from 'react-native-elements';
-import TouchableScale from 'react-native-touchable-scale'; 
-import { Divider } from 'react-native-elements/dist/divider/Divider';
-import { color } from 'react-native-reanimated';
-import UploadProfileImage from '../components/UploadProfileImage';
 import { Icon } from 'react-native-elements'
-import { Ionicons ,Foundation,FontAwesome5,FontAwesome} from '@expo/vector-icons';
+import { Ionicons ,FontAwesome} from '@expo/vector-icons';
 import ImagePickerModal from '../components/ImagePickerModal';
-//import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
 LogBox.ignoreAllLogs(true)
 LogBox.ignoreLogs([

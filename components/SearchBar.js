@@ -1,9 +1,8 @@
 import React from 'react'
-import { View, Text, KeyboardAvoidingView } from 'react-native'
+import { View, KeyboardAvoidingView } from 'react-native'
 import Input from '../components/Inputs';
 import { ListItem, Avatar } from 'react-native-elements';
 import { styles } from '../styleSheet'
-
 
 
 const SearchBar = (props) => {

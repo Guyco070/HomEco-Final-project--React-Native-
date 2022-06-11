@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import CustomRow from './CustomRow';
 
 const styles = StyleSheet.create({
@@ -19,7 +19,6 @@ const CustomListview = ({ itemList }) => (
                     image_url={item.image_url}
                 />}
             />
-
     </View>
 );
 

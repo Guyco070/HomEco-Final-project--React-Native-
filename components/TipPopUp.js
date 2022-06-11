@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, TouchableOpacity, Text, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Modal } from 'react-native'
 import { Colors } from '../Colors';

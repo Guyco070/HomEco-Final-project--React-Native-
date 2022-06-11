@@ -1,27 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Image,ScrollView, TouchableOpacity, Picker, LogBox, Modal, Alert, Platform} from 'react-native';
+import { Text, View,ScrollView, TouchableOpacity, Picker, LogBox, Alert, Platform} from 'react-native';
 import * as firebase from '../firebase'
-import * as cloudinary from '../Cloudinary'
 import Input from '../components/Inputs';
-import { styles, houseProfileStyles, docImageUploaderStyles,modelContent, TodoSheet } from '../styleSheet'
-import * as ImagePicker from 'expo-image-picker';
-import UploadDocumentImage from '../components/UploadDocumentImage';
-import { ListItem, Avatar } from 'react-native-elements';
+import { styles, docImageUploaderStyles, TodoSheet } from '../styleSheet'
+import { ListItem } from 'react-native-elements';
 import TouchableScale from 'react-native-touchable-scale'; 
-import { Divider } from 'react-native-elements/dist/divider/Divider';
-import { color } from 'react-native-reanimated';
-import UploadProfileImage from '../components/UploadProfileImage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Ionicons ,Entypo,FontAwesome,AntDesign ,FontAwesome5} from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
-import CustomNotifications from '../CustomNotifications'
-import { async } from '@firebase/util';
 import SeperatorSwitch from '../components/SeperatorSwitch';
 import { deviceWidth } from '../SIZES';
 import { Timestamp } from 'firebase/firestore';
-// import * as CustomNotificationsFuncs from '../CustomNotifications'
+
 LogBox.ignoreAllLogs(true)
 
 //import LinearGradient from 'react-native-linear-gradient'; // Only if no expo

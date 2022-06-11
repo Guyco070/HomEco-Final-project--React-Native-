@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { Directions } from 'react-native-gesture-handler'
 import { Colors } from './Colors'
 import { deviceHeight, deviceWidth } from './SIZES'
 

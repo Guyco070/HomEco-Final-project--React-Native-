@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import FontAwesomeIcon from 'react-native-fontawesome'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
-// import { TodoSheet } from '../../styleSheet';
-import { Input } from 'react-native-elements';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { styles, TodoSheet } from '../../styleSheet';
 import { TextInput } from 'react-native-gesture-handler';
@@ -13,8 +10,6 @@ import Toast from 'react-native-toast-message';
 
 
 const TodoList = ({hKey,list, listName,uEmail, navigation,scrollHandler,setShowMenuBar}) => {
-	// HINT: each "item" in our list names a name,
-	// a boolean to tell if its been completed, and a quantity
 	const [items, setItems] = useState();
 
 	const [inputValue, setinputValue] = useState('');

@@ -1,23 +1,14 @@
 import React, { useEffect,useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Text, View, SafeAreaView, Image, ScrollView, LogBox } from "react-native";
 import * as firebase from '../firebase'
 import Loading from '../components/Loading';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { styles, houseProfileStyles } from '../styleSheet';
 import { useNavigation } from '@react-navigation/native';
 import SelfIncomeListViewer from '../components/SelfIncomeListViewer';
-import ChangeSelfIncome from '../components/ChangeSelfIncome';
-import Input from '../components/Inputs';
-import BarcodeScanner from '../components/BarcodeScanner';
-import { Button } from 'react-native-elements/dist/buttons/Button';
-import TodoList from '../components/TodoList/TodoList';
-import Toast from 'react-native-toast-message';
 import UserHousesListView from '../components/UserHousesListView';
 import UserIncomesOrExpendsToHousesList from '../components/UserIncomesOrExpendsToHousesList';
 import { Icon } from 'react-native-elements';
-
-
  
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state.',

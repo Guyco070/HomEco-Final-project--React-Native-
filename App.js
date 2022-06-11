@@ -1,9 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View ,dimensions } from 'react-native';
-import { NavigationContainer, DarkTheme } from '@react-navigation/native';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {createAppContainer} from "react-navigation"
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -22,17 +20,13 @@ import BarcodeScanner from './components/BarcodeScanner';
 import ImageViewer from './components/ImageViewer';
 import { I18nManager } from 'react-native'
 import UserProfileScreen from './screens/UserProfileScreen';
-import EditExpenditureScreen from './screens/EditExpenditureScreen';
 import EditSelfIncomeScreen from './screens/EditSelfIncomeScreen';
 import LoadUserScreen from './screens/LoadUserScreen';
-
 import * as Notifications from 'expo-notifications';
+
 import { LogBox } from "react-native"
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 import DrawerContent from './components/DrawerContent'
-import BarMenu from './components/BarMenu';
 import ChatScreen from './screens/ChatScreen'
 import SupportScreen from './screens/SupportScreen';
 import CurrencyConverterScreen from './screens/CurrencyConverterScreen';
@@ -76,7 +70,6 @@ export default function App() {
       <Stack.Screen name="Sidebar" component={General} />
       <Stack.Screen name="ImageViewer" component={ImageViewer} options={{headerShown: false}} />
       <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} options={{ title: 'User Profile Screen'}}/>
-      <Stack.Screen name="EditExpenditureScreen" component={EditExpenditureScreen} options={{ title: 'Edit Expenditure Screen'}}/>
       <Stack.Screen name="EditSelfIncome" component={EditSelfIncomeScreen} options={{ title: 'Edit SelfIncome Screen'}}/>
       <Stack.Screen name="GraphScreen" component={GraphHomeScreen} options={{ title: 'Graph Home Screen'}}/>
       <Stack.Screen name="Chat" component={ChatScreen} options={{ title: 'Chat'}}/>

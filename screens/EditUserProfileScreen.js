@@ -2,18 +2,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import UploadProfileImage from '../components/UploadProfileImage';
-import { StyleSheet, Text, TouchableOpacity, View,SafeAreaView, ScrollView, Platform } from 'react-native';
+import { Text, TouchableOpacity, View, ScrollView, Platform } from 'react-native';
 import Input from '../components/Inputs';
 import * as cloudinary from '../Cloudinary';
 import * as firebase from '../firebase';
-import {FontAwesome5} from "@expo/vector-icons";
 import { styles } from '../styleSheet';
 import '@firebase/auth';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
-import Loading from '../components/Loading';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import LoginScreen from './LoginScreen';
 import { LogBox } from "react-native"
 import ImagePickerModal from '../components/ImagePickerModal';
 import { deviceWidth } from '../SIZES';

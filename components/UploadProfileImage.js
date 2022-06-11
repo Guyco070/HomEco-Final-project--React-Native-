@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Image, View, Platform, TouchableOpacity, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { Image, View, TouchableOpacity, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { styles,imageUploaderStyles } from '../styleSheet';
 import * as ImagePicker from 'expo-image-picker';

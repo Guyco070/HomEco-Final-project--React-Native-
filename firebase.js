@@ -3,8 +3,8 @@ import { getAuth } from "@firebase/auth"
 import { getApps, initializeApp } from "firebase/app"
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
-import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc, orderBy, Timestamp, onSnapshot, Firestore} from 'firebase/firestore'
-import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
+import { getFirestore, collection, getDocs,query,where, doc, getDoc, setDoc, deleteDoc,updateDoc, addDoc, orderBy, Timestamp, onSnapshot } from 'firebase/firestore'
+import { getStorage } from "firebase/storage"
 import { firebaseConfig } from "./PrivateVariables"
 // import { LogBox } from "react-native"
 

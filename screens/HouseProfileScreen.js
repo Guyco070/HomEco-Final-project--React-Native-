@@ -8,7 +8,6 @@ import { styles, houseProfileStyles } from '../styleSheet';
 import { useNavigation } from '@react-navigation/native';
 import RecentActivity from '../components/RecentActivity';
 import TodoList from '../components/TodoList/TodoList';
-import Toast from 'react-native-toast-message';
 import TouchableScale from 'react-native-touchable-scale';
 import ModalSelector from 'react-native-modal-selector'
 import * as Linking from 'expo-linking';
@@ -18,6 +17,7 @@ import GraphHomeScreen from './GraphHomeScreen';
 import HouseGalleryViewer from '../components/HouseGalleryViewer';
 
 import TipPopUp from '../components/TipPopUp';
+
 LogBox.ignoreAllLogs(true)
 
 LogBox.ignoreLogs([
@@ -194,30 +194,6 @@ const HouseProfileScreen = ({route}) => {
                     </View> 
                 </View>
 
-                {/* <View style={{ marginTop: 32 }}>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                        <View style={houseProfileStyles.mediaImageContainer}>
-                            <Image source={require("../assets/bell.png")} style={houseProfileStyles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={houseProfileStyles.mediaImageContainer}>
-                            <Image source={require("../assets/bell.png")} style={houseProfileStyles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={houseProfileStyles.mediaImageContainer}>
-                            <Image source={require("../assets/bell.png")} style={houseProfileStyles.image} resizeMode="cover"></Image>
-                        </View>
-                    </ScrollView>
-                    <View style={houseProfileStyles.mediaCount}>
-                        <Text style={[houseProfileStyles.text, { fontSize: 24, color: "#DFD8C8", fontWeight: "300" }]}>70</Text>
-                        <Text style={[houseProfileStyles.text, { fontSize: 12, color: "#DFD8C8", textTransform: "uppercase" }]}>Media</Text>
-                    </View>
-                </View> */}
-                {/* <TouchableOpacity
-                            title="Scann barcode"
-                            onPress={() => navigation.navigate('BarcodeScanner')}
-                            style={styles.button}
-                            >
-                            <Text style={styles.buttonText}>Scann barcode</Text>
-                        </TouchableOpacity> */}
             {loading?(<Loading/>) :
                 (<ScrollView style={{marginTop:35, marginBottom:35}}
                     

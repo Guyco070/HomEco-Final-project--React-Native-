@@ -1,19 +1,16 @@
 import React, { useEffect,useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, LogBox, TouchableOpacity ,Picker, Platform} from "react-native";
-import { Divider } from 'react-native-elements/dist/divider/Divider';
+import { Text, View, ScrollView, TouchableOpacity , Platform} from "react-native";
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import Loading from '../components/Loading';
 import { getSortedArrayDateFromDict, getStrDateAndTimeToViewFromSrtDate } from '../firebase';
 import { styles,houseProfileStyles,docImageUploaderStyles } from '../styleSheet';
 import UploadDocumentImage from '../components/UploadDocumentImage';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import * as firebase from '../firebase'
 import ModalSelector from 'react-native-modal-selector'
 import { sortDispatch, filterOptionsDispatch ,filterByFunc} from '../SortAndFilter';
-import { TextInput } from 'react-native-gesture-handler';
 import ModalFilterPicker from 'react-native-modal-filter-picker'
-
 
 const typeIcones ={
     Home: 'home',

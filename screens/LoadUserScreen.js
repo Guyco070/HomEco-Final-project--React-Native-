@@ -1,14 +1,9 @@
-import React, { useEffect, useState, Component } from 'react'
-import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
+import React, { useEffect } from 'react'
+import { View, Image } from 'react-native'
 import { styles } from '../styleSheet';
-import { signInWithEmailAndPassword} from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 import * as firebase from '../firebase'
-import Account from '../components/Acount';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Input from '../components/Inputs';
 import { Title } from 'react-native-paper';
-// import { StyledFirebaseAuth } from 'react-firebaseui';
 import { LogBox } from "react-native"
 import Loading from '../components/Loading';
 

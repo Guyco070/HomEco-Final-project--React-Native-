@@ -88,8 +88,8 @@
 20. Update expenses.
 21. Event reminder / scheduled expenditure. :alarm_clock:
 22. Add an images of an invoice for an expense. :receipt:
-23. Adding a Warranty / Contract Photo for Expense. :scroll:
-24. Reminder for Expired Warranty / Contract of Expenditure :black_nib:
+23. Adding a Warranty / Contract Photo for Expense. :scroll: :black_nib:
+24. Reminder for Expired Warranty / Contract of Expenditure
 25. Display of the total expenses, income, the remainder and the future remainder of the house.
 26. Viewing the rest which is painted in a matching color: red - negative, green - positive.
 27. Automatic update of home budget for each new month.

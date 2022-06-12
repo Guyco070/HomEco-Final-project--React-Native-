@@ -67,7 +67,7 @@
    Adding products to a shopping list using a barcode. (Including quantity increase)
    barcodes added from a data file of barcodes to a new firestore collection + menual uploads while using the upp + scraping with react-native-cheerio.
 6. View the to-do list.
-7. Managing a list of house chores (adding / removing / marking chores).
+7. Managing a synchronized list of house chores (adding / removing / marking chores). :white_check_mark:
 
 #### • Permission to access the photo gallery:
 

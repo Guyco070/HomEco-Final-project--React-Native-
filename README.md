@@ -32,7 +32,7 @@
 ### General user:
 
 1. Register for the system.
-2. Login to the system.
+2. :bust_in_silhouette: Login to the system.
 3. Disconnect from the system.
 4. Password recovery.
 5. Creating a home for management.

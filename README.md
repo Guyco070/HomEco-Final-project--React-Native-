@@ -1,4 +1,4 @@
-# HomEco :houses:
+# HomEco :moneybag: :houses: :moneybag:
 
 ## 2021 - Final project – HomEco – Home budget management IOS/ Android smartphone aplication.
 
@@ -42,7 +42,7 @@
 9. Change personal profile information.
 10. View personal income.
 11. Management (Addition / Removal) Personal Income.
-12. Adding pay slips to personal income.
+12. Adding pay slips to personal income. :page_facing_up:
 13. View income for homes I own.
 14. Managing the distribution of income for the homes I own.
 15. Currency conversion calculator (using an currency API).
@@ -64,7 +64,7 @@
 3. Send a WhatsApp message to one of the partners of the house.
 4. View a synchronized shopping list.
 5. Managing a synchronized shopping list (adding / removing / marking products, quantity management). :shopping_cart:
-   Adding products to a shopping list using a barcode. (Including quantity increase)
+   Adding products to a shopping list using a barcode. (Including quantity increase) :camera:
    barcodes added from a data file of barcodes to a new firestore collection + menual uploads while using the upp + scraping with react-native-cheerio.
 6. View the to-do list.
 7. Managing a synchronized list of house chores (adding / removing / marking chores). :white_check_mark:
@@ -86,9 +86,9 @@
 18. Expenditure classification automatically (online / clothing and more).
 19. Adding a fixed expense according to the timing of the payment. :spiral_calendar:
 20. Update expenses.
-21. Event Reminder / Scheduled Expenditure.
-22. Add an images of an invoice for an expense.
-23. Adding a Warranty / Contract Photo for Expense.
+21. Event reminder / scheduled expenditure. :alarm_clock:
+22. Add an images of an invoice for an expense. :receipt:
+23. Adding a Warranty / Contract Photo for Expense. :scroll:
 24. Reminder for Expired Warranty / Contract of Expenditure
 25. Display of the total expenses, income, the remainder and the future remainder of the house.
 26. Viewing the rest which is painted in a matching color: red - negative, green - positive.

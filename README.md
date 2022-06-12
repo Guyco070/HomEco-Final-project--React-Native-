@@ -84,7 +84,7 @@
 16. Filter expenses by user / type / schedule type / name / description.
 17. Sort expenses by date / price.
 18. Expenditure classification automatically (online / clothing and more).
-19. Adding a fixed expense according to the timing of the payment.
+19. Adding a fixed expense according to the timing of the payment. :spiral_calendar:
 20. Update expenses.
 21. Event Reminder / Scheduled Expenditure.
 22. Add an images of an invoice for an expense.

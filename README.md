@@ -1,4 +1,4 @@
-# HomEco
+# HomEco :houses:
 
 ## 2021 - Final project – HomEco – Home budget management IOS/ Android smartphone aplication.
 
@@ -31,14 +31,14 @@
 
 ### General user:
 
-1. Register for the system.
-2. :bust_in_silhouette: Login to the system.
-3. Disconnect from the system.
+1. Register for the system. :pencil:
+2. Login to the system.
+3. User logout.
 4. Password recovery.
-5. Creating a home for management.
-6. View a list of managed homes.
+5. Creating a home for management. :house:
+6. View a list of managed homes. :houses:
 7. Main menu for performing actions (drawer navigator - side bar).
-8. Personal profile and viewing details.
+8. Personal profile and viewing details. :bust_in_silhouette:
 9. Change personal profile information.
 10. View personal income.
 11. Management (Addition / Removal) Personal Income.
@@ -63,7 +63,7 @@
 2. Chat with family partners.
 3. Send a WhatsApp message to one of the partners of the house.
 4. View a synchronized shopping list.
-5. Managing a synchronized shopping list (adding / removing / marking products, quantity management).
+5. Managing a synchronized shopping list (adding / removing / marking products, quantity management). :shopping_cart:
    Adding products to a shopping list using a barcode. (Including quantity increase)
    barcodes added from a data file of barcodes to a new firestore collection + menual uploads while using the upp + scraping with react-native-cheerio.
 6. View the to-do list.
@@ -93,7 +93,7 @@
 25. Display of the total expenses, income, the remainder and the future remainder of the house.
 26. Viewing the rest which is painted in a matching color: red - negative, green - positive.
 27. Automatic update of home budget for each new month.
-28. View graphs that show data on how the home economy is doing.
+28. View graphs that show data on how the home economy is doing. :chart_with_upwards_trend: :bar_chart:
 
 #### • Permission to update the house income:
 
@@ -104,4 +104,4 @@
 33. Sort income by date / amount.
 34. Adding / Removing Income to a Home.
 35. Editing house income.
-36. Receiving an update on house income.
+36. Get a reminder of house income. :alarm_clock:

@@ -25,6 +25,8 @@
     <img alt="Java Script" src="https://img.shields.io/badge/Java%20Script-f7df1e?style=for-the-badge&logo=javascript&logoColor=white" />
 </div>
 
+--
+
 ## In the app you will find:
 
 ### General user:

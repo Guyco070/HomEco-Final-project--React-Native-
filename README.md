@@ -25,9 +25,9 @@
     <img alt="Java Script" src="https://img.shields.io/badge/Java%20Script-f7df1e?style=for-the-badge&logo=javascript&logoColor=white" />
 </div>
 
-### In the app you will find:
+## In the app you will find:
 
-#### General user:
+### General user:
 
 1. Register for the system.
 2. Login to the system.
@@ -47,7 +47,7 @@
 16. Explanation page that includes an E2E video to show the functionality.
 17. Option to choose - Receiving optimization proposals for the management of the houses.
 
-#### House manager user (including general user + member with all permissions):
+### House manager user (including general user + member with all permissions):
 
 18. Adding / removing house partners from a managed home.
 19. Management of the permissions of the managed house partners.
@@ -55,7 +55,7 @@
 21. Deleting a house.
 22. Removal of expenses/ incomes of the house. (No matter who creates the expense)
 
-#### Home partner user (including general user):
+### Home partner user (including general user):
 
 1. Home profile page to view the latest updates.
 2. Chat with family partners.
@@ -67,12 +67,12 @@
 6. View the to-do list.
 7. Managing a list of house chores (adding / removing / marking chores).
 
-• Permission to access the photo gallery:
+#### • Permission to access the photo gallery:
 
 9. Photo gallery for home.
 10. Photo sharing from a photo gallery - (using an API to shorten link to send).
 
-• Permission to add / remove expenses:
+#### • Permission to add / remove expenses:
 
 11. Adding / Removing Expenses (Created by the same user only)
 12. Adding the shopping list as an expense to the home after purchase.

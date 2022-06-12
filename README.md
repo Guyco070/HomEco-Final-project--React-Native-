@@ -93,7 +93,7 @@
 27. Automatic update of home budget for each new month.
 28. View graphs that show data on how the home economy is doing.
 
-• Permission to update the house income:
+#### • Permission to update the house income:
 
 29. Viewing House Income.
 30. Expanding the amount of incomes presented.

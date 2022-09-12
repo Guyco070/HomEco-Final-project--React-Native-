@@ -2,7 +2,7 @@
 
 ## 2021 - Final project – HomEco – Home budget management IOS/ Android smartphone aplication.
 
-<a href='https://youtu.be/LZInDR4q70w'>
+<a href='https://vimeo.com/748682939'>
   <img align="center"  alt="Watch the video" width="500px" src="./readmeAssets/HomEco.png" />
 </a>
 
